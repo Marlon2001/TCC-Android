@@ -1,5 +1,6 @@
 package godinner.lab.com.godinner;
 
+import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -18,8 +19,10 @@ import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ViewUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,11 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton btnCadastrar;
     private CallbackManager callbackManager;
     private LoginButton loginButton;
+    public static final String ipServidor = "10.107.144.15:8080";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.logo));
 
         btnLogar = findViewById(R.id.btn_entrar);
         btnCadastrar = findViewById(R.id.btn_cadastrar);

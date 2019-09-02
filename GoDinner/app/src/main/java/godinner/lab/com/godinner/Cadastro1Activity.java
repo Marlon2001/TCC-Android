@@ -4,14 +4,15 @@ import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import godinner.lab.com.godinner.model.Cadastro;
-import godinner.lab.com.godinner.model.Contato;
 
 public class Cadastro1Activity extends AppCompatActivity {
 
@@ -29,6 +30,7 @@ public class Cadastro1Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro1);
+        Glide.with(this).load(R.drawable.logo).into((ImageView) findViewById(R.id.logo));
 
         txtEmail = findViewById(R.id.txt_email);
         txtSenha = findViewById(R.id.txt_senha);
@@ -67,8 +69,9 @@ public class Cadastro1Activity extends AppCompatActivity {
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
+                Intent abrirMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(abrirMainActivity);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
     }
@@ -77,7 +80,7 @@ public class Cadastro1Activity extends AppCompatActivity {
     public void onBackPressed() {
         Intent abrirMainActivity = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(abrirMainActivity);
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         super.onBackPressed();
     }
 

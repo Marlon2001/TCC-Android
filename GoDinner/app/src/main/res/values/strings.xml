@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">GoDinner</string>
-    <string name="ip_servidor">10.107.144.15:8080</string>
     <string name="carregando">Carregando...</string>
     <string name="logo_app">Logo da aplicação</string>
     <string name="lbl_email">E-MAIL</string>
@@ -32,4 +31,5 @@
     <string name="lbl_bemvindo">Bem vindo ao GoDinner</string>
     <string name="lbl_cortezia">Como cortezia nossa, em sua primeira compra você só paga a metade.</string>
     <string name="lbl_cpf">CPF</string>
+    <string name="lbl_complemento">Complemento</string>
 </resources>

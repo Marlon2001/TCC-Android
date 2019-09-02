@@ -14,9 +14,9 @@
         android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:src="@drawable/logo2"
         android:layout_marginTop="24dp"
-        android:contentDescription="@string/logo_app"/>
+        android:contentDescription="@string/logo_app"
+        android:visibility="visible"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"

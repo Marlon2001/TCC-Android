@@ -8,7 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import godinner.lab.com.godinner.model.Cadastro;
 import godinner.lab.com.godinner.model.Contato;
@@ -32,6 +35,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro2);
+        Glide.with(this).load(R.drawable.logo).into((ImageView) findViewById(R.id.logo));
 
         txtNome = findViewById(R.id.txt_nome);
         txtTelefone = findViewById(R.id.txt_telefone);
@@ -82,7 +86,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
                 Intent abrirCadastro1 = new Intent(getApplicationContext(), Cadastro1Activity.class);
                 abrirCadastro1.putExtra("cadastro", cadastroIntent);
                 startActivity(abrirCadastro1);
-                overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
     }
@@ -92,7 +96,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
         Intent abrirCadastro1 = new Intent(getApplicationContext(), Cadastro1Activity.class);
         abrirCadastro1.putExtra("cadastro", cadastroIntent);
         startActivity(abrirCadastro1);
-        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         super.onBackPressed();
     }
 
