@@ -1,7 +1,12 @@
 package godinner.lab.com.godinner;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,11 +47,11 @@ public class Cadastro3Activity extends AppCompatActivity {
     private TextInputLayout txtCepLayout;
     private TextInputLayout txtNumeroLayout;
     private TextInputLayout txtReferenciaLayout;
-    private TextInputLayout txtLogradouroLayout;
     private TextInputLayout txtComplementoLayout;
+    private TextInputLayout txtLogradouroLayout;
     private TextInputLayout txtBairroLayout;
-    private TextInputLayout txtCidadeLayout;
-    private TextInputLayout txtEstadoLayout;
+    private TextView txtErrorEstado;
+    private TextView txtErrorCidade;
 
     private ImageButton btnVoltar;
     private Button btnFinalizar;
@@ -59,7 +64,7 @@ public class Cadastro3Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro3);
         Glide.with(this).load(R.drawable.logo).into((ImageView) findViewById(R.id.logo));
-
+        
         txtCep = findViewById(R.id.txt_cep);
         txtNumero = findViewById(R.id.txt_numero);
         txtReferencia = findViewById(R.id.txt_referencia);
@@ -72,11 +77,11 @@ public class Cadastro3Activity extends AppCompatActivity {
         txtCepLayout = findViewById(R.id.txt_cep_layout);
         txtNumeroLayout = findViewById(R.id.txt_numero_layout);
         txtReferenciaLayout = findViewById(R.id.txt_referencia_layout);
-        txtLogradouroLayout = findViewById(R.id.txt_logradouro_layout);
         txtComplementoLayout= findViewById(R.id.txt_complemento_layout);
+        txtLogradouroLayout = findViewById(R.id.txt_logradouro_layout);
         txtBairroLayout = findViewById(R.id.txt_bairro_layout);
-//        txtCidadeLayout = findViewById(R.id.txt_cidade_layout);
-//        txtEstadoLayout = findViewById(R.id.txt_estado_layout);
+        txtErrorEstado = findViewById(R.id.txt_error_estado);
+        txtErrorCidade = findViewById(R.id.txt_error_cidade);
 
         btnFinalizar = findViewById(R.id.btn_finalizar);
         btnVoltar = findViewById(R.id.btn_voltar);
@@ -109,7 +114,7 @@ public class Cadastro3Activity extends AppCompatActivity {
                     dialog.show();
 
                     try {
-                        CadastroUsuario cadastroUsuario = new CadastroUsuario(getApplicationContext(), cadastroIntent, contatoIntent, e);
+                        CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e);
                         cadastroUsuario.execute();
                         cadastroUsuario.get();
 
@@ -117,6 +122,8 @@ public class Cadastro3Activity extends AppCompatActivity {
                         Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
                         startActivity(abrirBemVindo);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        LocalBroadcastManager.getInstance(Cadastro3Activity.this).sendBroadcast(new Intent("fecharActivity"));
+                        finish();
                     } catch (ExecutionException | InterruptedException e1) {
                         e1.printStackTrace();
                     }
@@ -139,14 +146,22 @@ public class Cadastro3Activity extends AppCompatActivity {
         spinnerEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                List cidades = new ArrayList();
+
                 if(position != 0) {
                     Estado e = (Estado) parent.getItemAtPosition(position);
                     CidadeEstadoDAO mCidadeEstadoDAO = new CidadeEstadoDAO(Cadastro3Activity.this);
-                    List cidades = mCidadeEstadoDAO.getCidadesByEstado(e.getIdEstado());
+                    cidades = mCidadeEstadoDAO.getCidadesByEstado(e.getIdEstado());
+                } else {
+                    Cidade c = new Cidade();
+                    c.setCidade("Escolha uma Cidade");
+                    c.setIdCidade(0);
 
-                    ArrayAdapter mAdapter = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, cidades);
-                    spinnerCidade.setAdapter(mAdapter);
+                    cidades.add(0, c);
                 }
+
+                ArrayAdapter mAdapter = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, cidades);
+                spinnerCidade.setAdapter(mAdapter);
             }
 
             @Override
@@ -166,43 +181,42 @@ public class Cadastro3Activity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-
     public boolean validarCampos(){
         boolean semErro = true;
 
-        if(txtCep.getText().toString().trim().isEmpty()){
+        if(!ValidaCampos.isValidCep(txtCep.getText().toString())){
             txtCepLayout.setErrorEnabled(true);
-            txtCepLayout.setError("O cep é obrigatório");
+            txtCepLayout.setError("O cep é inválido.");
             semErro = false;
         }
 
         if(txtNumero.getText().toString().trim().isEmpty()){
             txtNumeroLayout.setErrorEnabled(true);
-            txtNumeroLayout.setError("O número é obrigatório");
+            txtNumeroLayout.setError("O número é obrigatório.");
             semErro = false;
         }
 
         if(txtLogradouro.getText().toString().trim().isEmpty()){
             txtLogradouroLayout.setErrorEnabled(true);
-            txtLogradouroLayout.setError("O logradouro é obrigatório");
+            txtLogradouroLayout.setError("O logradouro é obrigatório.");
             semErro = false;
         }
 
         if(txtBairro.getText().toString().trim().isEmpty()){
             txtBairroLayout.setErrorEnabled(true);
-            txtBairroLayout.setError("O bairro é obrigatório");
+            txtBairroLayout.setError("O bairro é obrigatório.");
             semErro = false;
         }
 
-        if(false){
-            txtCidadeLayout.setErrorEnabled(true);
-            txtCidadeLayout.setError("A cidade é obrigatória");
+        if(ValidaCampos.isValidEstado(spinnerEstado.getSelectedItem())){
+            txtErrorEstado.setVisibility(View.VISIBLE);
+            txtErrorEstado.setText("Escolha um estado.");
             semErro = false;
         }
 
-        if(false){
-            txtEstadoLayout.setErrorEnabled(true);
-            txtEstadoLayout.setError("O estado é obrigatório");
+        if(ValidaCampos.isValidCidade(spinnerCidade.getSelectedItem())){
+            txtErrorCidade.setVisibility(View.VISIBLE);
+            txtErrorCidade.setText("Escolha uma cidade.");
             semErro = false;
         }
 
@@ -222,8 +236,8 @@ public class Cadastro3Activity extends AppCompatActivity {
         estados.add(e);
         estados.addAll(mCidadeEstadoDAO.getEstados());
 
-        ArrayAdapter mAdapter = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, estados);
-        spinnerEstado.setAdapter(mAdapter);
+        ArrayAdapter mAdapter2 = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, estados);
+        spinnerEstado.setAdapter(mAdapter2);
         spinnerEstado.setSelection(0);
     }
 }

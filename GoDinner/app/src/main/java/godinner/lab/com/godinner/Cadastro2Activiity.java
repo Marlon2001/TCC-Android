@@ -1,7 +1,11 @@
 package godinner.lab.com.godinner;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -68,7 +72,11 @@ public class Cadastro2Activiity extends AppCompatActivity {
                     Contato con = new Contato();
                     con.setNome(txtNome.getText().toString());
                     con.setTelefone(txtTelefone.getText().toString());
-                    con.setCpf(txtCpf.getText().toString());
+
+                    String strCpf = txtCpf.getText().toString();
+                    String cpf = strCpf.substring(0, 3) + "." + strCpf.substring(3, 6) + "." + strCpf.substring(6, 9) + "-" + strCpf.substring(9, 11);
+                    con.setCpf(cpf);
+
                     con.setNotificacoes(rdoNotificacoes.isChecked());
 
                     abrirCadastro3.putExtra("cadastro", cadastroIntent);
@@ -89,6 +97,8 @@ public class Cadastro2Activiity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("fecharActivity"));
     }
 
     @Override
@@ -103,24 +113,38 @@ public class Cadastro2Activiity extends AppCompatActivity {
     public boolean validarCampos(){
         boolean semErro = true;
 
-        if(txtNome.getText().toString().trim().isEmpty()){
+        if(txtNome.getText().toString().trim().length() < 3){
             txtNomeLayout.setErrorEnabled(true);
-            txtNomeLayout.setError("O nome é obrigatório");
+            txtNomeLayout.setError("O nome é obrigatório.");
             semErro = false;
         }
 
-        if(txtTelefone.getText().toString().trim().isEmpty()){
+        if(!ValidaCampos.isValidTelefone(txtTelefone.getText().toString())){
             txtTelefoneLayout.setErrorEnabled(true);
-            txtTelefoneLayout.setError("O telefone é obrigatório");
+            txtTelefoneLayout.setError("O telefone é inválido.");
             semErro = false;
         }
 
-        if(txtCpf.getText().toString().trim().isEmpty()){
+        if(!ValidaCampos.isValidCpf(txtCpf.getText().toString())){
             txtCpfLayout.setErrorEnabled(true);
-            txtCpfLayout.setError("O cpf é obrigatório");
+            txtCpfLayout.setError("O CPF é inválido.");
             semErro = false;
         }
 
         return semErro;
+    }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 }

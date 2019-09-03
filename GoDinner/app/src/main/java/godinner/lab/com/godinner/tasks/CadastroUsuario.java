@@ -21,13 +21,11 @@ import godinner.lab.com.godinner.model.Endereco;
 
 public class CadastroUsuario extends AsyncTask {
 
-    private Context context;
     private Cadastro cadastro;
     private Contato contato;
     private Endereco endereco;
 
-    public CadastroUsuario(Context context, Cadastro cadastro, Contato contato, Endereco endereco) {
-        this.context = context;
+    public CadastroUsuario(Cadastro cadastro, Contato contato, Endereco endereco) {
         this.cadastro = cadastro;
         this.contato = contato;
         this.endereco = endereco;
@@ -59,8 +57,6 @@ public class CadastroUsuario extends AsyncTask {
             jsonCadastro.endObject();
 
             URL url = new URL("http://"+MainActivity.ipServidor+"/consumidor/novo");
-
-            Log.i("URL", "http://"+MainActivity.ipServidor+"/consumidor/novo");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 

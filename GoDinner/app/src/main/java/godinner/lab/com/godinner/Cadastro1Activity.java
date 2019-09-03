@@ -1,7 +1,11 @@
 package godinner.lab.com.godinner;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import godinner.lab.com.godinner.model.Cadastro;
 
@@ -74,6 +81,8 @@ public class Cadastro1Activity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("fecharActivity"));
     }
 
     @Override
@@ -87,18 +96,32 @@ public class Cadastro1Activity extends AppCompatActivity {
     public boolean validarCampos(){
         boolean semErro = true;
 
-        if(txtEmail.getText().toString().trim().isEmpty()){
+        if(!ValidaCampos.isValidEmail(txtEmail.getText().toString())){
             txtEmailLayout.setErrorEnabled(true);
-            txtEmailLayout.setError("O e-mail é obrigatório");
+            txtEmailLayout.setError("E-mail inválido.");
             semErro = false;
         }
 
-        if(txtSenha.getText().toString().trim().isEmpty()){
+        if(txtSenha.getText().toString().trim().length() < 6){
             txtSenhaLayout.setErrorEnabled(true);
-            txtSenhaLayout.setError("A senha é obrigatória");
+            txtSenhaLayout.setError("A senha deve conter no minímo 6 caracteres.");
             semErro = false;
         }
 
         return semErro;
+    }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 }
