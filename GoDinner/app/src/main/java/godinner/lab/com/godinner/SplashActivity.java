@@ -31,31 +31,31 @@ public class SplashActivity extends Activity {
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.imageView));
 
         final CidadeEstadoDAO mCidadeEstadoDAO = new CidadeEstadoDAO(SplashActivity.this);
-
-        if(!mCidadeEstadoDAO.EstadoAlreadyPopuled()) {
-            try {
-                BuscarEstados mEstados = new BuscarEstados();
-                mEstados.execute();
-                mEstados.get();
-                mCidadeEstadoDAO.addEstados(estados);
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        if(!mCidadeEstadoDAO.CidadeAlreadyPopuled()){
-            try {
-                BuscarCidades mCidades = new BuscarCidades();
-                mCidades.execute();
-                mCidades.get();
-                mCidadeEstadoDAO.addCidades(cidades);
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//
+//        if(!mCidadeEstadoDAO.EstadoAlreadyPopuled()) {
+//            try {
+//                BuscarEstados mEstados = new BuscarEstados();
+//                mEstados.execute();
+//                mEstados.get();
+//                mCidadeEstadoDAO.addEstados(estados);
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        if(!mCidadeEstadoDAO.CidadeAlreadyPopuled()){
+//            try {
+//                BuscarCidades mCidades = new BuscarCidades();
+//                mCidades.execute();
+//                mCidades.get();
+//                mCidadeEstadoDAO.addCidades(cidades);
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

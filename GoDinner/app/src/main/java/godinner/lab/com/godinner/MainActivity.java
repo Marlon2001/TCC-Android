@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent abrirCadastro = new Intent(getApplicationContext(), Cadastro1Activity.class);
+                Intent abrirCadastro = new Intent(getApplicationContext(), TelaInicialActivity.class);
                 startActivity(abrirCadastro);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
