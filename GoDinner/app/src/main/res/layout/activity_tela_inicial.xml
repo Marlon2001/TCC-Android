@@ -40,7 +40,7 @@
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:id="@+id/txt_endereco"
+                    android:id="@+id/txt_endereco_entrega"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Rua das Magnólias, 965"
@@ -146,7 +146,7 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/lista_produtos"
+            android:id="@+id/lista_restaurantes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp">

@@ -37,4 +37,6 @@
     <string name="lbl_pratos_restaurantes">Pratos ou Restaurantes</string>
     <string name="lbl_description">Image Item</string>
     <string name="lbl_categorias">Categorias</string>
+    <string name="lbl_avaliacao_estrela">Avaliacao Estrela</string>
+    <string name="lbl_logo_restaurante">Logo Restaurante</string>
 </resources>

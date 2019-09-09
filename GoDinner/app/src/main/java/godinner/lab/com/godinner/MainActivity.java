@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
 
         txtEmail = findViewById(R.id.txt_email);
-        txtSenha = findViewById(R.id.txt_senha);
+        txtSenha = findViewById(R.id.txt_password);
         txtEmailLayout = findViewById(R.id.txt_email_layout);
         txtSenhaLayout = findViewById(R.id.txt_senha_layout);
 
@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
                     LoginUsuario mLogin = new LoginUsuario(login);
                     mLogin.execute();
-
                 }
             }
         });
