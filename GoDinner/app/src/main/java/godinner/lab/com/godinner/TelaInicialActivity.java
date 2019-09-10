@@ -10,12 +10,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.adapter.CategoriasAdapter;
 import godinner.lab.com.godinner.adapter.ListaRestaurantes;
 import godinner.lab.com.godinner.adapter.RestaurantesProximosAdapter;
 import godinner.lab.com.godinner.model.Categoria;
 import godinner.lab.com.godinner.model.Restaurante;
+import godinner.lab.com.godinner.tasks.BuscarCategorias;
+import godinner.lab.com.godinner.tasks.BuscarRestaurantesProximos;
 
 public class TelaInicialActivity extends AppCompatActivity {
 
@@ -23,6 +26,9 @@ public class TelaInicialActivity extends AppCompatActivity {
     private RecyclerView mCategorias;
     private RecyclerView mListaRestaurantes;
     private TextView txtEnderecoEntrega;
+
+    public static ArrayList<Categoria> categorias;
+    public static ArrayList<Restaurante> restaurantes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,58 +47,42 @@ public class TelaInicialActivity extends AppCompatActivity {
         mCategorias.setLayoutManager(horizontalLayoutManagerCategoria );
         mListaRestaurantes.setLayoutManager(verticalLayoutManagerRestaurante);
 
-        List<Restaurante> restaurantes = new ArrayList<>();
+        try {
+            BuscarRestaurantesProximos RestaurantesProximos = new BuscarRestaurantesProximos();
+            RestaurantesProximos.execute().get();
 
-        Restaurante r = new Restaurante();
-        r.setNome("Burger King");
-        r.setRank(1);
-        r.setAvaliacao(4.8);
-        r.setDistancia(3.2);
-        r.setPreco(8.00);
-        r.setTempo("30 - 40");
-        r.setDescricao("Lanches e Bebidas");
-        r.setUrlImage("https://upload.wikimedia.org/wikipedia/pt/thumb/c/cf/Logotipo_do_Burger_King.svg/1024px-Logotipo_do_Burger_King.svg.png");
-        restaurantes.add(r);
+            BuscarCategorias mBuscarCategorias = new BuscarCategorias();
+            mBuscarCategorias.execute().get();
 
-        RestaurantesProximosAdapter mAdapter = new RestaurantesProximosAdapter(restaurantes, this, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        RestaurantesProximosAdapter mAdapter1 = new RestaurantesProximosAdapter(restaurantes, this, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {
 
             }
         });
-        mRestaurantesProximos.setAdapter(mAdapter);
-
-        List<Categoria> categorias = new ArrayList<>();
-        Categoria c = new Categoria();
-        c.setNome("Salgados");
-        c.setUrlImage("https://www.bralyx.com/imagens/informacoes/maquina-fazer-salgados-valor-06.jpg");
-        categorias.add(c);
-
         CategoriasAdapter mAdapter2 = new CategoriasAdapter(categorias, this, new CategoriasAdapter.CategoriaOnClickListener() {
             @Override
             public void onClickCategoria(View view, int index) {
 
             }
         });
-        mCategorias.setAdapter(mAdapter2);
-
-        Restaurante r2 = new Restaurante();
-        r2.setNome("Mac Donnalds");
-        r2.setRank(2);
-        r2.setAvaliacao(4.5);
-        r2.setDistancia(2.4);
-        r2.setPreco(5.00);
-        r2.setTempo("20 - 30");
-        r2.setDescricao("Salgados e Bebidas");
-        r2.setUrlImage("https://pbs.twimg.com/profile_images/1150268408287698945/x4f3ITmx.png");
-        restaurantes.add(r2);
-
         ListaRestaurantes mAdapter3 = new ListaRestaurantes(restaurantes, this, new ListaRestaurantes.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {
 
             }
         });
+
+        mRestaurantesProximos.setAdapter(mAdapter1);
+        mCategorias.setAdapter(mAdapter2);
         mListaRestaurantes.setAdapter(mAdapter3);
     }
 }

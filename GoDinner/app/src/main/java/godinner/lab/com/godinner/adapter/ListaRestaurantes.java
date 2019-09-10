@@ -46,7 +46,9 @@ public class ListaRestaurantes extends RecyclerView.Adapter<ListaRestaurantes.Re
     public void onBindViewHolder(@NonNull RestauranteViewHolder restauranteViewHolder, final int i) {
         Restaurante r = mRestaurantes.get(i);
         restauranteViewHolder.nome.setText(r.getNome());
-        restauranteViewHolder.rank.setText(r.getRank()+"º mais visitado.");
+        if (r.getRank() != null){
+            restauranteViewHolder.rank.setText(r.getRank()+"º mais visitado.");
+        }
         restauranteViewHolder.avaliacao.setText(r.getAvaliacao().toString());
         restauranteViewHolder.distancia.setText(r.getDistancia()+" Km");
         restauranteViewHolder.preco.setText("R$ "+r.getPreco());
