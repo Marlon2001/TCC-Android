@@ -53,7 +53,6 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
             @Override
             public void onClick(View v) {
                 mCategoriaOnClickListener.onClickCategoria(v, i);
-                // codigo aqui...
             }
         });
 

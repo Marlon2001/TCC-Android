@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.dao.CidadeEstadoDAO;
+import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Cidade;
 import godinner.lab.com.godinner.model.Estado;
 import godinner.lab.com.godinner.tasks.BuscarCidades;
@@ -30,7 +31,9 @@ public class SplashActivity extends Activity {
 
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.imageView));
 
+        final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(SplashActivity.this);
         final CidadeEstadoDAO mCidadeEstadoDAO = new CidadeEstadoDAO(SplashActivity.this);
+
 //
 //        if(!mCidadeEstadoDAO.EstadoAlreadyPopuled()) {
 //            try {

@@ -53,7 +53,6 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
             @Override
             public void onClick(View v) {
                 mRestauranteOnClickListener.onClickRestaurante(v, i);
-                // codigo aqui...
             }
         });
 

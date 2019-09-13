@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Endereco implements Serializable {
 
+    private Integer idEstado;
     private String cep;
     private String numero;
     private String referencia;
@@ -12,6 +13,33 @@ public class Endereco implements Serializable {
     private String bairro;
     private int cidade;
     private int estado;
+
+    private String cidadeNome;
+    private String estadoNome;
+
+    public String getCidadeNome() {
+        return cidadeNome;
+    }
+
+    public void setCidadeNome(String cidadeNome) {
+        this.cidadeNome = cidadeNome;
+    }
+
+    public String getEstadoNome() {
+        return estadoNome;
+    }
+
+    public void setEstadoNome(String estadoNome) {
+        this.estadoNome = estadoNome;
+    }
+
+    public void setIdEstado(Integer idEstado) {
+        this.idEstado = idEstado;
+    }
+
+    public Integer getIdEstado() {
+        return idEstado;
+    }
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;

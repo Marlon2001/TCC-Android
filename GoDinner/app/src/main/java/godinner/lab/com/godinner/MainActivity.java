@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ViewUtils;
@@ -27,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.CadastroUsuario;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private LoginButton loginButton;
     public static final String ipServidor = "10.107.144.15:8080";
+    public static String statusLogin = "";
 
     private TextView txtEmail;
     private TextView txtSenha;
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.txt_email);
         txtSenha = findViewById(R.id.txt_password);
         txtEmailLayout = findViewById(R.id.txt_email_layout);
-        txtSenhaLayout = findViewById(R.id.txt_senha_layout);
+        txtSenhaLayout = findViewById(R.id.txt_password_layout);
 
         checkLoginStatus();
 
@@ -72,8 +75,34 @@ public class MainActivity extends AppCompatActivity {
                     login.setEmail(txtEmail.getText().toString());
                     login.setSenha(txtSenha.getText().toString());
 
-                    LoginUsuario mLogin = new LoginUsuario(login);
-                    mLogin.execute();
+                    final AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                    final View mView = getLayoutInflater().inflate(R.layout.loading_dialog, null);
+
+                    mBuilder.setView(mView);
+                    final AlertDialog dialog = mBuilder.create();
+                    dialog.show();
+
+                    try {
+                        LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
+                        mLogin.execute();
+                        mLogin.get();
+
+                        dialog.dismiss();
+                        if(statusLogin.equals("Logou")){
+                            Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
+                            startActivity(abrirTelaInicial);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        } else if(statusLogin.equals("Não cadastrado")){
+                            new AlertDialog.Builder(getApplicationContext())
+                                    .setMessage("Usuário ou senha incorretos.")
+                                    .setNeutralButton("Fechar", null)
+                                    .show();
+
+                        }
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    dialog.dismiss();
                 }
             }
         });
@@ -81,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent abrirCadastro = new Intent(getApplicationContext(), TelaInicialActivity.class);
+                Intent abrirCadastro = new Intent(getApplicationContext(), Cadastro1Activity.class);
                 startActivity(abrirCadastro);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }

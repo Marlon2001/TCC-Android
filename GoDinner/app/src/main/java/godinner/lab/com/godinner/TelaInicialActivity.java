@@ -5,15 +5,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.adapter.CategoriasAdapter;
-import godinner.lab.com.godinner.adapter.ListaRestaurantes;
+import godinner.lab.com.godinner.adapter.ListaRestaurantesAdapter;
 import godinner.lab.com.godinner.adapter.RestaurantesProximosAdapter;
 import godinner.lab.com.godinner.model.Categoria;
 import godinner.lab.com.godinner.model.Restaurante;
@@ -29,6 +27,7 @@ public class TelaInicialActivity extends AppCompatActivity {
 
     public static ArrayList<Categoria> categorias;
     public static ArrayList<Restaurante> restaurantes;
+    public static ArrayList<Restaurante> restaurantesProximos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +52,11 @@ public class TelaInicialActivity extends AppCompatActivity {
 
             BuscarCategorias mBuscarCategorias = new BuscarCategorias();
             mBuscarCategorias.execute().get();
-
-
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
 
         RestaurantesProximosAdapter mAdapter1 = new RestaurantesProximosAdapter(restaurantes, this, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
             @Override
@@ -74,7 +70,7 @@ public class TelaInicialActivity extends AppCompatActivity {
 
             }
         });
-        ListaRestaurantes mAdapter3 = new ListaRestaurantes(restaurantes, this, new ListaRestaurantes.RestauranteOnClickListener() {
+        ListaRestaurantesAdapter mAdapter3 = new ListaRestaurantesAdapter(restaurantes, this, new ListaRestaurantesAdapter.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {
 

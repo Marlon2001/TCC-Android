@@ -22,13 +22,13 @@ import java.util.List;
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Restaurante;
 
-public class ListaRestaurantes extends RecyclerView.Adapter<ListaRestaurantes.RestauranteViewHolder> {
+public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaurantesAdapter.RestauranteViewHolder> {
 
     private List<Restaurante> mRestaurantes;
     private Context context;
     private RestauranteOnClickListener mRestauranteOnClickListener;
 
-    public ListaRestaurantes(List<Restaurante> mRestaurantes, Context context, RestauranteOnClickListener mRestauranteOnClickListener) {
+    public ListaRestaurantesAdapter(List<Restaurante> mRestaurantes, Context context, RestauranteOnClickListener mRestauranteOnClickListener) {
         this.mRestaurantes = mRestaurantes;
         this.context = context;
         this.mRestauranteOnClickListener = mRestauranteOnClickListener;
@@ -54,6 +54,7 @@ public class ListaRestaurantes extends RecyclerView.Adapter<ListaRestaurantes.Re
         restauranteViewHolder.preco.setText("R$ "+r.getPreco());
         restauranteViewHolder.tempo.setText(r.getTempo() + " min");
         restauranteViewHolder.descricao.setText(r.getDescricao());
+        restauranteViewHolder.progressBar.setVisibility(View.VISIBLE);
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
 
         restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +105,7 @@ public class ListaRestaurantes extends RecyclerView.Adapter<ListaRestaurantes.Re
         @Override
         protected void onPostExecute(Drawable drawable) {
             mViewHolder.imgRestaurante.setImageDrawable(drawable);
-//            mViewHolder.progress.setVisibility(View.INVISIBLE);
+            mViewHolder.progressBar.setVisibility(View.INVISIBLE);
             super.onPostExecute(drawable);
         }
     }
@@ -120,6 +121,7 @@ public class ListaRestaurantes extends RecyclerView.Adapter<ListaRestaurantes.Re
         private TextView tempo;
         private TextView descricao;
         private ImageView imgRestaurante;
+        private ProgressBar progressBar;
 
         public RestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -132,6 +134,7 @@ public class ListaRestaurantes extends RecyclerView.Adapter<ListaRestaurantes.Re
             tempo = itemView.findViewById(R.id.tempo);
             descricao = itemView.findViewById(R.id.descricao);
             imgRestaurante = itemView.findViewById(R.id.image);
+            progressBar = itemView.findViewById(R.id.progressImage);
         }
     }
 }

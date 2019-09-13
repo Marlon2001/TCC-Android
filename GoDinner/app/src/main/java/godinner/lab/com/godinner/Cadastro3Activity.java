@@ -32,6 +32,7 @@ import godinner.lab.com.godinner.model.Contato;
 import godinner.lab.com.godinner.model.Endereco;
 import godinner.lab.com.godinner.model.Estado;
 import godinner.lab.com.godinner.tasks.CadastroUsuario;
+import godinner.lab.com.godinner.tasks.ConsultarCep;
 
 public class Cadastro3Activity extends AppCompatActivity {
 
@@ -58,6 +59,8 @@ public class Cadastro3Activity extends AppCompatActivity {
 
     private Cadastro cadastroIntent;
     private Contato contatoIntent;
+
+    public static Endereco endereco;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,32 @@ public class Cadastro3Activity extends AppCompatActivity {
         Intent intent = getIntent();
         cadastroIntent = (Cadastro) intent.getSerializableExtra("cadastro");
         contatoIntent = (Contato) intent.getSerializableExtra("contato");
+
+        spinnerEstado.setEnabled(false);
+//        spinnerEstado.setClickable(false);
+//        spinnerCidade.setClickable(false);
+        spinnerCidade.setEnabled(false);
+
+        txtCep.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    if(txtCep.getText().length() == 8) {
+                        try {
+                            ConsultarCep consultarCep = new ConsultarCep(txtCep.getText().toString());
+                            consultarCep.execute().get();
+
+                            txtLogradouro.setText(endereco.getLogradouro());
+                            txtBairro.setText(endereco.getBairro());
+                            spinnerEstado.setPrompt(endereco.getEstadoNome());
+                            spinnerCidade.setPrompt(endereco.getCidadeNome());
+                        } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
 
         btnFinalizar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -122,12 +122,25 @@
                 android:ellipsize="end"/>
         </LinearLayout>
     </LinearLayout>
-    <ImageView
-        android:id="@+id/image"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_weight="1.4"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_search1"
-        android:contentDescription="@string/lbl_logo_restaurante"/>
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/lbl_logo_restaurante"/>
+
+        <ProgressBar
+            android:id="@+id/progressImage"
+            style="@android:style/Widget.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"
+            android:gravity="center|center_vertical"
+            android:visibility="invisible" />
+    </FrameLayout>
 </LinearLayout>
