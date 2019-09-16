@@ -21,14 +21,15 @@ import java.util.List;
 
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Restaurante;
+import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaurantesAdapter.RestauranteViewHolder> {
 
-    private List<Restaurante> mRestaurantes;
+    private List<RestauranteExibicao> mRestaurantes;
     private Context context;
     private RestauranteOnClickListener mRestauranteOnClickListener;
 
-    public ListaRestaurantesAdapter(List<Restaurante> mRestaurantes, Context context, RestauranteOnClickListener mRestauranteOnClickListener) {
+    public ListaRestaurantesAdapter(List<RestauranteExibicao> mRestaurantes, Context context, RestauranteOnClickListener mRestauranteOnClickListener) {
         this.mRestaurantes = mRestaurantes;
         this.context = context;
         this.mRestauranteOnClickListener = mRestauranteOnClickListener;
@@ -44,16 +45,16 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
 
     @Override
     public void onBindViewHolder(@NonNull RestauranteViewHolder restauranteViewHolder, final int i) {
-        Restaurante r = mRestaurantes.get(i);
-        restauranteViewHolder.nome.setText(r.getNome());
-        if (r.getRank() != null){
-            restauranteViewHolder.rank.setText(r.getRank()+"º mais visitado.");
+        RestauranteExibicao r = mRestaurantes.get(i);
+        restauranteViewHolder.nome.setText(r.getRazaoSocial());
+        if (r.getNota() != null){
+            restauranteViewHolder.rank.setText(r.getNota()+"º mais visitado.");
         }
-        restauranteViewHolder.avaliacao.setText(r.getAvaliacao().toString());
+        restauranteViewHolder.avaliacao.setText(r.getNota().toString());
         restauranteViewHolder.distancia.setText(r.getDistancia()+" Km");
-        restauranteViewHolder.preco.setText("R$ "+r.getPreco());
-        restauranteViewHolder.tempo.setText(r.getTempo() + " min");
-        restauranteViewHolder.descricao.setText(r.getDescricao());
+        restauranteViewHolder.preco.setText("R$ "+r.getNota());
+        restauranteViewHolder.tempo.setText(r.getTempoEntrega() + " min");
+        restauranteViewHolder.descricao.setText(r.getRazaoSocial());
         restauranteViewHolder.progressBar.setVisibility(View.VISIBLE);
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
 
@@ -65,7 +66,7 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         });
 
         try{
-            URL urlImage = new URL(r.getUrlImage());
+            URL urlImage = new URL(r.getFoto());
 
             CarregaImage carregaImage = new CarregaImage();
             carregaImage.mViewHolder = restauranteViewHolder;

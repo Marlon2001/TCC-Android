@@ -21,14 +21,15 @@ import java.util.List;
 
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Restaurante;
+import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class RestaurantesProximosAdapter extends RecyclerView.Adapter<RestaurantesProximosAdapter.RestauranteViewHolder> {
 
-    private List<Restaurante> mRestaurantes;
+    private List<RestauranteExibicao> mRestaurantes;
     private Context context;
     private RestauranteOnClickListener mRestauranteOnClickListener;
 
-    public RestaurantesProximosAdapter(List<Restaurante> mRestaurantes, Context context, RestauranteOnClickListener mRestauranteOnClickListener) {
+    public RestaurantesProximosAdapter(List<RestauranteExibicao> mRestaurantes, Context context, RestauranteOnClickListener mRestauranteOnClickListener) {
         this.mRestaurantes = mRestaurantes;
         this.context = context;
         this.mRestauranteOnClickListener = mRestauranteOnClickListener;
@@ -47,7 +48,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
         Restaurante r = mRestaurantes.get(i);
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
         restauranteViewHolder.progress.setVisibility(View.VISIBLE);
-        restauranteViewHolder.txtRestaurante.setText(r.getNome());
+        restauranteViewHolder.txtRestaurante.setText(r.getRazaoSocial());
 
         restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +58,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
         });
 
         try{
-            URL urlImage = new URL(r.getUrlImage());
+            URL urlImage = new URL(r.getFoto());
 
             CarregaImage carregaImage = new CarregaImage();
             carregaImage.mViewHolder = restauranteViewHolder;

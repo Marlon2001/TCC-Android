@@ -18,15 +18,20 @@ import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.TelaInicialActivity;
 import godinner.lab.com.godinner.model.Categoria;
 import godinner.lab.com.godinner.model.Restaurante;
+import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class BuscarRestaurantesProximos extends AsyncTask {
 
-    private ArrayList<Restaurante> restaurantes;
+    private ArrayList<RestauranteExibicao> restaurantes;
+    private int idConsumidor;
+    public BuscarRestaurantesProximos(int idConsumidor){
+        this.idConsumidor = idConsumidor;
+    }
 
     @Override
     protected Object doInBackground(Object[] objects) {
         try{
-            URL url = new URL("http://"+ MainActivity.ipServidor+"/restaurante/proximos");
+            URL url = new URL("http://"+ MainActivity.ipServidor+"/todos/exibicao/"+idConsumidor);
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             InputStream inputStream = conexao.getInputStream();
@@ -43,13 +48,21 @@ public class BuscarRestaurantesProximos extends AsyncTask {
 
             JSONArray jsonArray = new JSONArray(dados);
             restaurantes = new ArrayList<>();
-            Restaurante restaurante;
+            RestauranteExibicao restaurante;
 
             for(int i = 0; i < jsonArray.length(); i++){
                 JSONObject mObject = (JSONObject) jsonArray.get(i);
-                restaurante = new Restaurante();
-                restaurante.setNome(mObject.getString("nome"));
-                restaurante.setUrlImage(mObject.getString("foto"));
+                restaurante = new RestauranteExibicao();
+
+                restaurante.setId(mObject.getInt("id"));
+                restaurante.setEmail(mObject.getString("email"));
+                restaurante.setFoto(mObject.getString("foto"));
+                restaurante.setRazaoSocial(mObject.getString("foto"));
+                restaurante.setTelefone(mObject.getString("telefone"));
+                restaurante.setDistancia(mObject.getString("distancia"));
+                restaurante.setTempoEntrega(mObject.getString("tempoEntrega"));
+                restaurante.setNota(mObject.getString("nota"));
+
                 restaurantes.add(restaurante);
             }
 
@@ -61,4 +74,5 @@ public class BuscarRestaurantesProximos extends AsyncTask {
         }
         return null;
     }
+
 }

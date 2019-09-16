@@ -70,18 +70,23 @@ public class LoginUsuario extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
+        JSONObject mObject;
 
-        JSONObject mObject = null;
         try {
             mObject = new JSONObject(s);
 
-            if(mObject.getString("error")!=null){
-                MainActivity.statusLogin = "Não cadastrado";
-            } else {
-                TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(context);
-                mTokenUsuarioDAO.salvarToken(mObject.getString("token"));
-                MainActivity.statusLogin = "Logou";
-            }
+//            if(mObject.getString("error")!=null){
+//                MainActivity.statusLogin = "Não cadastrado";
+//            } else {
+            TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(context);
+            mTokenUsuarioDAO.salvarToken(mObject.getString("token"));
+            MainActivity.statusLogin = "Logou";
+            MainActivity.token = mObject.getString("token");
+
+
+
+
+//            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

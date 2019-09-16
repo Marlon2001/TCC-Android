@@ -30,12 +30,16 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
+import godinner.lab.com.godinner.dao.ConsumidorDAO;
+import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
+import godinner.lab.com.godinner.tasks.BuscarConsumidor;
 import godinner.lab.com.godinner.tasks.CadastroUsuario;
 import godinner.lab.com.godinner.tasks.LoginUsuario;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static String token ;
     private MaterialButton btnLogar;
     private MaterialButton btnCadastrar;
     private CallbackManager callbackManager;
@@ -83,13 +87,23 @@ public class MainActivity extends AppCompatActivity {
                     dialog.show();
 
                     try {
+                        //fazendo login do consumidor
                         LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
-                        mLogin.execute();
-                        mLogin.get();
+                        mLogin.execute().get();
+
+                        //buscando consumidor
+                        BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token);
+                        Consumidor mConsumidorLogado = (Consumidor) mBuscarConsumidor.execute().get();
+
+                        //salvando consumidor logado
+                        ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(MainActivity.this);
+                        mConsumidorDAO.salvarConsumidorLogado(mConsumidorLogado);
+
 
                         dialog.dismiss();
                         if(statusLogin.equals("Logou")){
                             Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
+
                             startActivity(abrirTelaInicial);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else if(statusLogin.equals("Não cadastrado")){

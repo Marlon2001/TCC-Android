@@ -1,77 +1,67 @@
 package godinner.lab.com.godinner.model;
 
 public class Restaurante {
+    private Integer id;
+    private String email;
+    private String razaoSocial;
+    private String cnpj;
+    private String telefone;
+    private int idEndereco;
+    private String foto;
 
-    private String nome;
-    private Integer rank;
-    private Double avaliacao;
-    private Double distancia;
-    private Double preco;
-    private String tempo;
-    private String descricao;
-    private String urlImage;
-
-    public String getNome() {
-        return nome;
+    public Integer getId() {
+        return id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Integer getRank() {
-        return rank;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRank(Integer rank) {
-        this.rank = rank;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Double getAvaliacao() {
-        return avaliacao;
+    public String getRazaoSocial() {
+        return razaoSocial;
     }
 
-    public void setAvaliacao(Double avaliacao) {
-        this.avaliacao = avaliacao;
+    public void setRazaoSocial(String razaoSocial) {
+        this.razaoSocial = razaoSocial;
     }
 
-    public Double getDistancia() {
-        return distancia;
+    public String getCnpj() {
+        return cnpj;
     }
 
-    public void setDistancia(Double distancia) {
-        this.distancia = distancia;
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
-    public Double getPreco() {
-        return preco;
+    public String getTelefone() {
+        return telefone;
     }
 
-    public void setPreco(Double preco) {
-        this.preco = preco;
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
-    public String getTempo() {
-        return tempo;
+    public int getEndereco() {
+        return idEndereco;
     }
 
-    public void setTempo(String tempo) {
-        this.tempo = tempo;
+    public void setEndereco(int endereco) {
+        this.idEndereco = endereco;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getFoto() {
+        return foto;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getUrlImage() {
-        return urlImage;
-    }
-
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }
