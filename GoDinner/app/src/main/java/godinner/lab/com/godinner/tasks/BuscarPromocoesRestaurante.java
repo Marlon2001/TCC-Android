@@ -15,25 +15,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import godinner.lab.com.godinner.Cadastro3Activity;
 import godinner.lab.com.godinner.MainActivity;
-import godinner.lab.com.godinner.SplashActivity;
-import godinner.lab.com.godinner.model.Endereco;
-import godinner.lab.com.godinner.model.Estado;
+import godinner.lab.com.godinner.TelaRestaurante;
+import godinner.lab.com.godinner.model.Produto;
 
-public class ConsultarCep extends AsyncTask {
+public class BuscarPromocoesRestaurante extends AsyncTask {
 
-    private String cep;
-    private Endereco endereco;
+    private Integer idRestaurante;
+    private ArrayList<Produto> produtos;
 
-    public ConsultarCep(String cep) {
-        this.cep = cep;
+    public BuscarPromocoesRestaurante(Integer idRestaurante) {
+        this.idRestaurante = idRestaurante;
     }
 
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            URL url = new URL("http://"+MainActivity.ipServidor+"/endereco/cep/"+cep);
+            URL url = new URL("http://"+MainActivity.ipServidor+"/produto/promocao/todos/"+idRestaurante);
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("Content-Type", "application/json");
@@ -52,17 +50,24 @@ public class ConsultarCep extends AsyncTask {
                 dados = dados + linha;
             }
 
-            JSONObject mObject = new JSONObject(dados);
-            endereco = new Endereco();
-            endereco.setLogradouro(mObject.getString("logradouro"));
-            endereco.setBairro(mObject.getString("bairro"));
-            endereco.setCep(mObject.getString("cep"));
-            endereco.setCidade(mObject.getJSONObject("cidade").getInt("id"));
-            endereco.setCidadeNome(mObject.getJSONObject("cidade").getString("cidade"));
-            endereco.setEstado(mObject.getJSONObject("cidade").getJSONObject("estado").getInt("id"));
-            endereco.setEstadoNome(mObject.getJSONObject("cidade").getJSONObject("estado").getString("estado"));
+            JSONArray jsonArray = new JSONArray(dados);
+            produtos = new ArrayList<>();
+            Produto produto;
 
-            Cadastro3Activity.endereco = endereco;
+            for(int i = 0; i < jsonArray.length(); i++){
+                JSONObject mObject = (JSONObject) jsonArray.get(i);
+                produto = new Produto();
+                produto.setId(mObject.getInt("id"));
+                produto.setNome(mObject.getString("nome"));
+                produto.setPreco(mObject.getDouble("preco"));
+                produto.setDescricao(mObject.getString("descricao"));
+                produto.setDesconto(mObject.getString("desconto"));
+                produto.setVendidos(mObject.getInt("vendidos"));
+                produto.setStatus(mObject.getString("status"));
+                produtos.add(produto);
+            }
+
+            TelaRestaurante.mProdutosPromocao = produtos;
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
