@@ -42,7 +42,10 @@ public class TokenUsuarioDAO extends SQLiteOpenHelper {
         SQLiteDatabase dbWrite = getWritableDatabase();
 
         ContentValues dados = new ContentValues();
+
+        dados.put("id_token", 1);
         dados.put("token", token);
+        dados.put("validity", "atual");
 
         String[] params = {"atual"};
         dbWrite.update("tbl_token", dados, "validity = ?", params);

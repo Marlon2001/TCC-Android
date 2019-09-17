@@ -20,10 +20,11 @@ import java.util.ArrayList;
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.TelaInicialActivity;
 import godinner.lab.com.godinner.model.Restaurante;
+import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class RestaurantesMaisVisitados extends AsyncTask {
 
-    private ArrayList<Restaurante> restaurantes;
+    private ArrayList<RestauranteExibicao> restaurantes;
 
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -58,13 +59,13 @@ public class RestaurantesMaisVisitados extends AsyncTask {
 
             JSONArray jsonArray = new JSONArray(dados);
             restaurantes = new ArrayList<>();
-            Restaurante restaurante;
+            RestauranteExibicao restaurante;
 
             for (int i = 0; i < jsonArray.length(); i++){
                 JSONObject mObject = (JSONObject) jsonArray.get(i);
-                restaurante = new Restaurante();
-                restaurante.setNome(mObject.getString("nome"));
-                restaurante.setUrlImage(mObject.getString("foto"));
+                restaurante = new RestauranteExibicao();
+                restaurante.setRazaoSocial(mObject.getString("nome"));
+                restaurante.setFoto(mObject.getString("foto"));
                 restaurantes.add(restaurante);
             }
 

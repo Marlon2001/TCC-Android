@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.dao.ConsumidorDAO;
+import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.BuscarConsumidor;
@@ -40,12 +42,15 @@ import godinner.lab.com.godinner.tasks.LoginUsuario;
 public class MainActivity extends AppCompatActivity {
 
     public static String token ;
+    public  static Consumidor mConsumidorLogado;
+    public static  String erro;
     private MaterialButton btnLogar;
     private MaterialButton btnCadastrar;
     private CallbackManager callbackManager;
     private LoginButton loginButton;
     public static final String ipServidor = "10.107.144.15:8080";
     public static String statusLogin = "";
+
 
     private TextView txtEmail;
     private TextView txtSenha;
@@ -72,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
         checkLoginStatus();
 
         btnLogar.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
                 if(validarCampos()){
@@ -91,27 +98,36 @@ public class MainActivity extends AppCompatActivity {
                         LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
                         mLogin.execute().get();
 
+//                        TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(MainActivity.this);
+//                        mTokenUsuarioDAO.salvarToken(token);
+
                         //buscando consumidor
-                        BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token);
-                        Consumidor mConsumidorLogado = (Consumidor) mBuscarConsumidor.execute().get();
+                        BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGEuYSIsImV4cCI6MTU2ODc2MTQ4MSwiaWF0IjoxNTY4NzQzNDgxfQ.d9xM7e4RwOypK-KxlJBaEtVo_YDb94j4ngIkwa3gUvSxRIKgvWE3w2rGNAr_ti447cuI5RdFqXgYy6Pn-Imjbg");
+                        mBuscarConsumidor.execute().get();
 
-                        //salvando consumidor logado
-                        ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(MainActivity.this);
-                        mConsumidorDAO.salvarConsumidorLogado(mConsumidorLogado);
+                        // -*********
+                        if(erro !=null){
+                            Toast.makeText(MainActivity.this, "Não cadastrado", Toast.LENGTH_SHORT).show();
+                        }else{
+                            //salvando consumidor logado
+                            ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(MainActivity.this);
+
+                            mConsumidorDAO.salvarConsumidorLogado(mConsumidorLogado);
 
 
-                        dialog.dismiss();
-                        if(statusLogin.equals("Logou")){
-                            Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
+                            dialog.dismiss();
+                            if(statusLogin.equals("Logou")){
+                                Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
 
-                            startActivity(abrirTelaInicial);
-                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                        } else if(statusLogin.equals("Não cadastrado")){
-                            new AlertDialog.Builder(getApplicationContext())
-                                    .setMessage("Usuário ou senha incorretos.")
-                                    .setNeutralButton("Fechar", null)
-                                    .show();
+                                startActivity(abrirTelaInicial);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            } else if(statusLogin.equals("Não cadastrado")){
+                                new AlertDialog.Builder(getApplicationContext())
+                                        .setMessage("Usuário ou senha incorretos.")
+                                        .setNeutralButton("Fechar", null)
+                                        .show();
 
+                            }
                         }
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
