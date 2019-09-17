@@ -2,6 +2,7 @@ package godinner.lab.com.godinner.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +56,21 @@ public class LoginUsuario extends AsyncTask<Void, Void, String> {
 
             Scanner scanner = new Scanner(conexao.getInputStream());
             String resposta = scanner.nextLine();
+
+            JSONObject mObject = new JSONObject(resposta);
+
+            try {
+                MainActivity.statusLogin = "Logou";
+                MainActivity.token = mObject.getString("token");
+
+            } catch (JSONException e) {
+                try {
+                    String erro = mObject.getString("erro");
+                    MainActivity.erro = erro;
+                }catch (Exception e1){}
+            }
+
+
             return resposta;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -66,31 +82,5 @@ public class LoginUsuario extends AsyncTask<Void, Void, String> {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-        JSONObject mObject;
-
-        try {
-            mObject = new JSONObject(s);
-
-//            if(mObject.getString("error")!=null){
-//                MainActivity.statusLogin = "Não cadastrado";
-//            } else {
-            TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(context);
-            mTokenUsuarioDAO.salvarToken(mObject.getString("token"));
-            MainActivity.statusLogin = "Logou";
-            MainActivity.token = mObject.getString("token");
-
-
-
-
-//            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        super.onPostExecute(s);
     }
 }

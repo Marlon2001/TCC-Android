@@ -31,9 +31,15 @@ public class BuscarRestaurantesProximos extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try{
-            URL url = new URL("http://"+ MainActivity.ipServidor+"/todos/exibicao/"+idConsumidor);
+            URL url = new URL("http://"+ MainActivity.ipServidor+"/restaurante/todos/exibicao/"+idConsumidor);
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
+            conexao.setRequestProperty("token", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGEuYSIsImV4cCI6MTU2ODc2MTQ4MSwiaWF0IjoxNTY4NzQzNDgxfQ.d9xM7e4RwOypK-KxlJBaEtVo_YDb94j4ngIkwa3gUvSxRIKgvWE3w2rGNAr_ti447cuI5RdFqXgYy6Pn-Imjbg");
+            conexao.setRequestMethod("GET");
+            conexao.setDoInput(true);
+
+            conexao.connect();
+
             InputStream inputStream = conexao.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -55,9 +61,10 @@ public class BuscarRestaurantesProximos extends AsyncTask {
                 restaurante = new RestauranteExibicao();
 
                 restaurante.setId(mObject.getInt("id"));
-                restaurante.setEmail(mObject.getString("email"));
+//                restaurante.setEmail(mObject.getString("email"));
                 restaurante.setFoto(mObject.getString("foto"));
-                restaurante.setRazaoSocial(mObject.getString("foto"));
+                restaurante.setRazaoSocial(mObject.getString("razaoSocial"));
+
                 restaurante.setTelefone(mObject.getString("telefone"));
                 restaurante.setDistancia(mObject.getString("distancia"));
                 restaurante.setTempoEntrega(mObject.getString("tempoEntrega"));

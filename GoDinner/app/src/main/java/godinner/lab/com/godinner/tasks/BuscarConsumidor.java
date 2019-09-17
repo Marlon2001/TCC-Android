@@ -21,9 +21,9 @@ import godinner.lab.com.godinner.TelaInicialActivity;
 import godinner.lab.com.godinner.model.Categoria;
 import godinner.lab.com.godinner.model.Consumidor;
 
-public class BuscarConsumidor  extends AsyncTask {
+public class BuscarConsumidor  extends AsyncTask<Void, Void, Consumidor> {
     private String token;
-    private Consumidor mThisConsumidor = null;
+    private Consumidor mThisConsumidor = new Consumidor();
 
     public BuscarConsumidor(String token) {
         this.token = token;
@@ -32,27 +32,33 @@ public class BuscarConsumidor  extends AsyncTask {
 
     private ArrayList<Categoria> categorias;
 
+
+
+
     @Override
-    protected Object doInBackground(Object[] o) {
+    protected Consumidor doInBackground(Void... voids) {
         try {
-            JSONStringer jsonCadastro = new JSONStringer();
 
-            jsonCadastro.object();
-            jsonCadastro.key("token").value(this.token);
 
-            jsonCadastro.endObject();
+//            jsonCadastro.object();
+//            jsonCadastro.key("token").value(this.token);
+//            jsonCadastro.endObject();
 
             URL url = new URL("http://" + MainActivity.ipServidor + "/consumidor/este");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
-            conexao.setRequestProperty("Content-Type", "application/json");
-            conexao.setRequestProperty("Accept", "application/json");
-            conexao.setRequestMethod("POST");
+//            conexao.setRequestProperty("Content-Type", "application/json");
+
+            conexao.setRequestProperty("token", this.token);
+
+//            conexao.setRequestProperty("Accept", "application/json");
+            conexao.setRequestMethod("GET");
             conexao.setDoInput(true);
 
-            PrintStream outputStream = new PrintStream(conexao.getOutputStream());
-            outputStream.print(jsonCadastro);
+
+//            PrintStream outputStream = new PrintStream(conexao.getOutputStream());
+
 
             conexao.connect();
 
@@ -64,19 +70,21 @@ public class BuscarConsumidor  extends AsyncTask {
             String linha = "";
             String dados = "";
 
-            while (linha != null) {
-                linha = bufferedReader.readLine();
+            while (linha != null){
                 dados = dados + linha;
+                linha = bufferedReader.readLine();
             }
 
             JSONObject json = new JSONObject(dados);
 
             mThisConsumidor.setId(json.getInt("id"));
-            mThisConsumidor.setIdEndereco(json.getJSONObject("id_endereco").getInt("id"));
-            mThisConsumidor.setFotoPerfil(json.getString("foto"));
-            mThisConsumidor.setEmail(json.getString("foto"));
+            mThisConsumidor.setIdEndereco(json.getJSONObject("endereco").getInt("id"));
+            mThisConsumidor.setFotoPerfil(json.getString("fotoPerfil"));
+            mThisConsumidor.setEmail(json.getString("email"));
+            mThisConsumidor.setNome(json.getString("nome"));
+            MainActivity.mConsumidorLogado = mThisConsumidor;
 
-            TelaInicialActivity.categorias = categorias;
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -86,7 +94,6 @@ public class BuscarConsumidor  extends AsyncTask {
         return mThisConsumidor;
 
         }
-
 
 
 }
