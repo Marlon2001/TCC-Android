@@ -7,7 +7,6 @@ public class Consumidor {
     private String fotoPerfil;
     private int idEndereco;
 
-
     public int getId() {
         return id;
     }

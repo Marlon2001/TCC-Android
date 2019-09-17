@@ -34,7 +34,6 @@ public class TelaInicialActivity extends AppCompatActivity {
     private RecyclerView mListaRestaurantes;
     private TextView txtEnderecoEntrega;
 
-
     public static ArrayList<Categoria> categorias;
     public static ArrayList<RestauranteExibicao> restaurantes;
     public static ArrayList<RestauranteExibicao> restaurantesProximos;
@@ -54,7 +53,7 @@ public class TelaInicialActivity extends AppCompatActivity {
         LinearLayoutManager verticalLayoutManagerRestaurante = new LinearLayoutManager(TelaInicialActivity.this, LinearLayoutManager.VERTICAL, false);
 
         mRestaurantesProximos.setLayoutManager(horizontalLayoutManagerRestaurante);
-        mCategorias.setLayoutManager(horizontalLayoutManagerCategoria );
+        mCategorias.setLayoutManager(horizontalLayoutManagerCategoria);
         mListaRestaurantes.setLayoutManager(verticalLayoutManagerRestaurante);
 
         try {
@@ -141,7 +140,4 @@ public class TelaInicialActivity extends AppCompatActivity {
         mCategorias.setAdapter(categoriasAdapter);
 
     }
-
-
-
 }
