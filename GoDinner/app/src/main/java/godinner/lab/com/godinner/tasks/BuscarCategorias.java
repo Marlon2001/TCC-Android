@@ -21,13 +21,19 @@ import godinner.lab.com.godinner.model.Categoria;
 public class BuscarCategorias extends AsyncTask{
 
     private ArrayList<Categoria> categorias;
-    
+    private String token;
+
+    public BuscarCategorias(String token) {
+        this.token = token;
+    }
+
     @Override
     protected Object doInBackground(Object[] o) {
         try{
-            URL url = new URL("http://"+ MainActivity.ipServidor+"/categorias/todas");
+            URL url = new URL("http://"+ MainActivity.ipServidor+"/categoria/todos");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
+            conexao.setRequestProperty("token", token);
             InputStream inputStream = conexao.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);

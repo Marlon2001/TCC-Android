@@ -16,16 +16,17 @@ import java.util.ArrayList;
 
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.TelaInicialActivity;
-import godinner.lab.com.godinner.model.Categoria;
-import godinner.lab.com.godinner.model.Restaurante;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class BuscarRestaurantesProximos extends AsyncTask {
 
     private ArrayList<RestauranteExibicao> restaurantes;
-    private int idConsumidor;
-    public BuscarRestaurantesProximos(int idConsumidor){
+    private Integer idConsumidor;
+    private String token;
+
+    public BuscarRestaurantesProximos(Integer idConsumidor, String token) {
         this.idConsumidor = idConsumidor;
+        this.token = token;
     }
 
     @Override
@@ -34,10 +35,9 @@ public class BuscarRestaurantesProximos extends AsyncTask {
             URL url = new URL("http://"+ MainActivity.ipServidor+"/restaurante/todos/exibicao/"+idConsumidor);
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
-            conexao.setRequestProperty("token", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGEuYSIsImV4cCI6MTU2ODc2MTQ4MSwiaWF0IjoxNTY4NzQzNDgxfQ.d9xM7e4RwOypK-KxlJBaEtVo_YDb94j4ngIkwa3gUvSxRIKgvWE3w2rGNAr_ti447cuI5RdFqXgYy6Pn-Imjbg");
+            conexao.setRequestProperty("token", token);
             conexao.setRequestMethod("GET");
             conexao.setDoInput(true);
-
             conexao.connect();
 
             InputStream inputStream = conexao.getInputStream();
@@ -61,18 +61,14 @@ public class BuscarRestaurantesProximos extends AsyncTask {
                 restaurante = new RestauranteExibicao();
 
                 restaurante.setId(mObject.getInt("id"));
-//                restaurante.setEmail(mObject.getString("email"));
-                restaurante.setFoto(mObject.getString("foto"));
                 restaurante.setRazaoSocial(mObject.getString("razaoSocial"));
-
                 restaurante.setTelefone(mObject.getString("telefone"));
+                restaurante.setFoto(mObject.getString("foto"));
                 restaurante.setDistancia(mObject.getString("distancia"));
                 restaurante.setTempoEntrega(mObject.getString("tempoEntrega"));
                 restaurante.setNota(mObject.getString("nota"));
-
                 restaurantes.add(restaurante);
             }
-
             TelaInicialActivity.restaurantes = restaurantes;
         } catch (IOException e) {
             e.printStackTrace();
@@ -81,5 +77,4 @@ public class BuscarRestaurantesProximos extends AsyncTask {
         }
         return null;
     }
-
 }

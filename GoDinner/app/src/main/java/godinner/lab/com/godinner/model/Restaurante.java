@@ -1,6 +1,7 @@
 package godinner.lab.com.godinner.model;
 
 public class Restaurante {
+
     private Integer id;
     private String email;
     private String razaoSocial;

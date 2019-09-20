@@ -57,9 +57,9 @@ public class ConsultarCep extends AsyncTask {
             endereco.setLogradouro(mObject.getString("logradouro"));
             endereco.setBairro(mObject.getString("bairro"));
             endereco.setCep(mObject.getString("cep"));
-            endereco.setCidade(mObject.getJSONObject("cidade").getInt("id"));
+            endereco.setIdCidade(mObject.getJSONObject("cidade").getInt("id"));
             endereco.setCidadeNome(mObject.getJSONObject("cidade").getString("cidade"));
-            endereco.setEstado(mObject.getJSONObject("cidade").getJSONObject("estado").getInt("id"));
+            endereco.setIdEstado(mObject.getJSONObject("cidade").getJSONObject("estado").getInt("id"));
             endereco.setEstadoNome(mObject.getJSONObject("cidade").getJSONObject("estado").getString("estado"));
 
             Cadastro3Activity.endereco = endereco;

@@ -1,18 +1,30 @@
 package godinner.lab.com.godinner.model;
 
 public class Consumidor {
-    private int id;
+
+    private int idConsumidor;
+    private int idServidor;
     private String nome;
     private String email;
+    private String cpf;
+    private String telefone;
     private String fotoPerfil;
-    private int idEndereco;
+    private Endereco endereco;
 
-    public int getId() {
-        return id;
+    public int getIdConsumidor() {
+        return idConsumidor;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdConsumidor(int idConsumidor) {
+        this.idConsumidor = idConsumidor;
+    }
+
+    public int getIdServidor() {
+        return idServidor;
+    }
+
+    public void setIdServidor(int idServidor) {
+        this.idServidor = idServidor;
     }
 
     public String getNome() {
@@ -31,6 +43,22 @@ public class Consumidor {
         this.email = email;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
     public String getFotoPerfil() {
         return fotoPerfil;
     }
@@ -39,11 +67,11 @@ public class Consumidor {
         this.fotoPerfil = fotoPerfil;
     }
 
-    public int getIdEndereco() {
-        return idEndereco;
+    public Endereco getEndereco() {
+        return endereco;
     }
 
-    public void setIdEndereco(int idEndereco) {
-        this.idEndereco = idEndereco;
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
 }

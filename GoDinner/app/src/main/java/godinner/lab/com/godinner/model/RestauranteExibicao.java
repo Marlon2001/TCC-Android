@@ -2,7 +2,8 @@ package godinner.lab.com.godinner.model;
 
 import java.io.Serializable;
 
-public class RestauranteExibicao extends Restaurante implements Serializable{
+public class RestauranteExibicao extends Restaurante implements Serializable {
+
     private String distancia;
     private String tempoEntrega;
     private String precoEntrega;

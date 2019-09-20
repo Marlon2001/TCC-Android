@@ -19,12 +19,16 @@ import java.util.ArrayList;
 
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.TelaInicialActivity;
-import godinner.lab.com.godinner.model.Restaurante;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class RestaurantesMaisVisitados extends AsyncTask {
 
     private ArrayList<RestauranteExibicao> restaurantes;
+    private String token;
+
+    public RestaurantesMaisVisitados(String token) {
+        this.token = token;
+    }
 
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -37,6 +41,7 @@ public class RestaurantesMaisVisitados extends AsyncTask {
             URL url = new URL("http://"+MainActivity.ipServidor+"/restaurantes/proximo");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
+            conexao.setRequestProperty("token", token);
             conexao.setRequestProperty("Content-Type", "application/json");
             conexao.setRequestProperty("Accept", "application/json");
             conexao.setRequestMethod("POST");

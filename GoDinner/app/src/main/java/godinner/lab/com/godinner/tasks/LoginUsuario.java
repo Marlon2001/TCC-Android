@@ -2,7 +2,6 @@ package godinner.lab.com.godinner.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,10 +16,9 @@ import java.net.URL;
 import java.util.Scanner;
 
 import godinner.lab.com.godinner.MainActivity;
-import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Login;
 
-public class LoginUsuario extends AsyncTask<Void, Void, String> {
+public class LoginUsuario extends AsyncTask {
 
     private Login login;
     private Context context;
@@ -31,7 +29,7 @@ public class LoginUsuario extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Void... voids) {
+    protected Object doInBackground(Object[] objects) {
         JSONStringer jsonLogin = new JSONStringer();
 
         try {
@@ -60,18 +58,13 @@ public class LoginUsuario extends AsyncTask<Void, Void, String> {
             JSONObject mObject = new JSONObject(resposta);
 
             try {
-                MainActivity.statusLogin = "Logou";
                 MainActivity.token = mObject.getString("token");
-
             } catch (JSONException e) {
                 try {
                     String erro = mObject.getString("erro");
                     MainActivity.erro = erro;
-                }catch (Exception e1){}
+                }catch (JSONException e1){}
             }
-
-
-            return resposta;
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ProtocolException e) {

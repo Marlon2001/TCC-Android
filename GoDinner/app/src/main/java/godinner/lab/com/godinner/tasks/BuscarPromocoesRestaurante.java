@@ -61,7 +61,7 @@ public class BuscarPromocoesRestaurante extends AsyncTask {
                 produto.setNome(mObject.getString("nome"));
                 produto.setPreco(mObject.getDouble("preco"));
                 produto.setDescricao(mObject.getString("descricao"));
-                produto.setDesconto(mObject.getString("desconto"));
+                produto.setDesconto(mObject.getDouble("desconto"));
                 produto.setVendidos(mObject.getInt("vendidos"));
                 produto.setStatus(mObject.getString("status"));
                 produtos.add(produto);

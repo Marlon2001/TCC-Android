@@ -105,7 +105,6 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
     }
 
     protected class RestauranteViewHolder extends RecyclerView.ViewHolder {
-
         private ImageView imgRestaurante;
         private TextView txtRestaurante;
         private ProgressBar progress;

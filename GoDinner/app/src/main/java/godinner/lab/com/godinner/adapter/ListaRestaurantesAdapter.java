@@ -112,7 +112,6 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
     }
 
     protected class RestauranteViewHolder extends RecyclerView.ViewHolder {
-
         private TextView nome;
         private TextView rank;
         private TextView avaliacao;

@@ -132,8 +132,8 @@ public class Cadastro3Activity extends AppCompatActivity {
                     e.setBairro(txtBairro.getText().toString());
                     Cidade cidade = (Cidade) spinnerCidade.getSelectedItem();
                     Estado estado = (Estado) spinnerEstado.getSelectedItem();
-                    e.setCidade(cidade.getIdCidade());
-                    e.setEstado(estado.getIdEstado());
+                    e.setIdCidade(cidade.getIdCidade());
+                    e.setIdEstado(estado.getIdEstado());
 
                     final AlertDialog.Builder mBuilder = new AlertDialog.Builder(Cadastro3Activity.this);
                     final View mView = getLayoutInflater().inflate(R.layout.loading_dialog, null);

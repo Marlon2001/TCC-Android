@@ -51,7 +51,7 @@ public class CadastroUsuario extends AsyncTask {
                     .key("complemento").value(endereco.getComplemento())
                     .key("referencia").value(endereco.getReferencia())
                     .key("cidade").object()
-                        .key("id").value(endereco.getCidade())
+                        .key("id").value(endereco.getIdCidade())
                     .endObject()
             .endObject();
             jsonCadastro.endObject();
