@@ -10,8 +10,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Produto;
-import godinner.lab.com.godinner.model.Restaurante;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 import godinner.lab.com.godinner.tasks.BuscarPromocoesRestaurante;
 
@@ -43,7 +43,7 @@ public class TelaRestaurante extends AppCompatActivity {
         RestauranteExibicao mRestaurante = (RestauranteExibicao) mIntent.getSerializableExtra("restaurante");
 
         txtRestaurante.setText(mRestaurante.getRazaoSocial());
-        txtPreco.setText(mRestaurante.getPrecoEntrega()+"R% 5,00");
+        txtPreco.setText("R$ "+mRestaurante.getPrecoEntrega());
         txtEntrega.setText(mRestaurante.getTempoEntrega());
         txtAvaliacao.setText(mRestaurante.getNota());
 
@@ -51,7 +51,9 @@ public class TelaRestaurante extends AppCompatActivity {
         mPromocoes.setLayoutManager(linearLayoutManagerHorizontal);
 
         try {
-            BuscarPromocoesRestaurante mPromocoesRestaurante = new BuscarPromocoesRestaurante(mRestaurante.getId());
+            TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(TelaRestaurante.this);
+            String token = mTokenUsuarioDAO.consultarToken();
+            BuscarPromocoesRestaurante mPromocoesRestaurante = new BuscarPromocoesRestaurante(mRestaurante.getId(), token);
             mPromocoesRestaurante.execute().get();
 
 
@@ -60,5 +62,11 @@ public class TelaRestaurante extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        super.onBackPressed();
     }
 }

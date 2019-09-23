@@ -1,6 +1,7 @@
 package godinner.lab.com.godinner.tasks;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,11 +22,13 @@ import godinner.lab.com.godinner.model.Produto;
 
 public class BuscarPromocoesRestaurante extends AsyncTask {
 
-    private Integer idRestaurante;
+    private int idRestaurante;
+    private String token;
     private ArrayList<Produto> produtos;
 
-    public BuscarPromocoesRestaurante(Integer idRestaurante) {
+    public BuscarPromocoesRestaurante(int idRestaurante, String token) {
         this.idRestaurante = idRestaurante;
+        this.token = token;
     }
 
     @Override
@@ -36,6 +39,7 @@ public class BuscarPromocoesRestaurante extends AsyncTask {
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("Content-Type", "application/json");
             conexao.setRequestProperty("Accept", "application/json");
+            conexao.setRequestProperty("token", token);
             conexao.setDoInput(true);
 
             InputStream inputStream = conexao.getInputStream();

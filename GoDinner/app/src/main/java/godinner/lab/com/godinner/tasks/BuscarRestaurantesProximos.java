@@ -1,6 +1,7 @@
 package godinner.lab.com.godinner.tasks;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +37,6 @@ public class BuscarRestaurantesProximos extends AsyncTask {
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("token", token);
-            conexao.setRequestMethod("GET");
             conexao.setDoInput(true);
             conexao.connect();
 
@@ -63,13 +63,14 @@ public class BuscarRestaurantesProximos extends AsyncTask {
                 restaurante.setId(mObject.getInt("id"));
                 restaurante.setRazaoSocial(mObject.getString("razaoSocial"));
                 restaurante.setTelefone(mObject.getString("telefone"));
+                restaurante.setPrecoEntrega(mObject.getDouble("valorEntrega"));
                 restaurante.setFoto(mObject.getString("foto"));
                 restaurante.setDistancia(mObject.getString("distancia"));
                 restaurante.setTempoEntrega(mObject.getString("tempoEntrega"));
                 restaurante.setNota(mObject.getString("nota"));
                 restaurantes.add(restaurante);
             }
-            TelaInicialActivity.restaurantes = restaurantes;
+            TelaInicialActivity.restaurantesProximos = restaurantes;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

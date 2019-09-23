@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,8 @@ public class TelaInicialActivity extends AppCompatActivity {
             ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(this);
             Consumidor c = mConsumidorDAO.consultarConsumidor();
 
+            txtEnderecoEntrega.setText(c.getEndereco().getLogradouro() + ", " +c.getEndereco().getNumero());
+
             TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
             String token = mTokenUsuarioDAO.consultarToken();
 
@@ -66,8 +69,8 @@ public class TelaInicialActivity extends AppCompatActivity {
             BuscarCategorias mBuscarCategorias = new BuscarCategorias(token);
             mBuscarCategorias.execute().get();
 
-            RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(token);
-            mRestaurantesMaisVisitados.execute();
+//            RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(token);
+//            mRestaurantesMaisVisitados.execute();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -80,14 +83,19 @@ public class TelaInicialActivity extends AppCompatActivity {
         super.onResume();
         popularRestaurantesProximos();
         popularCategorias();
-        popularListaDeRestaurantes();
+//        popularListaDeRestaurantes();
     }
 
     private void popularRestaurantesProximos(){
         RestaurantesProximosAdapter mRestaurantesProximosAdapter = new RestaurantesProximosAdapter(restaurantesProximos, this, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {
-                Toast.makeText(TelaInicialActivity.this, "Clicou no restaurante "+index, Toast.LENGTH_SHORT).show();
+                Intent abrirTelaRestaurante = new Intent(TelaInicialActivity.this, TelaRestaurante.class);
+                RestauranteExibicao restauranteExibicao = restaurantesProximos.get(index);
+
+                abrirTelaRestaurante.putExtra("restaurante", restauranteExibicao);
+                startActivity(abrirTelaRestaurante);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         mRestaurantesProximos.setAdapter(mRestaurantesProximosAdapter);

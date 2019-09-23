@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 
@@ -31,7 +34,7 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
 
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.imageView));
-
+        StartActivity();
 
 //        final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(SplashActivity.this);
 //        final CidadeEstadoDAO mCidadeEstadoDAO = new CidadeEstadoDAO(SplashActivity.this);
@@ -60,6 +63,16 @@ public class SplashActivity extends Activity {
 //                e.printStackTrace();
 //            }
 //        }
+    }
+
+    private void StartActivity(){
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
+        anim.reset();
+        RelativeLayout r = findViewById(R.id.splash);
+        if (r != null) {
+            r.clearAnimation();
+            r.startAnimation(anim);
+        }
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -67,9 +80,8 @@ public class SplashActivity extends Activity {
             public void run() {
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                finish();
+                SplashActivity.this.finish();
             }
-        }, 1000);
+        }, 2000);
     }
 }

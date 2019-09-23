@@ -58,12 +58,11 @@ public class LoginUsuario extends AsyncTask {
             JSONObject mObject = new JSONObject(resposta);
 
             try {
-                MainActivity.token = mObject.getString("token");
+                if(mObject.getString("token") != null)
+                    MainActivity.token = mObject.getString("token");
             } catch (JSONException e) {
-                try {
-                    String erro = mObject.getString("erro");
-                    MainActivity.erro = erro;
-                }catch (JSONException e1){}
+                if(mObject.getString("error") != null)
+                    MainActivity.erro = "nao cadastrado";
             }
         } catch (JSONException e) {
             e.printStackTrace();

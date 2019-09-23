@@ -2,7 +2,7 @@ package godinner.lab.com.godinner.model;
 
 public class Restaurante {
 
-    private Integer id;
+    private int id;
     private String email;
     private String razaoSocial;
     private String cnpj;
@@ -10,12 +10,13 @@ public class Restaurante {
     private int idEndereco;
     private String foto;
 
-    public Integer getId() {
-        return id;
+
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public int getId() {
+        return id;
     }
 
     public String getEmail() {

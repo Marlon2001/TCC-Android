@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,28 +75,23 @@ public class MainActivity extends AppCompatActivity {
         btnLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                erro = null;
+                token = null;
                 if(validarCampos()){
                     Login login = new Login();
                     login.setEmail(txtEmail.getText().toString());
                     login.setSenha(txtSenha.getText().toString());
-
-                    final AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-                    final View mView = getLayoutInflater().inflate(R.layout.loading_dialog, null);
-
-                    mBuilder.setView(mView);
-                    final AlertDialog dialog = mBuilder.create();
-                    dialog.show();
-                    dialog.dismiss();
 
                     try {
                         LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
                         mLogin.execute().get();
 
                         if(erro != null){
-//                            new AlertDialog.Builder(getApplicationContext())
-//                                    .setMessage("Usuário ou senha incorretos.")
-//                                    .setNeutralButton("Fechar", null)
-//                                    .show();
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Erro no login.")
+                                    .setMessage("Usuário ou senha incorretos.")
+                                    .setPositiveButton("Fechar", null)
+                                    .show();
                         } else {
                             TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(getApplicationContext());
                             mTokenUsuarioDAO.salvarToken(token);
@@ -111,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
                             startActivity(abrirTelaInicial);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            MainActivity.this.finish();
                         }
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
