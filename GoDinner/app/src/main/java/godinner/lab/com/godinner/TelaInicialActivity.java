@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -63,7 +64,7 @@ public class TelaInicialActivity extends AppCompatActivity {
             TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
             String token = mTokenUsuarioDAO.consultarToken();
 
-            BuscarRestaurantesProximos mRestaurantesProximos = new BuscarRestaurantesProximos(2, token);
+            BuscarRestaurantesProximos mRestaurantesProximos = new BuscarRestaurantesProximos(c.getIdServidor(), token);
             mRestaurantesProximos.execute().get();
 
             BuscarCategorias mBuscarCategorias = new BuscarCategorias(token);
@@ -81,12 +82,12 @@ public class TelaInicialActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        popularRestaurantesProximos();
-        popularCategorias();
-//        popularListaDeRestaurantes();
+        mAdapterRestaurantesProximos();
+        mAdapterCategorias();
+//        mAdapterListaDeRestaurantes();
     }
 
-    private void popularRestaurantesProximos(){
+    private void mAdapterRestaurantesProximos(){
         RestaurantesProximosAdapter mRestaurantesProximosAdapter = new RestaurantesProximosAdapter(restaurantesProximos, this, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {
@@ -101,7 +102,7 @@ public class TelaInicialActivity extends AppCompatActivity {
         mRestaurantesProximos.setAdapter(mRestaurantesProximosAdapter);
     }
 
-    private void popularCategorias(){
+    private void mAdapterCategorias(){
         CategoriasAdapter categoriasAdapter = new CategoriasAdapter(categorias, this, new CategoriasAdapter.CategoriaOnClickListener() {
             @Override
             public void onClickCategoria(View view, int index) {
@@ -111,7 +112,7 @@ public class TelaInicialActivity extends AppCompatActivity {
         mCategorias.setAdapter(categoriasAdapter);
     }
 
-    private void popularListaDeRestaurantes(){
+    private void mAdapterListaDeRestaurantes(){
         ListaRestaurantesAdapter mRestaurantesAdapter = new ListaRestaurantesAdapter(restaurantes, this, new ListaRestaurantesAdapter.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {

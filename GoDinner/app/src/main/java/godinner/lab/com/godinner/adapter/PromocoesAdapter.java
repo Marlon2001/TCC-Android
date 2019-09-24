@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,8 +50,10 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
         promocoesViewholder.imgProduto.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
         promocoesViewholder.progress.setVisibility(View.VISIBLE);
         promocoesViewholder.txtProduto.setText(p.getNome());
-        promocoesViewholder.txtPrecoAntigo.setText("7,00");
-        promocoesViewholder.txtPrecoNovo.setText("5,00");
+        promocoesViewholder.txtPrecoAntigo.setText(Html.fromHtml("<del>R$ "+p.getPreco()+"</del>"));
+
+        Double desconto = p.getPreco() * (p.getDesconto()/100);
+        promocoesViewholder.txtPrecoNovo.setText((p.getPreco()-desconto)+"");
 
         promocoesViewholder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +63,7 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
         });
 
         try{
-            URL urlImage = new URL("");
+            URL urlImage = new URL(p.getFotos().get(0).getFoto());
 
             CarregaImage carregaImage = new CarregaImage();
             carregaImage.mViewHolder = promocoesViewholder;

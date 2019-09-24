@@ -1,6 +1,8 @@
 package godinner.lab.com.godinner.model;
 
-public class Restaurante {
+import java.io.Serializable;
+
+public class Restaurante implements Serializable{
 
     private int id;
     private String email;

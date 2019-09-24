@@ -1,7 +1,6 @@
 package godinner.lab.com.godinner.tasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,9 +14,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.TelaRestaurante;
+import godinner.lab.com.godinner.model.FotoProduto;
 import godinner.lab.com.godinner.model.Produto;
 
 public class BuscarPromocoesRestaurante extends AsyncTask {
@@ -67,7 +68,17 @@ public class BuscarPromocoesRestaurante extends AsyncTask {
                 produto.setDescricao(mObject.getString("descricao"));
                 produto.setDesconto(mObject.getDouble("desconto"));
                 produto.setVendidos(mObject.getInt("vendidos"));
-                produto.setStatus(mObject.getString("status"));
+
+                JSONArray fotos = mObject.getJSONArray("foto");
+                JSONObject f = fotos.get(0) == null ? null : (JSONObject) fotos.get(0);
+                FotoProduto foto = new FotoProduto();
+                foto.setId(f.getInt("id"));
+                foto.setFoto(f.getString("foto"));
+                foto.setLegenda(f.getString("legenda"));
+
+                List<FotoProduto> f1 = new ArrayList<>();
+                f1.add(foto);
+                produto.setFotos(f1);
                 produtos.add(produto);
             }
 

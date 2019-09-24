@@ -5,11 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import godinner.lab.com.godinner.adapter.PromocoesAdapter;
 import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Produto;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
@@ -39,6 +42,9 @@ public class TelaRestaurante extends AppCompatActivity {
         txtAvaliacao = findViewById(R.id.avaliacao_restaurante);
         mPromocoes = findViewById(R.id.promocoes);
 
+        LinearLayoutManager linearLayoutManagerHorizontal = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mPromocoes.setLayoutManager(linearLayoutManagerHorizontal);
+
         Intent mIntent = getIntent();
         RestauranteExibicao mRestaurante = (RestauranteExibicao) mIntent.getSerializableExtra("restaurante");
 
@@ -47,16 +53,13 @@ public class TelaRestaurante extends AppCompatActivity {
         txtEntrega.setText(mRestaurante.getTempoEntrega());
         txtAvaliacao.setText(mRestaurante.getNota());
 
-        LinearLayoutManager linearLayoutManagerHorizontal = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mPromocoes.setLayoutManager(linearLayoutManagerHorizontal);
-
         try {
             TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(TelaRestaurante.this);
             String token = mTokenUsuarioDAO.consultarToken();
             BuscarPromocoesRestaurante mPromocoesRestaurante = new BuscarPromocoesRestaurante(mRestaurante.getId(), token);
             mPromocoesRestaurante.execute().get();
 
-
+            mAdapterPromocoes();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -68,5 +71,15 @@ public class TelaRestaurante extends AppCompatActivity {
     public void onBackPressed() {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         super.onBackPressed();
+    }
+
+    public void mAdapterPromocoes(){
+        PromocoesAdapter mAdapter = new PromocoesAdapter(mProdutosPromocao, this, new PromocoesAdapter.PromocaoOnClickListener() {
+            @Override
+            public void onClickPromocao(View view, int index) {
+                Toast.makeText(TelaRestaurante.this, "Promoção "+index, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mPromocoes.setAdapter(mAdapter);
     }
 }

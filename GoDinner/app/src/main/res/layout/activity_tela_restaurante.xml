@@ -10,11 +10,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        android:paddingBottom="8dp"
+        android:background="@drawable/img1">
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -136,7 +137,7 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="180dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:orientation="vertical"
@@ -146,14 +147,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Promoções"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:textColor="#444"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/promocoes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="4dp"
             android:layout_marginEnd="6dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="6dp"></android.support.v7.widget.RecyclerView>
     </LinearLayout>
     <View
@@ -173,7 +175,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Todos"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:textColor="#444"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/todos"

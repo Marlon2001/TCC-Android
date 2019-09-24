@@ -87,7 +87,7 @@ public class ConsumidorDAO extends SQLiteOpenHelper {
         dbWrite.update("tbl_endereco", dadosEndereco,  "id_endereco = ?", params1);
 
         ContentValues dadosConsumidor = new ContentValues();
-        dadosConsumidor.put("id_servidor", c.getIdConsumidor());
+        dadosConsumidor.put("id_servidor", c.getIdServidor());
         dadosConsumidor.put("nome", c.getNome());
         dadosConsumidor.put("email", c.getEmail());
         dadosConsumidor.put("cpf", c.getCpf());
