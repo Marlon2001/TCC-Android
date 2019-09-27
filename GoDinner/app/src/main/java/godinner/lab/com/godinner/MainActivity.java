@@ -35,6 +35,7 @@ import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.BuscarConsumidor;
 import godinner.lab.com.godinner.tasks.LoginUsuario;
+import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class MainActivity extends AppCompatActivity {
 

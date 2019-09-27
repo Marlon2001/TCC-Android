@@ -1,4 +1,4 @@
-package godinner.lab.com.godinner;
+package godinner.lab.com.godinner.utils;
 
 import android.util.Log;
 

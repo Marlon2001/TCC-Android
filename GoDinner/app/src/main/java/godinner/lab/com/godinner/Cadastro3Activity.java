@@ -1,11 +1,7 @@
 package godinner.lab.com.godinner;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +29,7 @@ import godinner.lab.com.godinner.model.Endereco;
 import godinner.lab.com.godinner.model.Estado;
 import godinner.lab.com.godinner.tasks.CadastroUsuario;
 import godinner.lab.com.godinner.tasks.ConsultarCep;
+import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class Cadastro3Activity extends AppCompatActivity {
 
@@ -93,11 +90,6 @@ public class Cadastro3Activity extends AppCompatActivity {
         cadastroIntent = (Cadastro) intent.getSerializableExtra("cadastro");
         contatoIntent = (Contato) intent.getSerializableExtra("contato");
 
-        spinnerEstado.setEnabled(false);
-//        spinnerEstado.setClickable(false);
-//        spinnerCidade.setClickable(false);
-        spinnerCidade.setEnabled(false);
-
         txtCep.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -109,8 +101,35 @@ public class Cadastro3Activity extends AppCompatActivity {
 
                             txtLogradouro.setText(endereco.getLogradouro());
                             txtBairro.setText(endereco.getBairro());
-                            spinnerEstado.setPrompt(endereco.getEstadoNome());
-                            spinnerCidade.setPrompt(endereco.getCidadeNome());
+
+                            Estado e = new Estado();
+                            e.setEstado("Escolha um Estado");
+                            e.setIdEstado(0);
+                            Estado e2 = new Estado();
+                            e2.setEstado(endereco.getEstadoNome());
+                            e2.setIdEstado(endereco.getIdEstado());
+
+                            List estados = new ArrayList();
+                            estados.add(e);
+                            estados.add(e2);
+                            ArrayAdapter mAdapter = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, estados);
+
+                            Cidade c = new Cidade();
+                            c.setCidade("Escolha uma Cidade");
+                            c.setIdCidade(0);
+                            Cidade c2 = new Cidade();
+                            c2.setCidade(endereco.getCidadeNome());
+                            c2.setIdCidade(endereco.getIdCidade());
+
+                            List cidades = new ArrayList();
+                            cidades.add(e);
+                            cidades.add(c2);
+                            ArrayAdapter mAdapter2 = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, cidades);
+
+                            spinnerEstado.setAdapter(mAdapter);
+                            spinnerEstado.setSelection(1);
+                            spinnerCidade.setAdapter(mAdapter2);
+                            spinnerCidade.setSelection(1);
                         } catch (ExecutionException | InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -171,33 +190,6 @@ public class Cadastro3Activity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
-
-        spinnerEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                List cidades = new ArrayList();
-
-                if(position != 0) {
-                    Estado e = (Estado) parent.getItemAtPosition(position);
-                    CidadeEstadoDAO mCidadeEstadoDAO = new CidadeEstadoDAO(Cadastro3Activity.this);
-                    cidades = mCidadeEstadoDAO.getCidadesByEstado(e.getIdEstado());
-                } else {
-                    Cidade c = new Cidade();
-                    c.setCidade("Escolha uma Cidade");
-                    c.setIdCidade(0);
-
-                    cidades.add(0, c);
-                }
-
-                ArrayAdapter mAdapter = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, cidades);
-                spinnerCidade.setAdapter(mAdapter);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     @Override
@@ -255,18 +247,18 @@ public class Cadastro3Activity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        CidadeEstadoDAO mCidadeEstadoDAO = new CidadeEstadoDAO(Cadastro3Activity.this);
-
-        Estado e = new Estado();
-        e.setEstado("Escolha um Estado");
-        e.setIdEstado(0);
-
-        List estados = new ArrayList();
-        estados.add(e);
-        estados.addAll(mCidadeEstadoDAO.getEstados());
-
-        ArrayAdapter mAdapter2 = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, estados);
-        spinnerEstado.setAdapter(mAdapter2);
-        spinnerEstado.setSelection(0);
+//        CidadeEstadoDAO mCidadeEstadoDAO = new CidadeEstadoDAO(Cadastro3Activity.this);
+//
+//        Estado e = new Estado();
+//        e.setEstado("Escolha um Estado");
+//        e.setIdEstado(0);
+//
+//        List estados = new ArrayList();
+//        estados.add(e);
+//        estados.addAll(mCidadeEstadoDAO.getEstados());
+//
+//        ArrayAdapter mAdapter2 = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, estados);
+//        spinnerEstado.setAdapter(mAdapter2);
+//        spinnerEstado.setSelection(0);
     }
 }
