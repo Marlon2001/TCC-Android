@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +32,7 @@ public class TelaInicialActivity extends AppCompatActivity {
     private TextView txtEnderecoEntrega;
 
     public static ArrayList<Categoria> categorias;
-    public static ArrayList<RestauranteExibicao> restaurantes;
+    public static ArrayList<RestauranteExibicao> restaurantesMaisVisitados;
     public static ArrayList<RestauranteExibicao> restaurantesProximos;
 
     @Override
@@ -70,8 +68,8 @@ public class TelaInicialActivity extends AppCompatActivity {
             BuscarCategorias mBuscarCategorias = new BuscarCategorias(token);
             mBuscarCategorias.execute().get();
 
-//            RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(token);
-//            mRestaurantesMaisVisitados.execute();
+            RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(c.getIdServidor(), token);
+            mRestaurantesMaisVisitados.execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -84,7 +82,7 @@ public class TelaInicialActivity extends AppCompatActivity {
         super.onResume();
         mAdapterRestaurantesProximos();
         mAdapterCategorias();
-//        mAdapterListaDeRestaurantes();
+        mAdapterListaDeRestaurantes();
     }
 
     private void mAdapterRestaurantesProximos(){
@@ -113,11 +111,11 @@ public class TelaInicialActivity extends AppCompatActivity {
     }
 
     private void mAdapterListaDeRestaurantes(){
-        ListaRestaurantesAdapter mRestaurantesAdapter = new ListaRestaurantesAdapter(restaurantes, this, new ListaRestaurantesAdapter.RestauranteOnClickListener() {
+        ListaRestaurantesAdapter mRestaurantesAdapter = new ListaRestaurantesAdapter(restaurantesMaisVisitados, this, new ListaRestaurantesAdapter.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {
                 Intent abrirTelaRestaurante = new Intent(TelaInicialActivity.this, TelaRestaurante.class);
-                RestauranteExibicao restauranteExibicao = restaurantes.get(index);
+                RestauranteExibicao restauranteExibicao = restaurantesMaisVisitados.get(index);
                 abrirTelaRestaurante.putExtra("restaurante", restauranteExibicao);
                 startActivity(abrirTelaRestaurante);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

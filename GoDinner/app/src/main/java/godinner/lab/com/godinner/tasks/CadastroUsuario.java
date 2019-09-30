@@ -53,12 +53,10 @@ public class CadastroUsuario extends AsyncTask {
             .endObject();
             jsonCadastro.endObject();
 
-            URL url = new URL("http://"+MainActivity.ipServidor+"/consumidor/novo");
+            URL url = new URL("http://"+MainActivity.ipServidor+"/consumidor");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
-
-//            {"nome":"marlon","email":"marlon2@teste.com","senha":"12345678","cpf":"113.262.578-54","telefone":"1147075043","fotoPerfil":null,"endereco":{"cep":"06606300","numero":"76","logradouro":"Rua das Magnólias","bairro":"Vila Ipê","complemento":"","referencia":"","cidade":{"id":3525003}}}
             conexao.setRequestProperty("Content-Type", "application/json");
             conexao.setRequestProperty("Accept", "application/json");
             conexao.setRequestMethod("POST");

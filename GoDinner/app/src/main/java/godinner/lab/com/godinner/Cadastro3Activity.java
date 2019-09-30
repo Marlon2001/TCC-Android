@@ -229,13 +229,13 @@ public class Cadastro3Activity extends AppCompatActivity {
             semErro = false;
         }
 
-        if(ValidaCampos.isValidEstado(spinnerEstado.getSelectedItem())){
+        if(ValidaCampos.isValidEstado((Estado) spinnerEstado.getSelectedItem())){
             txtErrorEstado.setVisibility(View.VISIBLE);
             txtErrorEstado.setText("Escolha um estado.");
             semErro = false;
         }
 
-        if(ValidaCampos.isValidCidade(spinnerCidade.getSelectedItem())){
+        if(ValidaCampos.isValidCidade((Cidade) spinnerCidade.getSelectedItem())){
             txtErrorCidade.setVisibility(View.VISIBLE);
             txtErrorCidade.setText("Escolha uma cidade.");
             semErro = false;

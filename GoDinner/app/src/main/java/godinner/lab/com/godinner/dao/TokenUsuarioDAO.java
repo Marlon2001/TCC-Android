@@ -55,6 +55,5 @@ public class TokenUsuarioDAO extends SQLiteOpenHelper {
         String token = c.getString(c.getColumnIndex("token"));
 
         return  token;
-
     }
 }

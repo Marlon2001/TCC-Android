@@ -12,10 +12,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import godinner.lab.com.godinner.adapter.ProdutosAdapter;
 import godinner.lab.com.godinner.adapter.PromocoesAdapter;
 import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Produto;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
+import godinner.lab.com.godinner.tasks.BuscarProdutosRestaurante;
 import godinner.lab.com.godinner.tasks.BuscarPromocoesRestaurante;
 
 public class TelaRestaurante extends AppCompatActivity {
@@ -41,9 +43,13 @@ public class TelaRestaurante extends AppCompatActivity {
         txtEntrega = findViewById(R.id.tempo_entrega);
         txtAvaliacao = findViewById(R.id.avaliacao_restaurante);
         mPromocoes = findViewById(R.id.promocoes);
+        mTodosProdutos = findViewById(R.id.todos);
 
         LinearLayoutManager linearLayoutManagerHorizontal = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mPromocoes.setLayoutManager(linearLayoutManagerHorizontal);
+
+        LinearLayoutManager linearLayoutManagerVertical = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mTodosProdutos.setLayoutManager(linearLayoutManagerVertical);
 
         Intent mIntent = getIntent();
         RestauranteExibicao mRestaurante = (RestauranteExibicao) mIntent.getSerializableExtra("restaurante");
@@ -59,7 +65,11 @@ public class TelaRestaurante extends AppCompatActivity {
             BuscarPromocoesRestaurante mPromocoesRestaurante = new BuscarPromocoesRestaurante(mRestaurante.getId(), token);
             mPromocoesRestaurante.execute().get();
 
+            BuscarProdutosRestaurante mProdutosRestaurante = new BuscarProdutosRestaurante(mRestaurante.getId(), token);
+            mProdutosRestaurante.execute().get();
+
             mAdapterPromocoes();
+            mAdapterProdutos();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -81,5 +91,15 @@ public class TelaRestaurante extends AppCompatActivity {
             }
         });
         mPromocoes.setAdapter(mAdapter);
+    }
+
+    public void mAdapterProdutos(){
+        ProdutosAdapter mAdapter = new ProdutosAdapter(mProdutosTodos, this, new ProdutosAdapter.ProdutoOnClickListener() {
+            @Override
+            public void onClickProduto(View view, int index) {
+                Toast.makeText(TelaRestaurante.this, "Produto "+index, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mTodosProdutos.setAdapter(mAdapter);
     }
 }

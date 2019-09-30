@@ -33,7 +33,7 @@ public class BuscarRestaurantesProximos extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try{
-            URL url = new URL("http://"+ MainActivity.ipServidor+"/restaurante/todos/exibicao/"+idConsumidor);
+            URL url = new URL("http://"+ MainActivity.ipServidor+"/restaurante/destaque/"+idConsumidor);
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("token", token);

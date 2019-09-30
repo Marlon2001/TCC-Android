@@ -94,19 +94,14 @@ public class ValidaCampos {
         }
     }
 
-    public static boolean isValidEstado(Object o){
-        Estado e = (Estado) o;
-        Log.d("ID-ESTADO", e.getIdEstado()+"");
-
+    public static boolean isValidEstado(Estado e){
         if(e.getIdEstado() == 0){
             return true;
         }
         return false;
     }
 
-    public static boolean isValidCidade(Object o){
-        Cidade c = (Cidade) o;
-        Log.d("ID-CIDADE", c.getIdCidade()+"");
+    public static boolean isValidCidade(Cidade c){
         if(c.getIdCidade() == 0){
             return true;
         }

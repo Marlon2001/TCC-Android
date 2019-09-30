@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public static String token;
     public static String erro;
     public static Consumidor mConsumidorLogado;
-    public static final String ipServidor = "10.107.144.15:8080";
+    public static final String ipServidor = "ec2-18-228-43-221.sa-east-1.compute.amazonaws.com:8080";
 
     private MaterialButton btnLogar;
     private MaterialButton btnCadastrar;
