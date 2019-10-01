@@ -10,6 +10,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.squareup.picasso.Picasso;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         checkLoginStatus();
 
+        final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
+
         btnLogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
                                     .setPositiveButton("Fechar", null)
                                     .show();
                         } else {
-                            TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(getApplicationContext());
                             mTokenUsuarioDAO.salvarToken(token);
 
                             BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token);
