@@ -21,13 +21,13 @@ import godinner.lab.com.godinner.TelaRestaurante;
 import godinner.lab.com.godinner.model.FotoProduto;
 import godinner.lab.com.godinner.model.Produto;
 
-public class BuscarPromocoesRestaurante extends AsyncTask {
+public class BuscarProdutosRestaurante extends AsyncTask {
 
     private int idRestaurante;
     private String token;
     private ArrayList<Produto> produtos;
 
-    public BuscarPromocoesRestaurante(int idRestaurante, String token) {
+    public BuscarProdutosRestaurante(int idRestaurante, String token) {
         this.idRestaurante = idRestaurante;
         this.token = token;
     }
@@ -35,7 +35,7 @@ public class BuscarPromocoesRestaurante extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            URL url = new URL("http://"+MainActivity.ipServidor+"/produto/promocao/"+idRestaurante);
+            URL url = new URL("http://"+ MainActivity.ipServidor+"/produto/restaurante/"+idRestaurante);
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("Content-Type", "application/json");
@@ -82,7 +82,7 @@ public class BuscarPromocoesRestaurante extends AsyncTask {
                 produtos.add(produto);
             }
 
-            TelaRestaurante.mProdutosPromocao = produtos;
+            TelaRestaurante.mProdutosTodos = produtos;
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

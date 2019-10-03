@@ -16,10 +16,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import godinner.lab.com.godinner.model.Cadastro;
+import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class Cadastro1Activity extends AppCompatActivity {
 
@@ -102,9 +100,9 @@ public class Cadastro1Activity extends AppCompatActivity {
             semErro = false;
         }
 
-        if(txtSenha.getText().toString().trim().length() < 6){
+        if(txtSenha.getText().toString().trim().length() < 8){
             txtSenhaLayout.setErrorEnabled(true);
-            txtSenhaLayout.setError("A senha deve conter no minímo 6 caracteres.");
+            txtSenhaLayout.setError("A senha deve conter no minímo 8 caracteres.");
             semErro = false;
         }
 

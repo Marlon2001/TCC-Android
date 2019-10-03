@@ -6,9 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 public class TokenUsuarioDAO extends SQLiteOpenHelper {
 
     public TokenUsuarioDAO(Context context) {
@@ -34,7 +31,6 @@ public class TokenUsuarioDAO extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String sql = "DROP TABLE IF EXISTS tbl_token";
         db.execSQL(sql);
-
         onCreate(db);
     }
 
@@ -42,7 +38,6 @@ public class TokenUsuarioDAO extends SQLiteOpenHelper {
         SQLiteDatabase dbWrite = getWritableDatabase();
 
         ContentValues dados = new ContentValues();
-
         dados.put("id_token", 1);
         dados.put("token", token);
         dados.put("validity", "atual");
@@ -60,6 +55,5 @@ public class TokenUsuarioDAO extends SQLiteOpenHelper {
         String token = c.getString(c.getColumnIndex("token"));
 
         return  token;
-
     }
 }

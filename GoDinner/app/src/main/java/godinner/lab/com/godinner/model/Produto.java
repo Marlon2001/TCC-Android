@@ -1,5 +1,7 @@
 package godinner.lab.com.godinner.model;
 
+import java.util.List;
+
 public class Produto {
 
     private Integer id;
@@ -8,8 +10,15 @@ public class Produto {
     private String descricao;
     private Double desconto;
     private Integer vendidos;
-    private String status;
+    private List<FotoProduto> fotos;
 
+    public List<FotoProduto> getFotos() {
+        return fotos;
+    }
+
+    public void setFotos(List<FotoProduto> fotos) {
+        this.fotos = fotos;
+    }
 
     public Double getDesconto() {
         return desconto;
@@ -51,20 +60,11 @@ public class Produto {
         this.descricao = descricao;
     }
 
-
     public Integer getVendidos() {
         return vendidos;
     }
 
     public void setVendidos(Integer vendidos) {
         this.vendidos = vendidos;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

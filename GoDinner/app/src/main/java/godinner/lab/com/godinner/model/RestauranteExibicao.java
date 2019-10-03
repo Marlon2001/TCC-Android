@@ -2,17 +2,18 @@ package godinner.lab.com.godinner.model;
 
 import java.io.Serializable;
 
-public class RestauranteExibicao extends Restaurante implements Serializable{
+public class RestauranteExibicao extends Restaurante implements Serializable {
+
     private String distancia;
     private String tempoEntrega;
-    private String precoEntrega;
+    private Double precoEntrega;
     private String nota;
 
-    public String getPrecoEntrega() {
+    public Double getPrecoEntrega() {
         return precoEntrega;
     }
 
-    public void setPrecoEntrega(String precoEntrega) {
+    public void setPrecoEntrega(Double precoEntrega) {
         this.precoEntrega = precoEntrega;
     }
 

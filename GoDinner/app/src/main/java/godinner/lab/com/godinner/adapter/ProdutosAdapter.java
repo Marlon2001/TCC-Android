@@ -22,13 +22,13 @@ import java.util.List;
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Produto;
 
-public class ProdutoPromocaoAdapter extends RecyclerView.Adapter<ProdutoPromocaoAdapter.ProdutoViewHolder> {
+public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.ProdutoViewHolder> {
 
     private List<Produto> mProdutos;
     private Context context;
     private ProdutoOnClickListener mProdutoOnClickListener;
 
-    public ProdutoPromocaoAdapter(List<Produto> mProdutos, Context context, ProdutoOnClickListener mProdutoOnClickListener) {
+    public ProdutosAdapter(List<Produto> mProdutos, Context context, ProdutoOnClickListener mProdutoOnClickListener) {
         this.mProdutos = mProdutos;
         this.context = context;
         this.mProdutoOnClickListener = mProdutoOnClickListener;
@@ -38,20 +38,19 @@ public class ProdutoPromocaoAdapter extends RecyclerView.Adapter<ProdutoPromocao
     @Override
     public ProdutoViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context)
-                .inflate(R.layout.lista_promocoes, viewGroup, false);
+                .inflate(R.layout.lista_produtos, viewGroup, false);
         return new ProdutoViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProdutoViewHolder produtoViewHolder, int i) {
         Produto p = mProdutos.get(i);
+
         produtoViewHolder.nomeProdto.setText(p.getNome());
+        produtoViewHolder.descProduto.setText(p.getDescricao());
 
         DecimalFormat f = new DecimalFormat("0.00");
-        produtoViewHolder.precoAntigo.setText("R$ "+f.format(p.getPreco()));
-
-        Double precoNovo = p.getPreco() * (p.getDesconto()/100);
-        produtoViewHolder.precoNovo.setText("R$ "+f.format(precoNovo));
+        produtoViewHolder.precoProduto.setText("R$ "+f.format(p.getPreco()));
 
         produtoViewHolder.progressBar.setVisibility(View.VISIBLE);
         produtoViewHolder.imageProduto.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
@@ -67,7 +66,7 @@ public class ProdutoPromocaoAdapter extends RecyclerView.Adapter<ProdutoPromocao
     }
 
     protected class CarregaImage extends AsyncTask<URL, Void, Drawable> {
-        private ProdutoPromocaoAdapter.ProdutoViewHolder mViewHolder;
+        private ProdutoViewHolder mViewHolder;
 
         @Override
         protected Drawable doInBackground(URL... urls) {
@@ -97,8 +96,8 @@ public class ProdutoPromocaoAdapter extends RecyclerView.Adapter<ProdutoPromocao
         private ImageView imageProduto;
         private ProgressBar progressBar;
         private TextView nomeProdto;
-        private TextView precoAntigo;
-        private TextView precoNovo;
+        private TextView descProduto;
+        private TextView precoProduto;
 
         public ProdutoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,8 +105,8 @@ public class ProdutoPromocaoAdapter extends RecyclerView.Adapter<ProdutoPromocao
             imageProduto = itemView.findViewById(R.id.image_produto);
             progressBar = itemView.findViewById(R.id.progressImage);
             nomeProdto = itemView.findViewById(R.id.nome_produto);
-            precoAntigo = itemView.findViewById(R.id.preco_antigo);
-            precoNovo = itemView.findViewById(R.id.preco_novo);
+            descProduto = itemView.findViewById(R.id.desc_produto);
+            precoProduto = itemView.findViewById(R.id.preco_produto);
         }
     }
 }

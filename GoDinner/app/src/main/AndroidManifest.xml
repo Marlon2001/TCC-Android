@@ -47,5 +47,4 @@
         <activity android:name=".TelaInicialActivity" />
         <activity android:name=".TelaRestaurante"></activity>
     </application>
-
 </manifest>

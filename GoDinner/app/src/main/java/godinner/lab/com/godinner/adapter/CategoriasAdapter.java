@@ -104,7 +104,6 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
     }
 
     protected class CategoriasViewholder extends RecyclerView.ViewHolder {
-
         private ImageView imgCategoria;
         private TextView txtCategoria;
         private ProgressBar progress;

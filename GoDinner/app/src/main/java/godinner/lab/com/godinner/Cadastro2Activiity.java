@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 
 import godinner.lab.com.godinner.model.Cadastro;
 import godinner.lab.com.godinner.model.Contato;
+import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class Cadastro2Activiity extends AppCompatActivity {
 

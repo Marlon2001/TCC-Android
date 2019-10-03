@@ -1,67 +1,40 @@
 package godinner.lab.com.godinner.tasks;
 
 import android.os.AsyncTask;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 import godinner.lab.com.godinner.MainActivity;
-import godinner.lab.com.godinner.TelaInicialActivity;
-import godinner.lab.com.godinner.model.Categoria;
 import godinner.lab.com.godinner.model.Consumidor;
+import godinner.lab.com.godinner.model.Endereco;
 
-public class BuscarConsumidor  extends AsyncTask<Void, Void, Consumidor> {
+public class BuscarConsumidor  extends AsyncTask {
+
     private String token;
-    private Consumidor mThisConsumidor = new Consumidor();
+    private Consumidor mConsumidor;
 
     public BuscarConsumidor(String token) {
         this.token = token;
     }
 
-
-    private ArrayList<Categoria> categorias;
-
-
-
-
     @Override
-    protected Consumidor doInBackground(Void... voids) {
+    protected Object doInBackground(Object[] objects) {
+        mConsumidor = new Consumidor();
         try {
-
-
-//            jsonCadastro.object();
-//            jsonCadastro.key("token").value(this.token);
-//            jsonCadastro.endObject();
-
-            URL url = new URL("http://" + MainActivity.ipServidor + "/consumidor/este");
+            URL url = new URL("http://"+MainActivity.ipServidor+"/consumidor/este");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
-
-//            conexao.setRequestProperty("Content-Type", "application/json");
-
-            conexao.setRequestProperty("token", this.token);
-
-//            conexao.setRequestProperty("Accept", "application/json");
-            conexao.setRequestMethod("GET");
+            conexao.setRequestProperty("token", token);
+            conexao.setRequestProperty("Accept", "application/json");
             conexao.setDoInput(true);
-
-
-//            PrintStream outputStream = new PrintStream(conexao.getOutputStream());
-
-
             conexao.connect();
-
 
             InputStream inputStream = conexao.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -76,25 +49,36 @@ public class BuscarConsumidor  extends AsyncTask<Void, Void, Consumidor> {
             }
 
             JSONObject json = new JSONObject(dados);
+            mConsumidor.setIdServidor(json.getInt("id"));
+            mConsumidor.setNome(json.getString("nome"));
+            mConsumidor.setEmail(json.getString("email"));
+            mConsumidor.setCpf(json.getString("cpf"));
+            mConsumidor.setTelefone(json.getString("telefone"));
+            mConsumidor.setFotoPerfil(json.getString("fotoPerfil"));
 
-            mThisConsumidor.setId(json.getInt("id"));
-            mThisConsumidor.setIdEndereco(json.getJSONObject("endereco").getInt("id"));
-            mThisConsumidor.setFotoPerfil(json.getString("fotoPerfil"));
-            mThisConsumidor.setEmail(json.getString("email"));
-            mThisConsumidor.setNome(json.getString("nome"));
-            MainActivity.mConsumidorLogado = mThisConsumidor;
+            Endereco endereco = new Endereco();
+            endereco.setIdEndereco(json.getJSONObject("endereco").getInt("id"));
+            endereco.setCep(json.getJSONObject("endereco").getString("cep"));
+            endereco.setNumero(json.getJSONObject("endereco").getString("numero"));
+            endereco.setLogradouro(json.getJSONObject("endereco").getString("logradouro"));
+            endereco.setBairro(json.getJSONObject("endereco").getString("bairro"));
+            endereco.setComplemento(json.getJSONObject("endereco").getString("complemento"));
+            endereco.setReferencia(json.getJSONObject("endereco").getString("referencia"));
 
+            endereco.setIdCidade(json.getJSONObject("endereco").getJSONObject("cidade").getInt("id"));
+            endereco.setIdEstado(json.getJSONObject("endereco").getJSONObject("cidade").getJSONObject("estado").getInt("id"));
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            endereco.setCidadeNome(json.getJSONObject("endereco").getJSONObject("cidade").getString("cidade"));
+            endereco.setCidadeNome(json.getJSONObject("endereco").getJSONObject("cidade").getJSONObject("estado").getString("estado"));
+            mConsumidor.setEndereco(endereco);
+
+            MainActivity.mConsumidorLogado = mConsumidor;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return mThisConsumidor;
-
-        }
-
-
+        return null;
+    }
 }
 

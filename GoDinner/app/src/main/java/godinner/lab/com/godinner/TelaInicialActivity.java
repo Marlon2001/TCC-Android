@@ -1,13 +1,11 @@
 package godinner.lab.com.godinner;
 
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +19,6 @@ import godinner.lab.com.godinner.dao.ConsumidorDAO;
 import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Categoria;
 import godinner.lab.com.godinner.model.Consumidor;
-import godinner.lab.com.godinner.model.Restaurante;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 import godinner.lab.com.godinner.tasks.BuscarCategorias;
 import godinner.lab.com.godinner.tasks.BuscarRestaurantesProximos;
@@ -35,7 +32,7 @@ public class TelaInicialActivity extends AppCompatActivity {
     private TextView txtEnderecoEntrega;
 
     public static ArrayList<Categoria> categorias;
-    public static ArrayList<RestauranteExibicao> restaurantes;
+    public static ArrayList<RestauranteExibicao> restaurantesMaisVisitados;
     public static ArrayList<RestauranteExibicao> restaurantesProximos;
 
     @Override
@@ -57,80 +54,53 @@ public class TelaInicialActivity extends AppCompatActivity {
         mListaRestaurantes.setLayoutManager(verticalLayoutManagerRestaurante);
 
         try {
-
-            //buscando o consumidor logado
             ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(this);
             Consumidor c = mConsumidorDAO.consultarConsumidor();
 
-            //buscando os restaurantes proximos de acordo com o usario logaso
-            BuscarRestaurantesProximos RestaurantesProximos = new BuscarRestaurantesProximos(c.getId());
-            RestaurantesProximos.execute().get();
+            txtEnderecoEntrega.setText(c.getEndereco().getLogradouro() + ", " +c.getEndereco().getNumero());
 
+            TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
+            String token = mTokenUsuarioDAO.consultarToken();
 
-            BuscarCategorias mBuscarCategorias = new BuscarCategorias();
+            BuscarRestaurantesProximos mRestaurantesProximos = new BuscarRestaurantesProximos(c.getIdServidor(), token);
+            mRestaurantesProximos.execute().get();
+
+            BuscarCategorias mBuscarCategorias = new BuscarCategorias(token);
             mBuscarCategorias.execute().get();
 
-            RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados();
-            mRestaurantesMaisVisitados.execute();
-
+            RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(c.getIdServidor(), token);
+            mRestaurantesMaisVisitados.execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        RestaurantesProximosAdapter mAdapter1 = new RestaurantesProximosAdapter(restaurantes, this, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
-            @Override
-            public void onClickRestaurante(View view, int index) {
-
-            }
-        });
-        CategoriasAdapter mAdapter2 = new CategoriasAdapter(categorias, this, new CategoriasAdapter.CategoriaOnClickListener() {
-            @Override
-            public void onClickCategoria(View view, int index) {
-
-            }
-        });
-        ListaRestaurantesAdapter mAdapter3 = new ListaRestaurantesAdapter(restaurantes, this, new ListaRestaurantesAdapter.RestauranteOnClickListener() {
-            @Override
-            public void onClickRestaurante(View view, int index) {
-
-            }
-        });
-
-        mRestaurantesProximos.setAdapter(mAdapter1);
-        mCategorias.setAdapter(mAdapter2);
-        mListaRestaurantes.setAdapter(mAdapter3);
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-
-        //inflando as listas dos resturatesproximos
-        popularRestaurantesProximos(this.restaurantesProximos);
-
-        popularCategorias(this.categorias);
-        popularListaDeRestaurantes(this.restaurantesProximos);
-
-
+    protected void onResume() {
+        super.onResume();
+        mAdapterRestaurantesProximos();
+        mAdapterCategorias();
+        mAdapterListaDeRestaurantes();
     }
 
-    private void popularRestaurantesProximos(ArrayList<RestauranteExibicao> restaurantes){
-        RestaurantesProximosAdapter mRestaurantesProximosAdapter = new RestaurantesProximosAdapter(restaurantes, this, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
+    private void mAdapterRestaurantesProximos(){
+        RestaurantesProximosAdapter mRestaurantesProximosAdapter = new RestaurantesProximosAdapter(restaurantesProximos, this, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {
-                Toast.makeText(TelaInicialActivity.this, "Clicou no restaurante "+index, Toast.LENGTH_SHORT).show();
+                Intent abrirTelaRestaurante = new Intent(TelaInicialActivity.this, TelaRestaurante.class);
+                RestauranteExibicao restauranteExibicao = restaurantesProximos.get(index);
+
+                abrirTelaRestaurante.putExtra("restaurante", restauranteExibicao);
+                startActivity(abrirTelaRestaurante);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         mRestaurantesProximos.setAdapter(mRestaurantesProximosAdapter);
     }
-    private void popularListaDeRestaurantes(ArrayList<RestauranteExibicao> restaurantes){
 
-    }
-
-    private void popularCategorias(ArrayList<Categoria> categorias){
-
+    private void mAdapterCategorias(){
         CategoriasAdapter categoriasAdapter = new CategoriasAdapter(categorias, this, new CategoriasAdapter.CategoriaOnClickListener() {
             @Override
             public void onClickCategoria(View view, int index) {
@@ -138,6 +108,19 @@ public class TelaInicialActivity extends AppCompatActivity {
             }
         });
         mCategorias.setAdapter(categoriasAdapter);
+    }
 
+    private void mAdapterListaDeRestaurantes(){
+        ListaRestaurantesAdapter mRestaurantesAdapter = new ListaRestaurantesAdapter(restaurantesMaisVisitados, this, new ListaRestaurantesAdapter.RestauranteOnClickListener() {
+            @Override
+            public void onClickRestaurante(View view, int index) {
+                Intent abrirTelaRestaurante = new Intent(TelaInicialActivity.this, TelaRestaurante.class);
+                RestauranteExibicao restauranteExibicao = restaurantesMaisVisitados.get(index);
+                abrirTelaRestaurante.putExtra("restaurante", restauranteExibicao);
+                startActivity(abrirTelaRestaurante);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        mListaRestaurantes.setAdapter(mRestaurantesAdapter);
     }
 }

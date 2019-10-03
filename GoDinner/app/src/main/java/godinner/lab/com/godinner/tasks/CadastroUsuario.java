@@ -1,8 +1,6 @@
 package godinner.lab.com.godinner.tasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONStringer;
@@ -14,7 +12,6 @@ import java.net.URL;
 import java.util.Scanner;
 
 import godinner.lab.com.godinner.MainActivity;
-import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Cadastro;
 import godinner.lab.com.godinner.model.Contato;
 import godinner.lab.com.godinner.model.Endereco;
@@ -51,12 +48,12 @@ public class CadastroUsuario extends AsyncTask {
                     .key("complemento").value(endereco.getComplemento())
                     .key("referencia").value(endereco.getReferencia())
                     .key("cidade").object()
-                        .key("id").value(endereco.getCidade())
+                        .key("id").value(endereco.getIdCidade())
                     .endObject()
             .endObject();
             jsonCadastro.endObject();
 
-            URL url = new URL("http://"+MainActivity.ipServidor+"/consumidor/novo");
+            URL url = new URL("http://"+MainActivity.ipServidor+"/consumidor");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 

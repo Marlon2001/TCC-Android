@@ -10,6 +10,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.squareup.picasso.Picasso;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -18,12 +19,10 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ViewUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,21 +35,20 @@ import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.BuscarConsumidor;
-import godinner.lab.com.godinner.tasks.CadastroUsuario;
 import godinner.lab.com.godinner.tasks.LoginUsuario;
+import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String token ;
-    public  static Consumidor mConsumidorLogado;
-    public static  String erro;
+    public static String token;
+    public static String erro;
+    public static Consumidor mConsumidorLogado;
+    public static final String ipServidor = "ec2-18-228-43-221.sa-east-1.compute.amazonaws.com:8080";
+
     private MaterialButton btnLogar;
     private MaterialButton btnCadastrar;
     private CallbackManager callbackManager;
     private LoginButton loginButton;
-    public static final String ipServidor = "10.107.144.15:8080";
-    public static String statusLogin = "";
-
 
     private TextView txtEmail;
     private TextView txtSenha;
@@ -76,63 +74,45 @@ public class MainActivity extends AppCompatActivity {
 
         checkLoginStatus();
 
+        final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
+
         btnLogar.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View v) {
+                erro = null;
+                token = null;
                 if(validarCampos()){
                     Login login = new Login();
                     login.setEmail(txtEmail.getText().toString());
                     login.setSenha(txtSenha.getText().toString());
 
-                    final AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-                    final View mView = getLayoutInflater().inflate(R.layout.loading_dialog, null);
-
-                    mBuilder.setView(mView);
-                    final AlertDialog dialog = mBuilder.create();
-                    dialog.show();
-
                     try {
-                        //fazendo login do consumidor
                         LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
                         mLogin.execute().get();
 
-//                        TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(MainActivity.this);
-//                        mTokenUsuarioDAO.salvarToken(token);
+                        if(erro != null){
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Erro no login.")
+                                    .setMessage("Usuário ou senha incorretos.")
+                                    .setPositiveButton("Fechar", null)
+                                    .show();
+                        } else {
+                            mTokenUsuarioDAO.salvarToken(token);
 
-                        //buscando consumidor
-                        BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGEuYSIsImV4cCI6MTU2ODc2MTQ4MSwiaWF0IjoxNTY4NzQzNDgxfQ.d9xM7e4RwOypK-KxlJBaEtVo_YDb94j4ngIkwa3gUvSxRIKgvWE3w2rGNAr_ti447cuI5RdFqXgYy6Pn-Imjbg");
-                        mBuscarConsumidor.execute().get();
+                            BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token);
+                            mBuscarConsumidor.execute().get();
 
-                        // -*********
-                        if(erro !=null){
-                            Toast.makeText(MainActivity.this, "Não cadastrado", Toast.LENGTH_SHORT).show();
-                        }else{
-                            //salvando consumidor logado
-                            ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(MainActivity.this);
-
+                            ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(getApplicationContext());
                             mConsumidorDAO.salvarConsumidorLogado(mConsumidorLogado);
 
-
-                            dialog.dismiss();
-                            if(statusLogin.equals("Logou")){
-                                Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
-
-                                startActivity(abrirTelaInicial);
-                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                            } else if(statusLogin.equals("Não cadastrado")){
-                                new AlertDialog.Builder(getApplicationContext())
-                                        .setMessage("Usuário ou senha incorretos.")
-                                        .setNeutralButton("Fechar", null)
-                                        .show();
-
-                            }
+                            Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
+                            startActivity(abrirTelaInicial);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            MainActivity.this.finish();
                         }
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
-                    dialog.dismiss();
                 }
             }
         });
@@ -148,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
         loginButton.setPermissions(Arrays.asList("email", "public_profile"));
-
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
