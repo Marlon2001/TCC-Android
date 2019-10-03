@@ -45,6 +45,8 @@
         <activity android:name=".Cadastro3Activity" />
         <activity android:name=".BemVindoActivity" />
         <activity android:name=".TelaInicialActivity" />
-        <activity android:name=".TelaRestaurante"></activity>
+        <activity android:name=".TelaRestaurante" />
+        <activity android:name=".datalhes_do_pedido"></activity>
     </application>
+
 </manifest>

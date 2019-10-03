@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TokenUsuarioDAO extends SQLiteOpenHelper {
 
     public TokenUsuarioDAO(Context context) {
-        super(context, "db_godinner", null, 1);
+        super(context, "db_godinner2", null, 1);
     }
 
     @Override
