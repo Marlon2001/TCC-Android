@@ -40,4 +40,7 @@
     <string name="lbl_avaliacao_estrela">Avaliacao Estrela</string>
     <string name="lbl_logo_restaurante">Logo Restaurante</string>
     <string name="lbl_compartilhar">Compartilhar</string>
+    <string name="lbl_imagem_entregador">Imagem Entregador</string>
+    <string name="lbl_sacola">SACOLA</string>
+    <string name="lbl_more">Ver Mais</string>
 </resources>
