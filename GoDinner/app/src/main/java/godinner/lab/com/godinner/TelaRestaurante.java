@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -63,6 +62,8 @@ public class TelaRestaurante extends AppCompatActivity {
             TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(TelaRestaurante.this);
             String token = mTokenUsuarioDAO.consultarToken();
             BuscarPromocoesRestaurante mPromocoesRestaurante = new BuscarPromocoesRestaurante(mRestaurante.getId(), token);
+
+
             mPromocoesRestaurante.execute().get();
 
             BuscarProdutosRestaurante mProdutosRestaurante = new BuscarProdutosRestaurante(mRestaurante.getId(), token);
@@ -87,7 +88,11 @@ public class TelaRestaurante extends AppCompatActivity {
         PromocoesAdapter mAdapter = new PromocoesAdapter(mProdutosPromocao, this, new PromocoesAdapter.PromocaoOnClickListener() {
             @Override
             public void onClickPromocao(View view, int index) {
-                Toast.makeText(TelaRestaurante.this, "Promoção "+index, Toast.LENGTH_SHORT).show();
+
+                Intent intentDetalhesProduto = new Intent(TelaRestaurante.this, DetalhesPedido.class);
+                Produto p = mProdutosPromocao.get(index);
+                intentDetalhesProduto.putExtra("produto_clicado", p);
+                startActivity(intentDetalhesProduto);
             }
         });
         mPromocoes.setAdapter(mAdapter);
@@ -97,7 +102,11 @@ public class TelaRestaurante extends AppCompatActivity {
         ProdutosAdapter mAdapter = new ProdutosAdapter(mProdutosTodos, this, new ProdutosAdapter.ProdutoOnClickListener() {
             @Override
             public void onClickProduto(View view, int index) {
-                Toast.makeText(TelaRestaurante.this, "Produto "+index, Toast.LENGTH_SHORT).show();
+
+                Intent intentDetalhesProduto = new Intent(getApplicationContext(), DetalhesPedido.class);
+                intentDetalhesProduto.putExtra("produto", mProdutosTodos.get(index));
+                startActivity(intentDetalhesProduto);
+
             }
         });
         mTodosProdutos.setAdapter(mAdapter);

@@ -100,7 +100,7 @@
 
             <android.support.design.button.MaterialButton
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:id="@+id/btn_entrar"
+                android:id="@+id/btn_total_produtos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_entrar"
@@ -132,7 +132,7 @@
                 app:rippleColor="#33AAAAAA"
                 app:strokeColor="#b3b0b0"
                 app:strokeWidth="2dp"
-                android:layout_below="@id/btn_entrar" />
+                android:layout_below="@id/btn_total_produtos" />
         </RelativeLayout>
 
         <LinearLayout

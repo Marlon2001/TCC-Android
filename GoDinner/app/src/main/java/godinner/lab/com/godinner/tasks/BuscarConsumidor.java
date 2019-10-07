@@ -55,7 +55,6 @@ public class BuscarConsumidor  extends AsyncTask {
             mConsumidor.setCpf(json.getString("cpf"));
             mConsumidor.setTelefone(json.getString("telefone"));
             mConsumidor.setFotoPerfil(json.getString("fotoPerfil"));
-
             Endereco endereco = new Endereco();
             endereco.setIdEndereco(json.getJSONObject("endereco").getInt("id"));
             endereco.setCep(json.getJSONObject("endereco").getString("cep"));
@@ -64,10 +63,8 @@ public class BuscarConsumidor  extends AsyncTask {
             endereco.setBairro(json.getJSONObject("endereco").getString("bairro"));
             endereco.setComplemento(json.getJSONObject("endereco").getString("complemento"));
             endereco.setReferencia(json.getJSONObject("endereco").getString("referencia"));
-
             endereco.setIdCidade(json.getJSONObject("endereco").getJSONObject("cidade").getInt("id"));
             endereco.setIdEstado(json.getJSONObject("endereco").getJSONObject("cidade").getJSONObject("estado").getInt("id"));
-
             endereco.setCidadeNome(json.getJSONObject("endereco").getJSONObject("cidade").getString("cidade"));
             endereco.setCidadeNome(json.getJSONObject("endereco").getJSONObject("cidade").getJSONObject("estado").getString("estado"));
             mConsumidor.setEndereco(endereco);

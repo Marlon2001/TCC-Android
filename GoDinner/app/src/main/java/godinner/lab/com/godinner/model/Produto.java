@@ -1,8 +1,9 @@
 package godinner.lab.com.godinner.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Produto {
+public class Produto implements Serializable{
 
     private Integer id;
     private String nome;

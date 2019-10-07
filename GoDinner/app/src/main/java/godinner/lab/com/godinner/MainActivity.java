@@ -10,7 +10,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.squareup.picasso.Picasso;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String token;
     public static String erro;
-    public static Consumidor mConsumidorLogado;
+    public static Consumidor    mConsumidorLogado;
     public static final String ipServidor = "ec2-18-228-43-221.sa-east-1.compute.amazonaws.com:8080";
 
     private MaterialButton btnLogar;
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.logo));
 
-        btnLogar = findViewById(R.id.btn_entrar);
+        btnLogar = findViewById(R.id.btn_total_produtos);
         btnCadastrar = findViewById(R.id.btn_cadastrar);
         loginButton = findViewById(R.id.login_button);
 

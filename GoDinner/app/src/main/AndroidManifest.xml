@@ -46,7 +46,7 @@
         <activity android:name=".BemVindoActivity" />
         <activity android:name=".TelaInicialActivity" />
         <activity android:name=".TelaRestaurante" />
-        <activity android:name=".datalhes_do_pedido"></activity>
+        <activity android:name=".DetalhesPedido"></activity>
     </application>
 
 </manifest>
