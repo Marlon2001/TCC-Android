@@ -89,7 +89,6 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_mais_um:
-
                 Toast.makeText(this, "Somar 1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_menos_um:
@@ -97,6 +96,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_total_produtos:
                 Toast.makeText(this, "Valor total", Toast.LENGTH_SHORT).show();
+                break;
             case R.id.valor_total:
                 finish();
                 break;
