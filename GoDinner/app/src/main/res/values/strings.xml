@@ -43,4 +43,10 @@
     <string name="lbl_imagem_entregador">Imagem Entregador</string>
     <string name="lbl_sacola">SACOLA</string>
     <string name="lbl_more">Ver Mais</string>
+    <string name="lbl_meus_pedidos">Meus Pedidos</string>
+    <string name="lbl_pedido">Pedido:</string>
+    <string name="lbl_entrega">Entrega:</string>
+    <string name="lbl_total_geral">Total Geral:</string>
+    <string name="lbl_finaliar_compra">Finaliar Compra</string>
+    <string name="lbl_esvaziar_sacola">Esvaziar sacola</string>
 </resources>
