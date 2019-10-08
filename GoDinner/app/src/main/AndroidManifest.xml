@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Fullscreen">
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -46,9 +47,7 @@
         <activity android:name=".BemVindoActivity" />
         <activity android:name=".TelaInicialActivity" />
         <activity android:name=".TelaRestaurante" />
-        <activity android:name=".CarrinhoComprasActivity">
-        <activity android:name=".DetalhesPedido"></activity>
-    </application>         
-        </activity>
+        <activity android:name=".CarrinhoComprasActivity"/>
+        <activity android:name=".DetalhesPedido"/>
     </application>
 </manifest>
