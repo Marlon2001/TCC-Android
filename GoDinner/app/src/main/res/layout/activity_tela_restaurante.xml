@@ -136,7 +136,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1.5"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_entregador"/>
+                    android:src="@drawable/ic_entregador"
+                    android:contentDescription="@string/lbl_imagem_entregador"/>
             </LinearLayout>
         </RelativeLayout>
         <View
