@@ -1,6 +1,8 @@
 package godinner.lab.com.godinner.model;
 
-public class FotoProduto {
+import java.io.Serializable;
+
+public class FotoProduto implements Serializable {
 
     private int id;
     private String foto;
