@@ -38,7 +38,7 @@ public class LoginUsuario extends AsyncTask {
             jsonLogin.key("password").value(login.getSenha());
             jsonLogin.endObject();
 
-            URL url = new URL("http://"+ MainActivity.ipServidor+"/login/consumidor");
+            URL url = new URL(MainActivity.ipServidor+"/login/consumidor");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 

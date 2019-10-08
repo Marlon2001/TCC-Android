@@ -33,7 +33,7 @@ public class ConsultarCep extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            URL url = new URL("http://"+MainActivity.ipServidor+"/endereco/cep/"+cep);
+            URL url = new URL(MainActivity.ipServidor+"/endereco/cep/"+cep);
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("Content-Type", "application/json");

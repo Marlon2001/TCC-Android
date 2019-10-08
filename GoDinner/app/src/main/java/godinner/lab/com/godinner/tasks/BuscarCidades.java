@@ -26,7 +26,7 @@ public class BuscarCidades extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            URL url = new URL("http://"+MainActivity.ipServidor+"/cidade");
+            URL url = new URL(MainActivity.ipServidor+"/cidade");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             InputStream inputStream = conexao.getInputStream();

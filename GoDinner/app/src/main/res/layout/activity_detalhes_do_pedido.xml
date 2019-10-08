@@ -58,7 +58,7 @@
             android:layout_marginBottom="10dp">
 
             <ImageView
-                android:id="@+id/image_produto"
+                android:id="@+id/image_produto_detalhes"
                 android:layout_width="match_parent"
                 android:layout_height="233dp"
                 app:srcCompat="@drawable/img1" />
@@ -95,7 +95,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:textAlignment="center"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:textColor="@color/Dark"
                 android:layout_height="wrap_content"
                 android:text="1 carne, pão com gergelim, queijo, alface, tomate, cebola, picles, maionese BK® e ketchup" />
@@ -152,7 +152,6 @@
                     app:backgroundTint="@android:color/transparent"
                     app:cornerRadius="1dp"
                     android:soundEffectsEnabled="false"
-
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:rippleColor="@color/Dark"
                     app:strokeColor="#b3b0b0"
@@ -190,8 +189,7 @@
                     android:text="R$ 53.11"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp"/>
             </LinearLayout>
         </LinearLayout>
 
