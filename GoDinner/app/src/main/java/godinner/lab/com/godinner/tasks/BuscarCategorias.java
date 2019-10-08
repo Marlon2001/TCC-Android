@@ -30,7 +30,7 @@ public class BuscarCategorias extends AsyncTask{
     @Override
     protected Object doInBackground(Object[] o) {
         try{
-            URL url = new URL("http://"+ MainActivity.ipServidor+"/categoria");
+            URL url = new URL(MainActivity.ipServidor+"/categoria");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("token", token);

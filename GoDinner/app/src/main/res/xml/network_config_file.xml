@@ -3,5 +3,6 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">10.107.144.15</domain>
         <domain includeSubdomains="true">ec2-18-228-43-221.sa-east-1.compute.amazonaws.com</domain>
+        <domain includeSubdomains="true">godinner.tk</domain>
     </domain-config>
 </network-security-config>

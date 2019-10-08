@@ -35,7 +35,7 @@ public class RestaurantesMaisVisitados extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            URL url = new URL("http://"+MainActivity.ipServidor+"/restaurante/exibicao/"+idConsumidor);
+            URL url = new URL(MainActivity.ipServidor+"/restaurante/exibicao/"+idConsumidor);
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("token", token);

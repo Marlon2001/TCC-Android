@@ -53,7 +53,7 @@ public class CadastroUsuario extends AsyncTask {
             .endObject();
             jsonCadastro.endObject();
 
-            URL url = new URL("http://"+MainActivity.ipServidor+"/consumidor");
+            URL url = new URL(MainActivity.ipServidor+"/consumidor");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 

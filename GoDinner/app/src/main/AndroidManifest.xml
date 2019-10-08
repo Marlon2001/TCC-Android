@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -36,7 +37,7 @@
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-              
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -46,9 +47,9 @@
         <activity android:name=".BemVindoActivity" />
         <activity android:name=".TelaInicialActivity" />
         <activity android:name=".TelaRestaurante" />
-        <activity android:name=".CarrinhoComprasActivity">
-        <activity android:name=".DetalhesPedido"></activity>
-    </application>         
-        </activity>
+        <activity android:name=".CarrinhoComprasActivity" />
+        <activity android:name=".DetalhesPedido" />
+
+
     </application>
 </manifest>

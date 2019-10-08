@@ -26,7 +26,7 @@ public class BuscarEstados extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            URL url = new URL("http://"+ MainActivity.ipServidor+"/estado");
+            URL url = new URL( MainActivity.ipServidor+"/estado");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             InputStream inputStream = conexao.getInputStream();

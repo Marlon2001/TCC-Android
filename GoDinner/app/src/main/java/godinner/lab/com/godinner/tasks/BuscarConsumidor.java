@@ -28,7 +28,7 @@ public class BuscarConsumidor  extends AsyncTask {
     protected Object doInBackground(Object[] objects) {
         mConsumidor = new Consumidor();
         try {
-            URL url = new URL("http://"+MainActivity.ipServidor+"/consumidor/este");
+            URL url = new URL(MainActivity.ipServidor+"/consumidor/este");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("token", token);

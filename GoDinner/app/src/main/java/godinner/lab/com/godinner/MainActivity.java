@@ -39,10 +39,10 @@ import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String token;
+    public static String token = null;
     public static String erro;
     public static Consumidor    mConsumidorLogado;
-    public static final String ipServidor = "ec2-18-228-43-221.sa-east-1.compute.amazonaws.com:8080";
+    public static final String ipServidor = "http://godinner.tk:8080";
 
     private MaterialButton btnLogar;
     private MaterialButton btnCadastrar;
@@ -89,13 +89,14 @@ public class MainActivity extends AppCompatActivity {
                         LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
                         mLogin.execute().get();
 
-                        if(erro != null){
+                        if(erro != null || token == null){
                             new AlertDialog.Builder(MainActivity.this)
-                                    .setTitle("Erro no login.")
+                                    .setTitle("Não foi desta vez.")
                                     .setMessage("Usuário ou senha incorretos.")
                                     .setPositiveButton("Fechar", null)
                                     .show();
                         } else {
+
                             mTokenUsuarioDAO.salvarToken(token);
 
                             BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token);
