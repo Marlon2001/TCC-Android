@@ -43,7 +43,7 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProdutoViewHolder produtoViewHolder, int i) {
+    public void onBindViewHolder(@NonNull ProdutoViewHolder produtoViewHolder, final int i) {
         Produto p = mProdutos.get(i);
 
         produtoViewHolder.nomeProdto.setText(p.getNome());
@@ -54,6 +54,12 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
 
         produtoViewHolder.progressBar.setVisibility(View.VISIBLE);
         produtoViewHolder.imageProduto.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
+        produtoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProdutoOnClickListener.onClickProduto(v , i);
+            }
+        });
     }
 
     @Override
