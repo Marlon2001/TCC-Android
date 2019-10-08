@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
+import godinner.lab.com.godinner.dao.PedidoDAO;
 import godinner.lab.com.godinner.model.Produto;
 import godinner.lab.com.godinner.utils.Imagens;
 
@@ -43,6 +44,13 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         btnTotal = findViewById(R.id.btn_total_produtos);
         txtDetalhesDoProduto = findViewById(R.id.text_descricao_produto);
 
+
+        btnTotal.setOnClickListener(this);
+        btnValorTotal.setOnClickListener(this);
+        subitrair1.setOnClickListener(this);
+        somar1.setOnClickListener(this);
+
+
         Intent intent = getIntent();
         mProduto = (Produto) intent.getSerializableExtra("produto_clicado");
 
@@ -64,6 +72,10 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         txtDetalhesDoProduto.setText(mProduto.getNome());
         btnTotal.setText("1");
 
+        PedidoDAO dao = new PedidoDAO(this);
+
+
+
     }
 
     @Override
@@ -77,12 +89,15 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_mais_um:
+
                 Toast.makeText(this, "Somar 1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_menos_um:
                 Toast.makeText(this, "Menos 1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_total_produtos:
+                Toast.makeText(this, "Valor total", Toast.LENGTH_SHORT).show();
+            case R.id.valor_total:
                 finish();
                 break;
             default:
