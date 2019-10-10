@@ -32,6 +32,7 @@ public class DetalhesPedido extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_do_pedido);
+
         imageProduto = findViewById(R.id.image_produto);
         descricaoProduto = findViewById(R.id.descricao);
         btnValorTotal = findViewById(R.id.valor_total);

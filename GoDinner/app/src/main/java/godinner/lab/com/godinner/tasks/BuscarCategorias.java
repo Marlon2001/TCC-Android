@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import godinner.lab.com.godinner.HomeFragment;
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.TelaInicialActivity;
 import godinner.lab.com.godinner.model.Categoria;
@@ -58,7 +59,7 @@ public class BuscarCategorias extends AsyncTask{
                 categorias.add(categoria);
             }
 
-            TelaInicialActivity.categorias = categorias;
+            HomeFragment.categorias = categorias;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
