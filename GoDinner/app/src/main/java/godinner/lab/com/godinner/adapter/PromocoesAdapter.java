@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Categoria;
 import godinner.lab.com.godinner.model.Produto;
@@ -48,7 +49,6 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
     public void onBindViewHolder(@NonNull PromocoesViewholder promocoesViewholder, final int i) {
         Produto p = mProdutos.get(i);
         promocoesViewholder.imgProduto.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
-        promocoesViewholder.progress.setVisibility(View.VISIBLE);
         promocoesViewholder.txtProduto.setText(p.getNome());
         promocoesViewholder.txtPrecoAntigo.setText(Html.fromHtml("<del>R$ "+p.getPreco()+"</del>"));
 
@@ -63,7 +63,7 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
         });
 
         try{
-            URL urlImage = new URL(p.getFotos().get(0).getFoto());
+            URL urlImage = new URL(MainActivity.ipServidorFotos+"/"+p.getFotos().get(0).getFoto());
 
             CarregaImage carregaImage = new CarregaImage();
             carregaImage.mViewHolder = promocoesViewholder;
@@ -104,7 +104,7 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
         @Override
         protected void onPostExecute(Drawable drawable) {
             mViewHolder.imgProduto.setImageDrawable(drawable);
-            mViewHolder.progress.setVisibility(View.INVISIBLE);
+//            mViewHolder.progress.setVisibility(View.INVISIBLE);
             super.onPostExecute(drawable);
         }
     }

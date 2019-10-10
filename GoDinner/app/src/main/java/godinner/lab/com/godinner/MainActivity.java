@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     public static String erro;
     public static Consumidor    mConsumidorLogado;
     public static final String ipServidor = "http://godinner.tk:8080";
+    public static String fotoLanchePadrao = "restaurante/produto/1569953042416-115-840x560.jpg";
+    public static String ipServidorFotos = "http://godinner.tk:80";
 
     private MaterialButton btnLogar;
     private MaterialButton btnCadastrar;

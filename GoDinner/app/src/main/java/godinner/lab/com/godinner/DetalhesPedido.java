@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,6 +32,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
     private Button somar1;
     private Button subitrair1;
     private Button btnTotal;
+    private CollapsingToolbarLayout toobar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -43,7 +45,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         subitrair1 = findViewById(R.id.btn_menos_um);
         btnTotal = findViewById(R.id.btn_total_produtos);
         txtDetalhesDoProduto = findViewById(R.id.text_descricao_produto);
-
+        toobar = findViewById(R.id.nome_do_restaurante_aqui);
 
         btnTotal.setOnClickListener(this);
         btnValorTotal.setOnClickListener(this);
@@ -58,7 +60,8 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         Imagens i = new Imagens();
         URL url ;
         try {
-            url = new URL(MainActivity.ipServidor + "/" + mProduto.getFotos().get(0).getFoto());
+            String enderecoFoto = mProduto.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao: mProduto.getFotos().get(0).getFoto();
+            url = new URL(MainActivity.ipServidorFotos + "/" + enderecoFoto);
             i.execute(url);
             imageProduto.setImageDrawable(i.drawable);
         } catch (MalformedURLException e) {
@@ -71,7 +74,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         btnValorTotal.setText("R$ "+mProduto.getPreco().toString());
         txtDetalhesDoProduto.setText(mProduto.getNome());
         btnTotal.setText("1");
-
+        toobar.setTitle(mProduto.getNome());
         PedidoDAO dao = new PedidoDAO(this);
 
 

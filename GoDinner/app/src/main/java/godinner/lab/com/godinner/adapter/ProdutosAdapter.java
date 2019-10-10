@@ -15,10 +15,12 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Produto;
 
@@ -53,13 +55,27 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
         produtoViewHolder.precoProduto.setText("R$ "+f.format(p.getPreco()));
 
         produtoViewHolder.progressBar.setVisibility(View.VISIBLE);
+
         produtoViewHolder.imageProduto.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
+
+
+
         produtoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mProdutoOnClickListener.onClickProduto(v , i);
             }
         });
+
+        try{
+            URL urlImage = new URL(MainActivity.ipServidorFotos+"/"+p.getFotos().get(0).getFoto());
+
+            ProdutosAdapter.CarregaImage carregaImage = new ProdutosAdapter.CarregaImage();
+            carregaImage.mViewHolder = produtoViewHolder;
+            carregaImage.execute(urlImage);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

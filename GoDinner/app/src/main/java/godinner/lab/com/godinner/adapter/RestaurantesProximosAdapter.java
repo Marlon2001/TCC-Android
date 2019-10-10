@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Restaurante;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
@@ -58,7 +59,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
         });
 
         try{
-            URL urlImage = new URL(r.getFoto());
+            URL urlImage = new URL(MainActivity.ipServidorFotos + "/" +r.getFoto());
 
             CarregaImage carregaImage = new CarregaImage();
             carregaImage.mViewHolder = restauranteViewHolder;

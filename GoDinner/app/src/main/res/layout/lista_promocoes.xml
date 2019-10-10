@@ -18,26 +18,22 @@
 
         <ImageView
             android:id="@+id/image_produto"
-            android:layout_width="135dp"
+            android:layout_width="match_parent"
+
+            android:scaleX="3"
+            android:scaleY="1"
+            android:scaleType="centerInside"
+            android:maxHeight="80px"
+            android:maxWidth="155px"
+
+            android:adjustViewBounds="true"
             android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/lbl_description"/>
+            android:contentDescription="@string/lbl_description"
+            android:background="@color/Image"/>
 
-        <ProgressBar
-            android:id="@+id/progressImage"
-            style="@android:style/Widget.ProgressBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|center_vertical"
-            android:gravity="center|center_vertical"
-            android:visibility="invisible" />
+
     </FrameLayout>
-    <!--<ImageView-->
-        <!--android:layout_width="60dp"-->
-        <!--android:layout_height="60dp"-->
-        <!--android:src="@drawable/ic_promocao"-->
-        <!--android:layout_marginTop="-85dp"-->
-        <!--android:layout_marginStart="1dp"/>-->
 
     <TextView
         android:id="@+id/nome_produto"
