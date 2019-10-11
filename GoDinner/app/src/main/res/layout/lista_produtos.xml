@@ -30,14 +30,14 @@
                 app:civ_border_width="1dp"
                 app:civ_border_color="#999"/>
 
-            <ProgressBar
-                android:id="@+id/progressImage"
-                style="@android:style/Widget.ProgressBar.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|center_vertical"
-                android:gravity="center|center_vertical"
-                android:visibility="invisible" />
+            <!--<ProgressBar-->
+                <!--android:id="@+id/progressImage"-->
+                <!--style="@android:style/Widget.ProgressBar.Small"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center|center_vertical"-->
+                <!--android:gravity="center|center_vertical"-->
+                <!--android:visibility="invisible" />-->
         </FrameLayout>
 
         <LinearLayout

@@ -8,11 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,32 +55,23 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         subitrair1.setOnClickListener(this);
         somar1.setOnClickListener(this);
 
-
         Intent intent = getIntent();
         mProduto = (Produto) intent.getSerializableExtra("produto_clicado");
 
-
-        Imagens i = new Imagens();
-        URL url ;
-        try {
-            String enderecoFoto = mProduto.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao: mProduto.getFotos().get(0).getFoto();
-            url = new URL(MainActivity.ipServidorFotos + "/" + enderecoFoto);
-            i.execute(url);
-            imageProduto.setImageDrawable(i.drawable);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-
+        String url = MainActivity.ipServidorFotos +"/"+(mProduto.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao:  mProduto.getFotos().get(0).getFoto());
+        Picasso.get()
+                .load(url)
+                .resize(150, 200)
+                .into(imageProduto);
 
         descricaoProduto.setText(mProduto.getDescricao());
         btnValorTotal.setText("R$ "+mProduto.getPreco().toString());
         txtDetalhesDoProduto.setText(mProduto.getNome());
         btnTotal.setText("1");
         toobar.setTitle(mProduto.getNome());
+
+
         PedidoDAO dao = new PedidoDAO(this);
-
-
 
     }
 

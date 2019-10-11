@@ -20,11 +20,7 @@
             android:id="@+id/image_produto"
             android:layout_width="match_parent"
 
-            android:scaleX="3"
-            android:scaleY="1"
-            android:scaleType="centerInside"
-            android:maxHeight="80px"
-            android:maxWidth="155px"
+            android:scaleType="fitXY"
 
             android:adjustViewBounds="true"
             android:layout_height="80dp"

@@ -16,20 +16,16 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="@color/colorPrimary"
+            app:contentScrim="@android:color/black"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            android:id="@+id/nome_do_restaurante_aqui"
-            >
+            android:id="@+id/nome_do_restaurante_aqui">
 
             <ImageView
                 android:id="@+id/image_produto_detalhes"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:scaleX="2"
-                android:scaleY="1"
-                android:scaleType="centerInside"
-                android:maxHeight="80px"
-                android:maxWidth="155px"
+                android:scaleType="fitXY"
+
                 android:src="@drawable/img1" />
 
 

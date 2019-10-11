@@ -88,10 +88,8 @@ public class TelaRestaurante extends AppCompatActivity {
         PromocoesAdapter mAdapter = new PromocoesAdapter(mProdutosPromocao, this, new PromocoesAdapter.PromocaoOnClickListener() {
             @Override
             public void onClickPromocao(View view, int index) {
-
-                Intent intentDetalhesProduto = new Intent(TelaRestaurante.this, DetalhesPedido.class);
-                Produto p = mProdutosPromocao.get(index);
-                intentDetalhesProduto.putExtra("produto_clicado", p);
+                Intent intentDetalhesProduto = new Intent(getApplicationContext(), DetalhesPedido.class);
+                intentDetalhesProduto.putExtra("produto", mProdutosTodos.get(index));
                 startActivity(intentDetalhesProduto);
             }
         });
@@ -102,7 +100,6 @@ public class TelaRestaurante extends AppCompatActivity {
         ProdutosAdapter mAdapter = new ProdutosAdapter(mProdutosTodos, this, new ProdutosAdapter.ProdutoOnClickListener() {
             @Override
             public void onClickProduto(View view, int index) {
-
                 Intent intentDetalhesProduto = new Intent(getApplicationContext(), DetalhesPedido.class);
                 intentDetalhesProduto.putExtra("produto", mProdutosTodos.get(index));
                 startActivity(intentDetalhesProduto);

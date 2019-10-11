@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -47,10 +49,9 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
     @Override
     public void onBindViewHolder(@NonNull RestauranteViewHolder restauranteViewHolder, final int i) {
         Restaurante r = mRestaurantes.get(i);
-        restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
-        restauranteViewHolder.progress.setVisibility(View.VISIBLE);
-        restauranteViewHolder.txtRestaurante.setText(r.getRazaoSocial());
 
+
+        restauranteViewHolder.txtRestaurante.setText(r.getRazaoSocial());
         restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,16 +59,12 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
             }
         });
 
-        try{
-            URL urlImage = new URL(MainActivity.ipServidorFotos + "/" +r.getFoto());
+        Picasso.get()
+                .load(r.getFoto())
+                .resize(100, 100)
+                .into(restauranteViewHolder.imgRestaurante);
 
-            CarregaImage carregaImage = new CarregaImage();
-            carregaImage.mViewHolder = restauranteViewHolder;
-            carregaImage.execute(urlImage);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         }
-    }
 
     @Override
     public int getItemCount() {
@@ -100,7 +97,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
         @Override
         protected void onPostExecute(Drawable drawable) {
             mViewHolder.imgRestaurante.setImageDrawable(drawable);
-            mViewHolder.progress.setVisibility(View.INVISIBLE);
+
             super.onPostExecute(drawable);
         }
     }
@@ -108,14 +105,14 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
     protected class RestauranteViewHolder extends RecyclerView.ViewHolder {
         private ImageView imgRestaurante;
         private TextView txtRestaurante;
-        private ProgressBar progress;
+
 
         public RestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imgRestaurante = itemView.findViewById(R.id.image_item);
             txtRestaurante = itemView.findViewById(R.id.title_item);
-            progress = itemView.findViewById(R.id.progressImage);
+
         }
     }
 }
