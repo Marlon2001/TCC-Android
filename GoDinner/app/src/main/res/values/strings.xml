@@ -49,4 +49,11 @@
     <string name="lbl_total_geral">Total Geral:</string>
     <string name="lbl_finaliar_compra">Finaliar Compra</string>
     <string name="lbl_esvaziar_sacola">Esvaziar sacola</string>
+    <string name="title_section1">Início</string>
+    <string name="title_section2">Sacola</string>
+    <string name="title_section3">Pedidos</string>
+    <string name="title_section4">Perfil</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

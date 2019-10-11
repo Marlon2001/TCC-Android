@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import godinner.lab.com.godinner.HomeFragment;
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.TelaInicialActivity;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
@@ -72,7 +73,7 @@ public class RestaurantesMaisVisitados extends AsyncTask {
                 restaurantes.add(restaurante);
             }
 
-            TelaInicialActivity.restaurantesMaisVisitados = restaurantes;
+            HomeFragment.restaurantesMaisVisitados = restaurantes;
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

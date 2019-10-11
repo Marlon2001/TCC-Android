@@ -50,6 +50,5 @@
         <activity android:name=".TelaRestaurante" />
         <activity android:name=".CarrinhoComprasActivity"/>
         <activity android:name=".DetalhesPedido"/>
-
     </application>
 </manifest>

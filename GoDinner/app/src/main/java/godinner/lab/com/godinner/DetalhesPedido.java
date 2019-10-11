@@ -35,6 +35,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_do_pedido);
+        
         imageProduto = findViewById(R.id.image_produto_detalhes);
         descricaoProduto = findViewById(R.id.text_descricao_produto);
         btnValorTotal = findViewById(R.id.valor_total);

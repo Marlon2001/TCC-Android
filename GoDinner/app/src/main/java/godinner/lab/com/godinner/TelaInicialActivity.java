@@ -1,126 +1,74 @@
 package godinner.lab.com.godinner;
 
-import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
-import godinner.lab.com.godinner.adapter.CategoriasAdapter;
-import godinner.lab.com.godinner.adapter.ListaRestaurantesAdapter;
-import godinner.lab.com.godinner.adapter.RestaurantesProximosAdapter;
-import godinner.lab.com.godinner.dao.ConsumidorDAO;
-import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
-import godinner.lab.com.godinner.model.Categoria;
-import godinner.lab.com.godinner.model.Consumidor;
-import godinner.lab.com.godinner.model.RestauranteExibicao;
-import godinner.lab.com.godinner.tasks.BuscarCategorias;
-import godinner.lab.com.godinner.tasks.BuscarRestaurantesProximos;
-import godinner.lab.com.godinner.tasks.RestaurantesMaisVisitados;
+import godinner.lab.com.godinner.adapter.TabsAdapter;
 
 public class TelaInicialActivity extends AppCompatActivity {
-
-    private RecyclerView mRestaurantesProximos;
-    private RecyclerView mCategorias;
-    private RecyclerView mListaRestaurantes;
-    private TextView txtEnderecoEntrega;
-
-    public static ArrayList<Categoria> categorias;
-    public static ArrayList<RestauranteExibicao> restaurantesMaisVisitados;
-    public static ArrayList<RestauranteExibicao> restaurantesProximos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_inicial);
 
-        mRestaurantesProximos = findViewById(R.id.restaurantes_proximos);
-        mCategorias = findViewById(R.id.categorias);
-        mListaRestaurantes = findViewById(R.id.lista_restaurantes);
-        txtEnderecoEntrega = findViewById(R.id.txt_endereco_entrega);
+        setUpViewPager();
+    }
 
-        LinearLayoutManager horizontalLayoutManagerRestaurante = new LinearLayoutManager(TelaInicialActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager horizontalLayoutManagerCategoria = new LinearLayoutManager(TelaInicialActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager verticalLayoutManagerRestaurante = new LinearLayoutManager(TelaInicialActivity.this, LinearLayoutManager.VERTICAL, false);
+    public void setUpViewPager(){
+        final ViewPager viewPager = findViewById(R.id.viewPager);
+        final TabLayout tabLayout = findViewById(R.id.tabLayout);
 
-        mRestaurantesProximos.setLayoutManager(horizontalLayoutManagerRestaurante);
-        mCategorias.setLayoutManager(horizontalLayoutManagerCategoria);
-        mListaRestaurantes.setLayoutManager(verticalLayoutManagerRestaurante);
-
-        try {
-            ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(this);
-            Consumidor c = mConsumidorDAO.consultarConsumidor();
-
-            txtEnderecoEntrega.setText(c.getEndereco().getLogradouro() + ", " +c.getEndereco().getNumero());
-
-            TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
-            String token = mTokenUsuarioDAO.consultarToken();
-
-            BuscarRestaurantesProximos mRestaurantesProximos = new BuscarRestaurantesProximos(c.getIdServidor(), token);
-            mRestaurantesProximos.execute().get();
-
-            BuscarCategorias mBuscarCategorias = new BuscarCategorias(token);
-            mBuscarCategorias.execute().get();
-
-            RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(c.getIdServidor(), token);
-            mRestaurantesMaisVisitados.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(viewPager != null) {
+            TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager());
+            tabsAdapter.addFragment(new HomeFragment(), "Início");
+            tabsAdapter.addFragment(new BagFragment(), "Sacolas");
+            tabsAdapter.addFragment(new PedidosFragment(), "Pedidos");
+            tabsAdapter.addFragment(new PerfilFragment(), "Perfil");
+            viewPager.setAdapter(tabsAdapter);
         }
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mAdapterRestaurantesProximos();
-        mAdapterCategorias();
-        mAdapterListaDeRestaurantes();
-    }
+        tabLayout.setupWithViewPager(viewPager);
 
-    private void mAdapterRestaurantesProximos(){
-        RestaurantesProximosAdapter mRestaurantesProximosAdapter = new RestaurantesProximosAdapter(restaurantesProximos, this, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            tabLayout.getTabAt(i).setIcon(getIcon(i));
+        }
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
-            public void onClickRestaurante(View view, int index) {
-                Intent abrirTelaRestaurante = new Intent(TelaInicialActivity.this, TelaRestaurante.class);
-                RestauranteExibicao restauranteExibicao = restaurantesProximos.get(index);
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-                abrirTelaRestaurante.putExtra("restaurante", restauranteExibicao);
-                startActivity(abrirTelaRestaurante);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
-        mRestaurantesProximos.setAdapter(mRestaurantesProximosAdapter);
+
+        //        int cor = ContextCompat.getColor(this,android.R.color.black);
+        //        tabLayout.setTabTextColors(cor, cor);
     }
 
-    private void mAdapterCategorias(){
-        CategoriasAdapter categoriasAdapter = new CategoriasAdapter(categorias, this, new CategoriasAdapter.CategoriaOnClickListener() {
-            @Override
-            public void onClickCategoria(View view, int index) {
-                Toast.makeText(TelaInicialActivity.this, "Clicou id " + index , Toast.LENGTH_SHORT).show();
-            }
-        });
-        mCategorias.setAdapter(categoriasAdapter);
-    }
+    public int getIcon(int position) {
+        switch(position) {
+            case 0:
+                return R.drawable.ic_home;
+            case 1:
+                return R.drawable.ic_bag;
+            case 2:
+                return R.drawable.ic_list;
+            case 3:
+                return R.drawable.ic_perfil;
+        }
 
-    private void mAdapterListaDeRestaurantes(){
-        ListaRestaurantesAdapter mRestaurantesAdapter = new ListaRestaurantesAdapter(restaurantesMaisVisitados, this, new ListaRestaurantesAdapter.RestauranteOnClickListener() {
-            @Override
-            public void onClickRestaurante(View view, int index) {
-                Intent abrirTelaRestaurante = new Intent(TelaInicialActivity.this, TelaRestaurante.class);
-                RestauranteExibicao restauranteExibicao = restaurantesMaisVisitados.get(index);
-                abrirTelaRestaurante.putExtra("restaurante", restauranteExibicao);
-                startActivity(abrirTelaRestaurante);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
-        });
-        mListaRestaurantes.setAdapter(mRestaurantesAdapter);
+        return 0;
     }
 }

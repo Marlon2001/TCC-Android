@@ -37,7 +37,5 @@ public class CarrinhoComprasActivity extends AppCompatActivity {
         txtTotalGeral = findViewById(R.id.txt_total_geral);
         btnEsvaziarSacola = findViewById(R.id.btn_esvaziar_sacola);
         btnFinalizarCompra = findViewById(R.id.btn_finalizar_compra);
-
-
     }
 }

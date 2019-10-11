@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import godinner.lab.com.godinner.HomeFragment;
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.TelaInicialActivity;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
@@ -70,7 +71,8 @@ public class BuscarRestaurantesProximos extends AsyncTask {
                 restaurante.setNota(mObject.getString("nota"));
                 restaurantes.add(restaurante);
             }
-            TelaInicialActivity.restaurantesProximos = restaurantes;
+
+            HomeFragment.restaurantesProximos = restaurantes;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
