@@ -55,7 +55,7 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         restauranteViewHolder.preco.setText("R$ "+r.getNota());
         restauranteViewHolder.tempo.setText(r.getTempoEntrega() + " min");
         restauranteViewHolder.descricao.setText(r.getRazaoSocial());
-        restauranteViewHolder.progressBar.setVisibility(View.VISIBLE);
+//        restauranteViewHolder.progressBar.setVisibility(View.VISIBLE);
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
 
         restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +106,7 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         @Override
         protected void onPostExecute(Drawable drawable) {
             mViewHolder.imgRestaurante.setImageDrawable(drawable);
-            mViewHolder.progressBar.setVisibility(View.INVISIBLE);
+//            mViewHolder.progressBar.setVisibility(View.INVISIBLE);
             super.onPostExecute(drawable);
         }
     }
@@ -134,7 +134,7 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
             tempo = itemView.findViewById(R.id.tempo);
             descricao = itemView.findViewById(R.id.descricao);
             imgRestaurante = itemView.findViewById(R.id.image);
-            progressBar = itemView.findViewById(R.id.progressImage);
+//            progressBar = itemView.findViewById(R.id.progressImage);
         }
     }
 }

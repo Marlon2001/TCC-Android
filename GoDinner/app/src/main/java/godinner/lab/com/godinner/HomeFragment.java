@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView mCategorias;
     private RecyclerView mListaRestaurantes;
     private TextView txtEnderecoEntrega;
+    private EditText txtBuscar;
 
     public static ArrayList<Categoria> categorias;
     public static ArrayList<RestauranteExibicao> restaurantesMaisVisitados;
@@ -56,13 +58,16 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_frag_home, container, false);;
+        View view = inflater.inflate(R.layout.fragment_home, container, false);;
         context = view.getContext();
 
         mRestaurantesProximos = view.findViewById(R.id.restaurantes_proximos);
         mCategorias = view.findViewById(R.id.categorias);
         mListaRestaurantes = view.findViewById(R.id.lista_restaurantes);
         txtEnderecoEntrega = view.findViewById(R.id.txt_endereco_entrega);
+        txtBuscar = view.findViewById(R.id.txt_buscar);
+
+        txtBuscar.clearFocus();
 
         LinearLayoutManager horizontalLayoutManagerRestaurante = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager horizontalLayoutManagerCategoria = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
