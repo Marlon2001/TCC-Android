@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetalhesPedido">
@@ -14,32 +14,26 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapseToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="@android:color/black"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            android:id="@+id/nome_do_restaurante_aqui">
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/image_produto_detalhes"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
+                android:contentDescription="@string/lbl_imagem_produto"
                 android:scaleType="fitXY"
-
                 android:src="@drawable/img1" />
-
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
-
-
         </android.support.design.widget.CollapsingToolbarLayout>
-
-
     </android.support.design.widget.AppBarLayout>
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -48,66 +42,42 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/relativeLayout"
+            <View
+                android:id="@+id/linha2"
+                android:layout_width="1000dp"
+                android:layout_height="4dp"
+                android:layout_marginBottom="8dp"
+                android:background="#a4a2a2" />
+            <TextView
+                android:id="@+id/text_nome_produto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:orientation="vertical">
-
-                    <View
-                        android:id="@+id/linha2"
-                        android:layout_width="1000dp"
-                        android:layout_height="4dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="#a4a2a2" />
-
-                    <TextView
-                        android:id="@+id/text_nome_produto"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="CHICKEN Jr"
-                        android:textAlignment="center"
-                        android:textColor="@color/Dark"
-                        android:textSize="25sp" />
-
-                    <View
-                        android:id="@+id/linha3"
-                        android:layout_width="1000dp"
-                        android:layout_height="4dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="15dp"
-                        android:background="#a4a2a2" />
-
-                    <TextView
-                        android:id="@+id/text_descricao_produto"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:text="1 carne, pão com gergelim, queijo, alface, tomate, cebola, picles, maionese BK® e ketchup"
-                        android:textAlignment="center"
-                        android:textColor="@color/Dark"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-
-
-
-            </RelativeLayout>
-
-
+                android:layout_height="wrap_content"
+                android:text="Burger King"
+                android:textAlignment="center"
+                android:textColor="@color/Dark"
+                android:textSize="25sp" />
+            <View
+                android:id="@+id/linha3"
+                android:layout_width="1000dp"
+                android:layout_height="4dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="15dp"
+                android:background="#a4a2a2" />
+            <TextView
+                android:id="@+id/text_descricao_produto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="1 carne, pão com gergelim, queijo, alface, tomate, cebola, picles, maionese BK® e ketchup"
+                android:textAlignment="center"
+                android:textColor="@color/Dark"
+                android:textSize="18sp" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
@@ -122,7 +92,6 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_marginTop="100dp"
-
             android:background="@color/colorProgressBar" />
 
         <LinearLayout
@@ -137,10 +106,10 @@
                 android:layout_width="0dp"
                 android:layout_height="55dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginLeft="15dp"
+                android:layout_marginEnd="15dp"
                 android:layout_marginTop="3dp"
                 android:layout_weight="2"
-                android:text="+"
+                android:text="@string/lbl_mais"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
@@ -158,7 +127,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_weight="3"
                 android:soundEffectsEnabled="false"
-                android:text="5"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
@@ -167,7 +135,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:rippleColor="@color/Dark"
                 app:strokeColor="#b3b0b0"
-                app:strokeWidth="2dp" />
+                app:strokeWidth="2dp"
+                android:text="0"/>
 
 
             <android.support.design.button.MaterialButton
@@ -179,7 +148,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="3dp"
                 android:layout_weight="2"
-                android:text="-"
+                android:text="@string/lbl_menos"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 app:backgroundTint="@android:color/transparent"
@@ -194,7 +163,6 @@
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="5"
                 android:background="@color/colorProgressBar"
@@ -202,7 +170,6 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp" />
-
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

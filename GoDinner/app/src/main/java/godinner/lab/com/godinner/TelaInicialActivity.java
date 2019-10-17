@@ -23,7 +23,7 @@ public class TelaInicialActivity extends AppCompatActivity {
         if(viewPager != null) {
             TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager());
             tabsAdapter.addFragment(new HomeFragment(), "Início");
-            tabsAdapter.addFragment(new BagFragment(), "Sacolas");
+            tabsAdapter.addFragment(new SacolaFragment(), "Sacolas");
             tabsAdapter.addFragment(new PedidosFragment(), "Pedidos");
             tabsAdapter.addFragment(new PerfilFragment(), "Perfil");
             viewPager.setAdapter(tabsAdapter);

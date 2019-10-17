@@ -1,28 +1,26 @@
 package godinner.lab.com.godinner.model;
 
-
-
 public class SacolaPedido {
 
-    private Integer id;
-    private Restaurante restaurante;
+    private Integer idSacola;
+    private Integer idRestaurante;
     private Double valorEntrega;
     private Double valorTotalPedido;
 
-    public Integer getId() {
-        return id;
+    public Integer getIdSacola() {
+        return idSacola;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdSacola(Integer idSacola) {
+        this.idSacola = idSacola;
     }
 
-    public Restaurante getRestaurante() {
-        return restaurante;
+    public void setIdRestaurante(Integer idRestaurante) {
+        this.idRestaurante = idRestaurante;
     }
 
-    public void setRestaurante(Restaurante restaurante) {
-        this.restaurante = restaurante;
+    public Integer getIdRestaurante() {
+        return idRestaurante;
     }
 
     public Double getValorEntrega() {

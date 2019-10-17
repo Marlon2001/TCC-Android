@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.logo));
 
-        btnLogar = findViewById(R.id.btn_total_produtos);
+        btnLogar = findViewById(R.id.btn_logar);
         btnCadastrar = findViewById(R.id.btn_cadastrar);
         loginButton = findViewById(R.id.login_button);
 

@@ -20,5 +20,4 @@ public class ProdutoPedido extends Produto {
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
-
 }

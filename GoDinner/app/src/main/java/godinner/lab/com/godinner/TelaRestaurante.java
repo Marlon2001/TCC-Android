@@ -31,6 +31,7 @@ public class TelaRestaurante extends AppCompatActivity {
 
     public static ArrayList<Produto> mProdutosPromocao;
     public static ArrayList<Produto> mProdutosTodos;
+    private RestauranteExibicao mRestaurante;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +52,18 @@ public class TelaRestaurante extends AppCompatActivity {
         mTodosProdutos.setLayoutManager(linearLayoutManagerVertical);
 
         Intent mIntent = getIntent();
-        RestauranteExibicao mRestaurante = (RestauranteExibicao) mIntent.getSerializableExtra("restaurante");
+        mRestaurante = (RestauranteExibicao) mIntent.getSerializableExtra("restaurante");
 
         txtRestaurante.setText(mRestaurante.getRazaoSocial());
-        txtPreco.setText("R$ "+mRestaurante.getPrecoEntrega());
+        txtPreco.setText("R$ " + mRestaurante.getPrecoEntrega());
         txtEntrega.setText(mRestaurante.getTempoEntrega());
         txtAvaliacao.setText(mRestaurante.getNota());
 
         try {
             TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(TelaRestaurante.this);
             String token = mTokenUsuarioDAO.consultarToken();
+
             BuscarPromocoesRestaurante mPromocoesRestaurante = new BuscarPromocoesRestaurante(mRestaurante.getId(), token);
-
-
             mPromocoesRestaurante.execute().get();
 
             BuscarProdutosRestaurante mProdutosRestaurante = new BuscarProdutosRestaurante(mRestaurante.getId(), token);
@@ -84,26 +84,27 @@ public class TelaRestaurante extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void mAdapterPromocoes(){
+    public void mAdapterPromocoes() {
         PromocoesAdapter mAdapter = new PromocoesAdapter(mProdutosPromocao, this, new PromocoesAdapter.PromocaoOnClickListener() {
             @Override
             public void onClickPromocao(View view, int index) {
                 Intent intentDetalhesProduto = new Intent(getApplicationContext(), DetalhesPedido.class);
-                intentDetalhesProduto.putExtra("produto_clicado", mProdutosTodos.get(index));
+                intentDetalhesProduto.putExtra("produto_clicado", mProdutosPromocao.get(index));
+                intentDetalhesProduto.putExtra("restaurante", mRestaurante);
                 startActivity(intentDetalhesProduto);
             }
         });
         mPromocoes.setAdapter(mAdapter);
     }
 
-    public void mAdapterProdutos(){
+    public void mAdapterProdutos() {
         ProdutosAdapter mAdapter = new ProdutosAdapter(mProdutosTodos, this, new ProdutosAdapter.ProdutoOnClickListener() {
             @Override
             public void onClickProduto(View view, int index) {
                 Intent intentDetalhesProduto = new Intent(getApplicationContext(), DetalhesPedido.class);
                 intentDetalhesProduto.putExtra("produto_clicado", mProdutosTodos.get(index));
+                intentDetalhesProduto.putExtra("restaurante", mRestaurante);
                 startActivity(intentDetalhesProduto);
-
             }
         });
         mTodosProdutos.setAdapter(mAdapter);
