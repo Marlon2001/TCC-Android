@@ -18,6 +18,11 @@ public class ListaProdutosAdapter extends BaseAdapter {
     private List<ProdutoPedido> pedidos;
     private Context context;
 
+    public ListaProdutosAdapter(List<ProdutoPedido> pedidos, Context context) {
+        this.pedidos = pedidos;
+        this.context = context;
+    }
+
     @Override
     public int getCount() {
         return this.pedidos.size();

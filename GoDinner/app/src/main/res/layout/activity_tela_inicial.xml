@@ -18,9 +18,9 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="56dp"
         app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-        android:background="#ff924e"
-        app:tabSelectedTextColor="#354aff"
+        android:background="#cdcdcd"
+        app:tabSelectedTextColor="#f15b25"
         app:tabTextColor="@android:color/black"/>
 </LinearLayout>

@@ -31,6 +31,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
         String sql2 = "CREATE TABLE IF NOT EXISTS tbl_sacola(" +
                 "id_sacola INTEGER PRIMARY KEY," +
                 "id_restaurante INTEGER NOT NULL," +
+                "nome_restaurante TEXT NOT NULL," +
                 "valor_entrega DOUBLE NOT NULL," +
                 "valor_total_pedido DOUBLE NOT NULL)";
 
@@ -53,6 +54,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
         Cursor c = dbRead.rawQuery(sql, null);
         c.moveToNext();
         int id = c.getInt(c.getColumnIndex("id_sacola"));
+        c.close();
 
         return id;
     }
@@ -81,8 +83,6 @@ public class PedidoDAO extends SQLiteOpenHelper {
             dadosProduto.put("quantidade", p.getQuantidade());
             dbWrite.insert("tbl_produto", null, dadosProduto);
 
-            int id = getLastId();
-
             ProdutoPedido pedido = new ProdutoPedido();
             pedido.setId(p.getId());
 
@@ -102,6 +102,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
         Cursor c = dbRead.rawQuery(sql, null);
         c.moveToNext();
         int total = c.getInt(c.getColumnIndex("total"));
+        c.close();
 
         if (total == 0) {
             return true;
@@ -117,6 +118,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
         Cursor c = dbRead.rawQuery(sql, null);
         c.moveToNext();
         int total = c.getInt(c.getColumnIndex("total"));
+        c.close();
 
         if (total == 1) {
             return true;
@@ -130,6 +132,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
 
         ContentValues dadosSacola = new ContentValues();
         dadosSacola.put("id_restaurante", s.getIdRestaurante());
+        dadosSacola.put("nome_restaurante", s.getNomeRestaurante());
         dadosSacola.put("valor_entrega", s.getValorEntrega());
         dadosSacola.put("valor_total_pedido", s.getValorTotalPedido());
 
@@ -142,10 +145,32 @@ public class PedidoDAO extends SQLiteOpenHelper {
 
         ContentValues dadosSacola = new ContentValues();
         dadosSacola.put("id_restaurante", s.getIdRestaurante());
+        dadosSacola.put("nome_restaurante", s.getNomeRestaurante());
         dadosSacola.put("valor_entrega", s.getValorEntrega());
         dadosSacola.put("valor_total_pedido", s.getValorTotalPedido());
 
         dbWrite.insert("tbl_sacola", null, dadosSacola);
+    }
+
+    public SacolaPedido consultarSacola(){
+        SQLiteDatabase dbRead = getReadableDatabase();
+
+        SacolaPedido s = new SacolaPedido();
+
+        String sql = "SELECT * FROM tbl_sacola WHERE id_sacola = 1";
+        Cursor c = dbRead.rawQuery(sql, null);
+
+        if(c.moveToNext()) {
+            s.setIdSacola(c.getInt(c.getColumnIndex("id_sacola")));
+            s.setIdRestaurante(c.getInt(c.getColumnIndex("id_restaurante")));
+            s.setNomeRestaurante(c.getString(c.getColumnIndex("nome_restaurante")));
+            s.setValorEntrega(c.getDouble(c.getColumnIndex("valor_entrega")));
+            s.setValorTotalPedido(c.getDouble(c.getColumnIndex("valor_total_pedido")));
+
+            c.close();
+        }
+
+        return s;
     }
 
     public List<ProdutoPedido> getItensSacola() {
@@ -155,9 +180,9 @@ public class PedidoDAO extends SQLiteOpenHelper {
         String sql = "SELECT * FROM tbl_produto";
 
         Cursor c = dbRead.rawQuery(sql, null);
-        while(c.moveToNext()){
+        while (c.moveToNext()) {
             ProdutoPedido p = new ProdutoPedido();
-
+            p.setId(c.getInt(c.getColumnIndex("id_produto")));
             p.setNome(c.getString(c.getColumnIndex("nome")));
             p.setQuantidade(c.getInt(c.getColumnIndex("quantidade")));
             p.setPreco(c.getDouble(c.getColumnIndex("preco")));
@@ -169,7 +194,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
         return listProdutos;
     }
 
-    private int getLastId(){
+    private int getLastId() {
         SQLiteDatabase dbRead = getReadableDatabase();
 
         String sql = "SELECT id_produto FROM tbl_produto ORDER BY id_produto DESC LIMIT 1";

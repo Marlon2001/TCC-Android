@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -68,6 +69,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         SacolaPedido mSacolaPedido = new SacolaPedido();
 
         mSacolaPedido.setIdRestaurante(0);
+        mSacolaPedido.setNomeRestaurante("");
         mSacolaPedido.setValorEntrega(0.0);
         mSacolaPedido.setValorTotalPedido(0.0);
 
@@ -95,6 +97,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                     SacolaPedido s = new SacolaPedido();
 
                     s.setIdRestaurante(mRestauranteExibicao.getId());
+                    s.setNomeRestaurante(mRestauranteExibicao.getRazaoSocial());
                     s.setValorEntrega(mRestauranteExibicao.getPrecoEntrega());
                     s.setValorTotalPedido(mRestauranteExibicao.getPrecoEntrega() + mProduto.getPreco() * total);
 

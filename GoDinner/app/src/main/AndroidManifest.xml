@@ -48,7 +48,6 @@
         <activity android:name=".BemVindoActivity" />
         <activity android:name=".TelaInicialActivity" />
         <activity android:name=".TelaRestaurante" />
-        <activity android:name=".CarrinhoComprasActivity"/>
         <activity android:name=".DetalhesPedido"/>
     </application>
 </manifest>
