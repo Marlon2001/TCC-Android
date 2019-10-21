@@ -1,30 +1,21 @@
 package godinner.lab.com.godinner.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.R;
-import godinner.lab.com.godinner.model.Categoria;
 import godinner.lab.com.godinner.model.Produto;
 
 public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.PromocoesViewholder> {
@@ -65,11 +56,8 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
         });
 
 
-        String url = MainActivity.ipServidorFotos +"/"+(p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao:  p.getFotos().get(0).getFoto());
-        Picasso.get()
-                .load(url)
-                .resize(120, 120)
-                .into(promocoesViewholder.imgProduto);
+        String url = MainActivity.ipServidorFotos + (p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao:  p.getFotos().get(0).getFoto());
+        Picasso.get().load(url).resize(120, 120).into(promocoesViewholder.imgProduto);
     }
 
     @Override

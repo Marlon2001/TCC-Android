@@ -3,12 +3,12 @@ package godinner.lab.com.godinner;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ import godinner.lab.com.godinner.adapter.ListaProdutosAdapter;
 import godinner.lab.com.godinner.dao.ConsumidorDAO;
 import godinner.lab.com.godinner.dao.PedidoDAO;
 import godinner.lab.com.godinner.model.Consumidor;
-import godinner.lab.com.godinner.model.Produto;
 import godinner.lab.com.godinner.model.ProdutoPedido;
+import godinner.lab.com.godinner.model.SacolaPedido;
 
 public class SacolaFragment extends Fragment {
 
@@ -39,7 +39,8 @@ public class SacolaFragment extends Fragment {
 
     private String mParam1;
 
-    public SacolaFragment() { }
+    public SacolaFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,12 @@ public class SacolaFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
+    }
+
+    @Override
+    public void onResume() {
+        Toast.makeText(getContext(), "ABRINDO A SACOLA", Toast.LENGTH_SHORT).show();
+        super.onResume();
     }
 
     @Override
@@ -67,19 +74,29 @@ public class SacolaFragment extends Fragment {
         btnEsvaziarSacola = view.findViewById(R.id.btn_esvaziar_sacola);
         btnFinalizarCompra = view.findViewById(R.id.btn_finalizar_compra);
 
-        PedidoDAO dao = new PedidoDAO(view.getContext());
+        PedidoDAO mPedidoDAO = new PedidoDAO(view.getContext());
         ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(view.getContext());
         Consumidor c = mConsumidorDAO.consultarConsumidor();
-        List<ProdutoPedido> listaProdutos = dao.getItensSacola();
+        SacolaPedido mSacolaPedido = mPedidoDAO.consultarSacola();
+        List<ProdutoPedido> listaProdutos = mPedidoDAO.getItensSacola();
 
         Double precoPedido = 0.0;
-        for(ProdutoPedido p : listaProdutos){
+        Double valorEntrega = 0.0;
+
+        if (mSacolaPedido.getValorEntrega() != 0.0)
+            valorEntrega = mSacolaPedido.getValorEntrega();
+
+        for (ProdutoPedido p : listaProdutos) {
             precoPedido += p.getPreco() * p.getQuantidade();
         }
 
         txtEntregarEm.setText(c.getEndereco().getLogradouro() + ", " + c.getEndereco().getNumero());
         txtValorPedido.setText("R$ " + precoPedido.toString().replace(".", ","));
-
+        txtValorEntrega.setText("Valor da Entrega: R$ " + valorEntrega.toString().replace(".", ","));
+        txtTempoEntrega.setText("Tempo: 10min - 15min");
+        txtNomeRestaurante.setText(mSacolaPedido.getNomeRestaurante());
+        txtValorEntrega2.setText("R$ " + valorEntrega.toString().replace(".", ","));
+        txtTotalGeral.setText("R$ " + String.valueOf(precoPedido + valorEntrega).replace(".", ","));
 
         ListaProdutosAdapter mAdapter = new ListaProdutosAdapter(listaProdutos, view.getContext());
         mListaPedidos.setAdapter(mAdapter);

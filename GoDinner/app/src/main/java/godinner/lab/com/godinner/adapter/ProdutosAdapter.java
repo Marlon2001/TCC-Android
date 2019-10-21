@@ -1,24 +1,16 @@
 package godinner.lab.com.godinner.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -55,7 +47,6 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
         DecimalFormat f = new DecimalFormat("0.00");
         produtoViewHolder.precoProduto.setText("R$ "+f.format(p.getPreco()));
 
-
         produtoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,12 +54,8 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
             }
         });
 
-        String url = MainActivity.ipServidorFotos +"/"+(p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao:  p.getFotos().get(0).getFoto());
-
-        Picasso.get()
-                .load(url)
-                .resize(100, 100)
-                .into( produtoViewHolder.imageProduto);
+        String url = MainActivity.ipServidorFotos +(p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao:  p.getFotos().get(0).getFoto());
+        Picasso.get().load(url).resize(100, 100).into( produtoViewHolder.imageProduto);
     }
 
     @Override
@@ -80,11 +67,9 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
         void onClickProduto(View view, int index);
     }
 
-
     protected class ProdutoViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageProduto;
-
         private TextView nomeProdto;
         private TextView descProduto;
         private TextView precoProduto;
@@ -93,7 +78,6 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
             super(itemView);
 
             imageProduto = itemView.findViewById(R.id.image_produto);
-
             nomeProdto = itemView.findViewById(R.id.nome_produto);
             descProduto = itemView.findViewById(R.id.desc_produto);
             precoProduto = itemView.findViewById(R.id.preco_produto);

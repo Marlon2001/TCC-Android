@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import godinner.lab.com.godinner.model.Produto;
 import godinner.lab.com.godinner.model.ProdutoPedido;
 import godinner.lab.com.godinner.model.SacolaPedido;
 
@@ -42,33 +41,34 @@ public class PedidoDAO extends SQLiteOpenHelper {
         db.execSQL(sql1);
         db.execSQL(sql2);
         db.execSQL(sql3);
+
+        ContentValues mDadosSacola = new ContentValues();
+        mDadosSacola.put("id_sacola", 1);
+        mDadosSacola.put("id_restaurante", 0);
+        mDadosSacola.put("nome_restaurante", "");
+        mDadosSacola.put("valor_entrega", 0.0);
+        mDadosSacola.put("valor_total_pedido", 0.0);
+        db.insert("tbl_sacola", null, mDadosSacola);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
-
-    public int getIdSacolaAtiva() {
-        SQLiteDatabase dbRead = getReadableDatabase();
-
-        String sql = "SELECT id_sacola FROM tbl_sacola order by id_sacola desc limit 1";
-        Cursor c = dbRead.rawQuery(sql, null);
-        c.moveToNext();
-        int id = c.getInt(c.getColumnIndex("id_sacola"));
-        c.close();
-
-        return id;
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    public void salvarProdutoPedido(ProdutoPedido p) {
-        int id = getIdSacolaAtiva();
+    public ProdutoPedido consultarProdutoById(int idProduto) {
+        SQLiteDatabase dbRead = getReadableDatabase();
 
-        SQLiteDatabase dbWrite = getWritableDatabase();
+        ProdutoPedido p = new ProdutoPedido();
+        String sql = "SELECT * FROM tbl_produto WHERE id_produto2 = ?";
+        Cursor c = dbRead.rawQuery(sql, new String[]{String.valueOf(idProduto)});
 
-        ContentValues dadosProdutoSacola = new ContentValues();
-        dadosProdutoSacola.put("id_produto", p.getId());
-        dadosProdutoSacola.put("id_sacola", id);
+        if (c.moveToNext())
+            p.setQuantidade(c.getInt(c.getColumnIndex("quantidade")));
+        else
+            p.setQuantidade(0);
 
-        dbWrite.insert("tbl_produto_sacola", null, dadosProdutoSacola);
+        c.close();
+        return p;
     }
 
     public void salvarProduto(ProdutoPedido p) {
@@ -95,35 +95,30 @@ public class PedidoDAO extends SQLiteOpenHelper {
         }
     }
 
-    public boolean verificarSacola() {
-        SQLiteDatabase dbRead = getReadableDatabase();
+    public void salvarProdutoPedido(ProdutoPedido p) {
+        SQLiteDatabase dbWrite = getWritableDatabase();
 
-        String sql = "SELECT COUNT(*) AS total FROM tbl_sacola";
-        Cursor c = dbRead.rawQuery(sql, null);
-        c.moveToNext();
-        int total = c.getInt(c.getColumnIndex("total"));
-        c.close();
+        ContentValues dadosProdutoSacola = new ContentValues();
+        dadosProdutoSacola.put("id_produto", p.getId());
+        dadosProdutoSacola.put("id_sacola", 1);
 
-        if (total == 0) {
-            return true;
-        }
-
-        return false;
+        dbWrite.insert("tbl_produto_sacola", null, dadosProdutoSacola);
     }
 
     public boolean sacolaIsNull() {
         SQLiteDatabase dbRead = getReadableDatabase();
 
-        String sql = "SELECT COUNT(*) AS total FROM tbl_sacola WHERE id_restaurante = 0.0";
+        String sql = "SELECT nome_restaurante FROM tbl_sacola WHERE id_sacola = 1";
         Cursor c = dbRead.rawQuery(sql, null);
-        c.moveToNext();
-        int total = c.getInt(c.getColumnIndex("total"));
-        c.close();
 
-        if (total == 1) {
-            return true;
+        if (c.moveToNext()) {
+            String nomeRestaurante = c.getString(c.getColumnIndex("nome_restaurante"));
+            c.close();
+
+            if (nomeRestaurante.equals("")) {
+                return true;
+            }
         }
-
         return false;
     }
 
@@ -136,23 +131,10 @@ public class PedidoDAO extends SQLiteOpenHelper {
         dadosSacola.put("valor_entrega", s.getValorEntrega());
         dadosSacola.put("valor_total_pedido", s.getValorTotalPedido());
 
-        String[] args = {"1"};
-        dbWrite.update("tbl_sacola", dadosSacola, "id_sacola = ?", args);
+        dbWrite.update("tbl_sacola", dadosSacola, "id_sacola = 1", null);
     }
 
-    public void criarSacola(SacolaPedido s) {
-        SQLiteDatabase dbWrite = getWritableDatabase();
-
-        ContentValues dadosSacola = new ContentValues();
-        dadosSacola.put("id_restaurante", s.getIdRestaurante());
-        dadosSacola.put("nome_restaurante", s.getNomeRestaurante());
-        dadosSacola.put("valor_entrega", s.getValorEntrega());
-        dadosSacola.put("valor_total_pedido", s.getValorTotalPedido());
-
-        dbWrite.insert("tbl_sacola", null, dadosSacola);
-    }
-
-    public SacolaPedido consultarSacola(){
+    public SacolaPedido consultarSacola() {
         SQLiteDatabase dbRead = getReadableDatabase();
 
         SacolaPedido s = new SacolaPedido();
@@ -160,13 +142,12 @@ public class PedidoDAO extends SQLiteOpenHelper {
         String sql = "SELECT * FROM tbl_sacola WHERE id_sacola = 1";
         Cursor c = dbRead.rawQuery(sql, null);
 
-        if(c.moveToNext()) {
+        if (c.moveToNext()) {
             s.setIdSacola(c.getInt(c.getColumnIndex("id_sacola")));
             s.setIdRestaurante(c.getInt(c.getColumnIndex("id_restaurante")));
             s.setNomeRestaurante(c.getString(c.getColumnIndex("nome_restaurante")));
             s.setValorEntrega(c.getDouble(c.getColumnIndex("valor_entrega")));
             s.setValorTotalPedido(c.getDouble(c.getColumnIndex("valor_total_pedido")));
-
             c.close();
         }
 
@@ -186,22 +167,9 @@ public class PedidoDAO extends SQLiteOpenHelper {
             p.setNome(c.getString(c.getColumnIndex("nome")));
             p.setQuantidade(c.getInt(c.getColumnIndex("quantidade")));
             p.setPreco(c.getDouble(c.getColumnIndex("preco")));
-//            p.setTotal(c.getDouble(c.getColumnIndex("valor_total_pedido")));
-//            p.setDesconto(c.getDouble(c.getColumnIndex("valor_entrega")));
             listProdutos.add(p);
         }
 
         return listProdutos;
-    }
-
-    private int getLastId() {
-        SQLiteDatabase dbRead = getReadableDatabase();
-
-        String sql = "SELECT id_produto FROM tbl_produto ORDER BY id_produto DESC LIMIT 1";
-        Cursor c = dbRead.rawQuery(sql, null);
-        c.moveToNext();
-        int idProduto = c.getInt(c.getColumnIndex("id_produto"));
-
-        return idProduto;
     }
 }

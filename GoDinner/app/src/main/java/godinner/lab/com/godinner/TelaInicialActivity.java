@@ -51,9 +51,6 @@ public class TelaInicialActivity extends AppCompatActivity {
 
             }
         });
-
-        //        int cor = ContextCompat.getColor(this,android.R.color.black);
-        //        tabLayout.setTabTextColors(cor, cor);
     }
 
     public int getIcon(int position) {

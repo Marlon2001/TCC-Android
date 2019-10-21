@@ -55,11 +55,10 @@
     <string name="title_section2">Sacola</string>
     <string name="title_section3">Pedidos</string>
     <string name="title_section4">Perfil</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="lbl_imagem_produto">Imagem Produto</string>
     <string name="lbl_promocoes">Promoções</string>
     <string name="lbl_todos">Todos</string>
     <string name="lbl_restaurantes_proximos">Restaurantes próximos</string>
+    <string name="lbl_preco_padrao">R$ 0,00</string>
+    <string name="lbl_sacola_vazia">Sacola Vazia</string>
 </resources>

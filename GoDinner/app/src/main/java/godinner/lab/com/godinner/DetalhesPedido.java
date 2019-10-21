@@ -59,23 +59,13 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         mRestauranteExibicao = (RestauranteExibicao) intent.getSerializableExtra("restaurante");
 
         String url = MainActivity.ipServidorFotos + "/" + (mProduto.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao : mProduto.getFotos().get(0).getFoto());
-        Picasso.get()
-                .load(url)
-                .resize(150, 200)
-                .into(imageProduto);
+        Picasso.get().load(url).resize(150, 200).into(imageProduto);
 
-        PedidoDAO dao = new PedidoDAO(this);
+        PedidoDAO mPedidoDAO = new PedidoDAO(this);
+        ProdutoPedido p = mPedidoDAO.consultarProdutoById(mProduto.getId());
 
-        SacolaPedido mSacolaPedido = new SacolaPedido();
-
-        mSacolaPedido.setIdRestaurante(0);
-        mSacolaPedido.setNomeRestaurante("");
-        mSacolaPedido.setValorEntrega(0.0);
-        mSacolaPedido.setValorTotalPedido(0.0);
-
-        if(dao.verificarSacola()){
-            dao.criarSacola(mSacolaPedido);
-        }
+        if(p.getQuantidade() != 0)
+            btnTotal.setText(p.getQuantidade()+"");
 
         txtNomeProduto.setText(mProduto.getNome());
         txtDetalhesDoProduto.setText(mProduto.getDescricao());
@@ -91,9 +81,9 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                 int total = Integer.parseInt(btnTotal.getText().toString()) + 1;
                 btnTotal.setText(total+"");
 
-                PedidoDAO dao = new PedidoDAO(this);
+                PedidoDAO mPedidoDAO = new PedidoDAO(this);
 
-                if(dao.sacolaIsNull()){
+                if(mPedidoDAO.sacolaIsNull()){
                     SacolaPedido s = new SacolaPedido();
 
                     s.setIdRestaurante(mRestauranteExibicao.getId());
@@ -101,7 +91,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                     s.setValorEntrega(mRestauranteExibicao.getPrecoEntrega());
                     s.setValorTotalPedido(mRestauranteExibicao.getPrecoEntrega() + mProduto.getPreco() * total);
 
-                    dao.atualizarSacola(s);
+                    mPedidoDAO.atualizarSacola(s);
                 }
 
                 ProdutoPedido p = new ProdutoPedido();
@@ -110,7 +100,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                 p.setPreco(mProduto.getPreco());
                 p.setQuantidade(total);
 
-                dao.salvarProduto(p);
+                mPedidoDAO.salvarProduto(p);
                 break;
             case R.id.btn_menos_um:
                 Toast.makeText(this, "Menos 1", Toast.LENGTH_SHORT).show();

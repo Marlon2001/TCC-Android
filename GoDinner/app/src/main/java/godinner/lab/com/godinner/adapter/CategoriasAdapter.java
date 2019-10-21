@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Categoria;
 
@@ -49,10 +50,7 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
             }
         });
 
-        Picasso.get()
-                .load(c.getUrlImage())
-                .resize(100, 100)
-                .into(categoriasViewholder.imgCategoria);
+        Picasso.get().load(MainActivity.ipServidorFotos + c.getUrlImage()).resize(100, 100).into(categoriasViewholder.imgCategoria);
     }
 
     @Override
@@ -68,13 +66,11 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
         private ImageView imgCategoria;
         private TextView txtCategoria;
 
-
         private CategoriasViewholder(@NonNull View itemView) {
             super(itemView);
 
             imgCategoria = itemView.findViewById(R.id.image_item);
             txtCategoria = itemView.findViewById(R.id.title_item);
-
         }
     }
 }
