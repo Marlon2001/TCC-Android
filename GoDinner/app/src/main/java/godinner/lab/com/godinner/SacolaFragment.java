@@ -126,7 +126,7 @@ public class SacolaFragment extends Fragment {
         txtValorPedido.setText("R$ " + precoPedido.toString().replace(".", ","));
         txtValorEntrega.setText("Valor da Entrega: R$ " + valorEntrega.toString().replace(".", ","));
         txtTempoEntrega.setText("Tempo: " + tempoEntrega);
-        txtNomeRestaurante.setText(nomeRestaurante); 
+        txtNomeRestaurante.setText(nomeRestaurante);
         txtValorEntrega2.setText("R$ " + valorEntrega.toString().replace(".", ","));
         txtTotalGeral.setText("R$ " + String.valueOf(precoPedido + valorEntrega).replace(".", ","));
 

@@ -51,7 +51,6 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
             }
         });
 
-        Log.d("CAMINHO FOTO ---", MainActivity.ipServidorFotos + r.getFoto());
         Picasso.get().load(MainActivity.ipServidorFotos + r.getFoto()).resize(100, 100).into(restauranteViewHolder.imgRestaurante);
     }
 
