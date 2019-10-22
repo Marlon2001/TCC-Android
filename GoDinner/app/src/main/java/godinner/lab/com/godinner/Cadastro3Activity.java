@@ -154,28 +154,20 @@ public class Cadastro3Activity extends AppCompatActivity {
                     e.setIdCidade(cidade.getIdCidade());
                     e.setIdEstado(estado.getIdEstado());
 
-                    final AlertDialog.Builder mBuilder = new AlertDialog.Builder(Cadastro3Activity.this);
-                    final View mView = getLayoutInflater().inflate(R.layout.loading_dialog, null);
-
-                    mBuilder.setView(mView);
-                    final AlertDialog dialog = mBuilder.create();
-                    dialog.show();
-
                     try {
                         CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e);
                         cadastroUsuario.execute();
                         cadastroUsuario.get();
 
-                        dialog.dismiss();
                         Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
                         startActivity(abrirBemVindo);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
                         LocalBroadcastManager.getInstance(Cadastro3Activity.this).sendBroadcast(new Intent("fecharActivity"));
                         finish();
                     } catch (ExecutionException | InterruptedException e1) {
                         e1.printStackTrace();
                     }
-                    dialog.dismiss();
                 }
             }
         });

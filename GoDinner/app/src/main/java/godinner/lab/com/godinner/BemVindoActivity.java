@@ -17,7 +17,7 @@ public class BemVindoActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bem_vindo);
 
-        btnEntrar = findViewById(R.id.btn_total_produtos);
+        btnEntrar = findViewById(R.id.btn_entrar);
         btnVoltar = findViewById(R.id.btn_voltar);
 
         btnEntrar.setOnClickListener(this);

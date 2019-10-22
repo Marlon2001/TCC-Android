@@ -1,24 +1,20 @@
 package godinner.lab.com.godinner.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import com.squareup.picasso.Picasso;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
+import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Produto;
 
@@ -48,18 +44,18 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
 
         produtoViewHolder.nomeProdto.setText(p.getNome());
         produtoViewHolder.descProduto.setText(p.getDescricao());
-
         DecimalFormat f = new DecimalFormat("0.00");
         produtoViewHolder.precoProduto.setText("R$ "+f.format(p.getPreco()));
 
-        produtoViewHolder.progressBar.setVisibility(View.VISIBLE);
-        produtoViewHolder.imageProduto.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
         produtoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mProdutoOnClickListener.onClickProduto(v , i);
             }
         });
+
+        String url = MainActivity.ipServidorFotos +(p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao:  p.getFotos().get(0).getFoto());
+        Picasso.get().load(url).resize(100, 100).into( produtoViewHolder.imageProduto);
     }
 
     @Override
@@ -71,36 +67,9 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
         void onClickProduto(View view, int index);
     }
 
-    protected class CarregaImage extends AsyncTask<URL, Void, Drawable> {
-        private ProdutoViewHolder mViewHolder;
-
-        @Override
-        protected Drawable doInBackground(URL... urls) {
-            URL url = urls[0];
-            InputStream content;
-
-            try {
-                content = (InputStream) url.getContent();
-
-                return Drawable.createFromStream(content, "src");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            mViewHolder.imageProduto.setImageDrawable(drawable);
-            mViewHolder.progressBar.setVisibility(View.INVISIBLE);
-            super.onPostExecute(drawable);
-        }
-    }
-
     protected class ProdutoViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageProduto;
-        private ProgressBar progressBar;
         private TextView nomeProdto;
         private TextView descProduto;
         private TextView precoProduto;
@@ -109,7 +78,6 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
             super(itemView);
 
             imageProduto = itemView.findViewById(R.id.image_produto);
-            progressBar = itemView.findViewById(R.id.progressImage);
             nomeProdto = itemView.findViewById(R.id.nome_produto);
             descProduto = itemView.findViewById(R.id.desc_produto);
             precoProduto = itemView.findViewById(R.id.preco_produto);

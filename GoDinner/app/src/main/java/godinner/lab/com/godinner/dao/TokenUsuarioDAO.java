@@ -16,44 +16,39 @@ public class TokenUsuarioDAO extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql = "CREATE TABLE IF NOT EXISTS tbl_token(" +
                 "id_token INTEGER PRIMARY KEY," +
-                "token TEXT NOT NULL," +
-                "validity TEXT NOT NULL)";
+                "token TEXT NOT NULL)";
         db.execSQL(sql);
 
         ContentValues dados = new ContentValues();
+        dados.put("id_token", 1);
         dados.put("token", "");
-        dados.put("validity", "atual");
-
         db.insert("tbl_token", null, dados);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sql = "DROP TABLE IF EXISTS tbl_token";
-        db.execSQL(sql);
-        onCreate(db);
     }
 
-    public void salvarToken(String token){
+    public void salvarToken(String token) {
         SQLiteDatabase dbWrite = getWritableDatabase();
 
         ContentValues dados = new ContentValues();
-        dados.put("id_token", 1);
         dados.put("token", token);
-        dados.put("validity", "atual");
 
-        String[] params = {"atual"};
-        dbWrite.update("tbl_token", dados, "validity = ?", params);
+        dbWrite.update("tbl_token", dados, "id_token = 1", null);
     }
 
-    public String consultarToken(){
+    public String consultarToken() {
         SQLiteDatabase dbRead = getReadableDatabase();
-        String sql = "SELECT token FROM tbl_token WHERE validity = 'atual'";
 
+        String token = "";
+        String sql = "SELECT token FROM tbl_token WHERE id_token = 1";
         Cursor c = dbRead.rawQuery(sql, null);
-        c.moveToNext();
-        String token = c.getString(c.getColumnIndex("token"));
 
-        return  token;
+        if(c.moveToNext()){
+            token = c.getString(c.getColumnIndex("token"));
+        }
+
+        return token;
     }
 }

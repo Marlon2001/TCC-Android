@@ -1,5 +1,17 @@
 package godinner.lab.com.godinner;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -10,18 +22,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
-import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.design.button.MaterialButton;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,14 +35,17 @@ import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.BuscarConsumidor;
 import godinner.lab.com.godinner.tasks.LoginUsuario;
+import godinner.lab.com.godinner.tasks.ValidarToken;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class MainActivity extends AppCompatActivity {
 
     public static String token = null;
     public static String erro;
-    public static Consumidor    mConsumidorLogado;
+    public static Consumidor mConsumidorLogado;
     public static final String ipServidor = "http://godinner.tk:8080";
+    public static String fotoLanchePadrao = "/restaurante/produto/1569953042416-115-840x560.jpg";
+    public static String ipServidorFotos = "http://fotos.godinner.tk";
 
     private MaterialButton btnLogar;
     private MaterialButton btnCadastrar;
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.logo));
 
-        btnLogar = findViewById(R.id.btn_total_produtos);
+        btnLogar = findViewById(R.id.btn_logar);
         btnCadastrar = findViewById(R.id.btn_cadastrar);
         loginButton = findViewById(R.id.login_button);
 
@@ -71,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         txtEmailLayout = findViewById(R.id.txt_email_layout);
         txtSenhaLayout = findViewById(R.id.txt_password_layout);
 
-        checkLoginStatus();
+//        checkLoginStatus();
 
         final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
 
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 erro = null;
                 token = null;
-                if(validarCampos()){
+                if (validarCampos()) {
                     Login login = new Login();
                     login.setEmail(txtEmail.getText().toString());
                     login.setSenha(txtSenha.getText().toString());
@@ -89,14 +92,13 @@ public class MainActivity extends AppCompatActivity {
                         LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
                         mLogin.execute().get();
 
-                        if(erro != null || token == null){
+                        if (erro != null || token == null) {
                             new AlertDialog.Builder(MainActivity.this)
                                     .setTitle("Não foi desta vez.")
                                     .setMessage("Usuário ou senha incorretos.")
                                     .setPositiveButton("Fechar", null)
                                     .show();
                         } else {
-
                             mTokenUsuarioDAO.salvarToken(token);
 
                             BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token);
@@ -155,13 +157,13 @@ public class MainActivity extends AppCompatActivity {
     AccessTokenTracker tokenTracker = new AccessTokenTracker() {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-            if(currentAccessToken!=null){
+            if (currentAccessToken != null) {
                 loadUserProfile(currentAccessToken);
             }
         }
     };
 
-    private void loadUserProfile(AccessToken token){
+    private void loadUserProfile(AccessToken token) {
         // Enviando uma solicitação ao Facebook para pegar os dados do usuário através da API Graph
         GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
             @Override
@@ -171,15 +173,14 @@ public class MainActivity extends AppCompatActivity {
                     String last_name = object.getString("last_name");
                     String email = object.getString("email");
                     String id = object.getString("id");
-                    String image_url = "https://graph.facebook.com/"+id+"/picture?type=normal";
+                    String image_url = "https://graph.facebook.com/" + id + "/picture?type=normal";
 
-                    Log.d("NOME", first_name+" "+last_name);
+                    Log.d("NOME", first_name + " " + last_name);
                     Log.d("E-MAIL", email);
                     Log.d("IMAGE", image_url);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
@@ -191,21 +192,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkLoginStatus() {
-        if(AccessToken.getCurrentAccessToken()!=null){
+        if (AccessToken.getCurrentAccessToken() != null) {
             loadUserProfile(AccessToken.getCurrentAccessToken());
         }
     }
 
-    private boolean validarCampos(){
+    private boolean validarCampos() {
         boolean semErros = true;
 
-        if(!ValidaCampos.isValidEmail(txtEmail.getText().toString())){
+        if (!ValidaCampos.isValidEmail(txtEmail.getText().toString())) {
             txtEmailLayout.setErrorEnabled(true);
             txtEmailLayout.setError("Insira um e-mail válido.");
             semErros = false;
         }
 
-        if(txtSenha.getText().toString().length() < 6){
+        if (txtSenha.getText().toString().length() < 6) {
             txtSenhaLayout.setErrorEnabled(true);
             txtSenhaLayout.setError("Insira uma senha válida.");
             semErros = false;

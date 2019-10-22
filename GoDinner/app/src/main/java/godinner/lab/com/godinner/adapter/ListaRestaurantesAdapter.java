@@ -13,12 +13,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Restaurante;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
@@ -51,11 +54,10 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
             restauranteViewHolder.rank.setText(r.getNota()+"º mais visitado.");
         }
         restauranteViewHolder.avaliacao.setText(r.getNota().toString());
-        restauranteViewHolder.distancia.setText(r.getDistancia()+" Km");
+        restauranteViewHolder.distancia.setText(r.getDistancia());
         restauranteViewHolder.preco.setText("R$ "+r.getNota());
-        restauranteViewHolder.tempo.setText(r.getTempoEntrega() + " min");
+        restauranteViewHolder.tempo.setText(r.getTempoEntrega());
         restauranteViewHolder.descricao.setText(r.getRazaoSocial());
-        restauranteViewHolder.progressBar.setVisibility(View.VISIBLE);
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
 
         restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -65,15 +67,7 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
             }
         });
 
-        try{
-            URL urlImage = new URL(r.getFoto());
-
-            CarregaImage carregaImage = new CarregaImage();
-            carregaImage.mViewHolder = restauranteViewHolder;
-            carregaImage.execute(urlImage);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        Picasso.get().load(MainActivity.ipServidorFotos + r.getFoto()).resize(100, 100).into(restauranteViewHolder.imgRestaurante);
     }
 
     @Override
@@ -83,32 +77,6 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
 
     public interface RestauranteOnClickListener {
         void onClickRestaurante(View view, int index);
-    }
-
-    protected class CarregaImage extends AsyncTask<URL, Void, Drawable> {
-        private RestauranteViewHolder mViewHolder;
-
-        @Override
-        protected Drawable doInBackground(URL... urls) {
-            URL url = urls[0];
-            InputStream content;
-
-            try {
-                content = (InputStream) url.getContent();
-
-                return Drawable.createFromStream(content, "src");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            mViewHolder.imgRestaurante.setImageDrawable(drawable);
-            mViewHolder.progressBar.setVisibility(View.INVISIBLE);
-            super.onPostExecute(drawable);
-        }
     }
 
     protected class RestauranteViewHolder extends RecyclerView.ViewHolder {
@@ -121,7 +89,6 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         private TextView tempo;
         private TextView descricao;
         private ImageView imgRestaurante;
-        private ProgressBar progressBar;
 
         public RestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -134,7 +101,6 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
             tempo = itemView.findViewById(R.id.tempo);
             descricao = itemView.findViewById(R.id.descricao);
             imgRestaurante = itemView.findViewById(R.id.image);
-            progressBar = itemView.findViewById(R.id.progressImage);
         }
     }
 }

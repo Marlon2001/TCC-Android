@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp"
-    android:paddingTop="4dp"
-    android:foreground="?attr/selectableItemBackground">
+    android:layout_height="95dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:orientation="vertical">
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="4dp"
+
+        android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -121,6 +129,7 @@
                 android:lines="1"
                 android:ellipsize="end"/>
         </LinearLayout>
+
     </LinearLayout>
     <FrameLayout
         android:layout_width="0dp"
@@ -131,16 +140,30 @@
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
+
+            android:scaleType="centerInside"
+            android:maxHeight="100px"
+            android:maxWidth="100px"
+            android:background="@color/Image"
             android:contentDescription="@string/lbl_logo_restaurante"/>
 
-        <ProgressBar
-            android:id="@+id/progressImage"
-            style="@android:style/Widget.ProgressBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|center_vertical"
-            android:gravity="center|center_vertical"
-            android:visibility="invisible" />
+        <!--<ProgressBar-->
+            <!--android:id="@+id/progressImage"-->
+            <!--style="@android:style/Widget.ProgressBar.Small"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center|center_vertical"-->
+            <!--android:gravity="center|center_vertical"-->
+            <!--android:visibility="invisible" />-->
+
     </FrameLayout>
+    </LinearLayout>
+    <View
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="8dp"
+        android:id="@+id/linha3"
+        android:layout_width="1000dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:background="#a4a2a2" />
 </LinearLayout>
