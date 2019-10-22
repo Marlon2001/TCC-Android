@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -33,36 +34,30 @@ public class SplashActivity extends Activity {
         final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
 
         String mToken = mTokenUsuarioDAO.consultarToken();
-        if (mToken != "") {
-            ValidarToken task = new ValidarToken(new ValidarToken.ResultRequest() {
+
+        if (!mToken.equals("")) {
+            ValidarToken validarToken = new ValidarToken(mToken, new ValidarToken.ResultRequest() {
                 @Override
                 public void Request(boolean result) {
                     if (result) {
-                        Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
-                        startActivity(abrirTelaInicial);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                        SplashActivity.this.finish();
+                        mStartInicialActivity();
                     } else if (!result) {
-                        StartActivity();
+                        mStartMainActivity();
                     }
                 }
-            }, mToken);
-            try {
-                task.execute().get();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+            });
 
-        StartActivity();
+            validarToken.execute();
+        } else {
+            mStartMainActivity();
+        }
     }
 
-    private void StartActivity() {
+    private void mStartMainActivity() {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
         anim.reset();
         RelativeLayout r = findViewById(R.id.splash);
+
         if (r != null) {
             r.clearAnimation();
             r.startAnimation(anim);
@@ -79,6 +74,26 @@ public class SplashActivity extends Activity {
         }, 2000);
     }
 
+    private void mStartInicialActivity() {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
+        anim.reset();
+        RelativeLayout r = findViewById(R.id.splash);
+
+        if (r != null) {
+            r.clearAnimation();
+            r.startAnimation(anim);
+        }
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent abrirTelaInicial = new Intent(SplashActivity.this, TelaInicialActivity.class);
+                startActivity(abrirTelaInicial);
+                SplashActivity.this.finish();
+            }
+        }, 2000);
+    }
 
 //        final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(SplashActivity.this);
 //        final CidadeEstadoDAO mCidadeEstadoDAO = new CidadeEstadoDAO(SplashActivity.this);

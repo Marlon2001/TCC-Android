@@ -3,6 +3,7 @@ package godinner.lab.com.godinner.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
             }
         });
 
+        Log.d("CAMINHO FOTO ---", MainActivity.ipServidorFotos + r.getFoto());
         Picasso.get().load(MainActivity.ipServidorFotos + r.getFoto()).resize(100, 100).into(restauranteViewHolder.imgRestaurante);
     }
 

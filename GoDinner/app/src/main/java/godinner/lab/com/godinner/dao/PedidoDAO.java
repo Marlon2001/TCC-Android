@@ -31,6 +31,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
                 "id_sacola INTEGER PRIMARY KEY," +
                 "id_restaurante INTEGER NOT NULL," +
                 "nome_restaurante TEXT NOT NULL," +
+                "tempo_entrega TEXT NOT NULL," +
                 "valor_entrega DOUBLE NOT NULL," +
                 "valor_total_pedido DOUBLE NOT NULL)";
 
@@ -46,6 +47,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
         mDadosSacola.put("id_sacola", 1);
         mDadosSacola.put("id_restaurante", 0);
         mDadosSacola.put("nome_restaurante", "");
+        mDadosSacola.put("tempo_entrega", "");
         mDadosSacola.put("valor_entrega", 0.0);
         mDadosSacola.put("valor_total_pedido", 0.0);
         db.insert("tbl_sacola", null, mDadosSacola);
@@ -71,12 +73,12 @@ public class PedidoDAO extends SQLiteOpenHelper {
         return p;
     }
 
-    public void salvarProduto(ProdutoPedido p) {
+    public void salvarProduto(ProdutoPedido p, String acao) {
         SQLiteDatabase dbWrite = getWritableDatabase();
 
         ContentValues dadosProduto = new ContentValues();
 
-        if (p.getQuantidade() == 1) {
+        if (acao.equals("novo")) {
             dadosProduto.put("id_produto2", p.getId());
             dadosProduto.put("nome", p.getNome());
             dadosProduto.put("preco", p.getPreco());
@@ -87,11 +89,15 @@ public class PedidoDAO extends SQLiteOpenHelper {
             pedido.setId(p.getId());
 
             salvarProdutoPedido(pedido);
-        } else {
+        } else if (acao.equals("editar")) {
             String[] args = {p.getId().toString()};
 
             dadosProduto.put("quantidade", p.getQuantidade());
             dbWrite.update("tbl_produto", dadosProduto, "id_produto2 = ?", args);
+        } else if (acao.equals("excluir")) {
+            String[] args = {p.getId().toString()};
+
+            dbWrite.delete("tbl_produto", "id_produto2 = ?", args);
         }
     }
 
@@ -128,6 +134,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
         ContentValues dadosSacola = new ContentValues();
         dadosSacola.put("id_restaurante", s.getIdRestaurante());
         dadosSacola.put("nome_restaurante", s.getNomeRestaurante());
+        dadosSacola.put("tempo_entrega", s.getTempoEntrega());
         dadosSacola.put("valor_entrega", s.getValorEntrega());
         dadosSacola.put("valor_total_pedido", s.getValorTotalPedido());
 
@@ -146,6 +153,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
             s.setIdSacola(c.getInt(c.getColumnIndex("id_sacola")));
             s.setIdRestaurante(c.getInt(c.getColumnIndex("id_restaurante")));
             s.setNomeRestaurante(c.getString(c.getColumnIndex("nome_restaurante")));
+            s.setTempoEntrega(c.getString(c.getColumnIndex("tempo_entrega")));
             s.setValorEntrega(c.getDouble(c.getColumnIndex("valor_entrega")));
             s.setValorTotalPedido(c.getDouble(c.getColumnIndex("valor_total_pedido")));
             c.close();
@@ -171,5 +179,21 @@ public class PedidoDAO extends SQLiteOpenHelper {
         }
 
         return listProdutos;
+    }
+
+    public void esvaziarSacola() {
+        SQLiteDatabase dbWrite = getWritableDatabase();
+
+        dbWrite.delete("tbl_produto_sacola", null, null);
+        dbWrite.delete("tbl_produto", null, null);
+
+        ContentValues mDadosSacola = new ContentValues();
+        mDadosSacola.put("id_restaurante", 0);
+        mDadosSacola.put("nome_restaurante", "");
+        mDadosSacola.put("tempo_entrega", "");
+        mDadosSacola.put("valor_entrega", 0.0);
+        mDadosSacola.put("valor_total_pedido", 0.0);
+
+        dbWrite.update("tbl_sacola", mDadosSacola, "id_sacola = 1", null);
     }
 }

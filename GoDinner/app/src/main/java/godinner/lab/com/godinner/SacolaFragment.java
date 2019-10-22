@@ -1,8 +1,10 @@
 package godinner.lab.com.godinner;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import godinner.lab.com.godinner.adapter.ListaProdutosAdapter;
 import godinner.lab.com.godinner.dao.ConsumidorDAO;
@@ -32,6 +36,8 @@ public class SacolaFragment extends Fragment {
     private TextView txtValorEntrega2;  // R$ 30,00
     private TextView txtTotalGeral;     // R$ 40,00
 
+    private Context context;
+
     private MaterialButton btnEsvaziarSacola;
     private MaterialButton btnFinalizarCompra;
 
@@ -51,14 +57,9 @@ public class SacolaFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        Toast.makeText(getContext(), "ABRINDO A SACOLA", Toast.LENGTH_SHORT).show();
-        super.onResume();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sacola, container, false);
+        context = getContext();
 
         txtEntregarEm = view.findViewById(R.id.txt_endereco_entrega);
         txtValorEntrega = view.findViewById(R.id.txt_valor_entrega);
@@ -74,32 +75,16 @@ public class SacolaFragment extends Fragment {
         btnEsvaziarSacola = view.findViewById(R.id.btn_esvaziar_sacola);
         btnFinalizarCompra = view.findViewById(R.id.btn_finalizar_compra);
 
-        PedidoDAO mPedidoDAO = new PedidoDAO(view.getContext());
-        ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(view.getContext());
-        Consumidor c = mConsumidorDAO.consultarConsumidor();
-        SacolaPedido mSacolaPedido = mPedidoDAO.consultarSacola();
-        List<ProdutoPedido> listaProdutos = mPedidoDAO.getItensSacola();
+        btnEsvaziarSacola.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PedidoDAO mPedidoDAO = new PedidoDAO(context);
 
-        Double precoPedido = 0.0;
-        Double valorEntrega = 0.0;
-
-        if (mSacolaPedido.getValorEntrega() != 0.0)
-            valorEntrega = mSacolaPedido.getValorEntrega();
-
-        for (ProdutoPedido p : listaProdutos) {
-            precoPedido += p.getPreco() * p.getQuantidade();
-        }
-
-        txtEntregarEm.setText(c.getEndereco().getLogradouro() + ", " + c.getEndereco().getNumero());
-        txtValorPedido.setText("R$ " + precoPedido.toString().replace(".", ","));
-        txtValorEntrega.setText("Valor da Entrega: R$ " + valorEntrega.toString().replace(".", ","));
-        txtTempoEntrega.setText("Tempo: 10min - 15min");
-        txtNomeRestaurante.setText(mSacolaPedido.getNomeRestaurante());
-        txtValorEntrega2.setText("R$ " + valorEntrega.toString().replace(".", ","));
-        txtTotalGeral.setText("R$ " + String.valueOf(precoPedido + valorEntrega).replace(".", ","));
-
-        ListaProdutosAdapter mAdapter = new ListaProdutosAdapter(listaProdutos, view.getContext());
-        mListaPedidos.setAdapter(mAdapter);
+                mPedidoDAO.esvaziarSacola();
+                mPedidoDAO.close();
+                onResume();
+            }
+        });
 
         return view;
     }
@@ -110,5 +95,48 @@ public class SacolaFragment extends Fragment {
         args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void mAtualizarSacola() {
+        PedidoDAO mPedidoDAO = new PedidoDAO(context);
+        ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(context);
+        Consumidor c = mConsumidorDAO.consultarConsumidor();
+        SacolaPedido mSacolaPedido = mPedidoDAO.consultarSacola();
+        List<ProdutoPedido> listaProdutos = mPedidoDAO.getItensSacola();
+
+        Double precoPedido = 0.0;
+        Double valorEntrega = 0.0;
+        String tempoEntrega = "0 min";
+        String nomeRestaurante = "Nenhum Pedido";
+
+        if (mSacolaPedido.getValorEntrega() != 0.0)
+            valorEntrega = mSacolaPedido.getValorEntrega();
+
+        if(!mSacolaPedido.getTempoEntrega().isEmpty())
+            tempoEntrega = mSacolaPedido.getTempoEntrega();
+
+        if(!mSacolaPedido.getNomeRestaurante().isEmpty())
+            nomeRestaurante = mSacolaPedido.getNomeRestaurante();
+
+        for (ProdutoPedido p : listaProdutos) {
+            precoPedido += p.getPreco() * p.getQuantidade();
+        }
+
+        txtEntregarEm.setText(c.getEndereco().getLogradouro() + ", " + c.getEndereco().getNumero());
+        txtValorPedido.setText("R$ " + precoPedido.toString().replace(".", ","));
+        txtValorEntrega.setText("Valor da Entrega: R$ " + valorEntrega.toString().replace(".", ","));
+        txtTempoEntrega.setText("Tempo: " + tempoEntrega);
+        txtNomeRestaurante.setText(nomeRestaurante); 
+        txtValorEntrega2.setText("R$ " + valorEntrega.toString().replace(".", ","));
+        txtTotalGeral.setText("R$ " + String.valueOf(precoPedido + valorEntrega).replace(".", ","));
+
+        ListaProdutosAdapter mAdapter = new ListaProdutosAdapter(listaProdutos, context);
+        mListaPedidos.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAtualizarSacola();
     }
 }

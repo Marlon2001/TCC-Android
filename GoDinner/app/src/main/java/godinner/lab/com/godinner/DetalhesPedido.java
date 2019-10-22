@@ -1,22 +1,19 @@
 package godinner.lab.com.godinner;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import godinner.lab.com.godinner.dao.PedidoDAO;
 import godinner.lab.com.godinner.model.Produto;
 import godinner.lab.com.godinner.model.ProdutoPedido;
-import godinner.lab.com.godinner.model.Restaurante;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 import godinner.lab.com.godinner.model.SacolaPedido;
 
@@ -64,8 +61,8 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         PedidoDAO mPedidoDAO = new PedidoDAO(this);
         ProdutoPedido p = mPedidoDAO.consultarProdutoById(mProduto.getId());
 
-        if(p.getQuantidade() != 0)
-            btnTotal.setText(p.getQuantidade()+"");
+        if (p.getQuantidade() != 0)
+            btnTotal.setText(p.getQuantidade() + "");
 
         txtNomeProduto.setText(mProduto.getNome());
         txtDetalhesDoProduto.setText(mProduto.getDescricao());
@@ -76,37 +73,52 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        int total = Integer.parseInt(btnTotal.getText().toString());
+        PedidoDAO mPedidoDAO = new PedidoDAO(this);
+        ProdutoPedido p = new ProdutoPedido();
+
         switch (v.getId()) {
             case R.id.btn_mais_um:
-                int total = Integer.parseInt(btnTotal.getText().toString()) + 1;
-                btnTotal.setText(total+"");
+                total++;
+                btnTotal.setText(String.valueOf(total));
 
-                PedidoDAO mPedidoDAO = new PedidoDAO(this);
-
-                if(mPedidoDAO.sacolaIsNull()){
+                if (mPedidoDAO.sacolaIsNull()) {
                     SacolaPedido s = new SacolaPedido();
 
                     s.setIdRestaurante(mRestauranteExibicao.getId());
                     s.setNomeRestaurante(mRestauranteExibicao.getRazaoSocial());
+                    s.setTempoEntrega(mRestauranteExibicao.getTempoEntrega());
                     s.setValorEntrega(mRestauranteExibicao.getPrecoEntrega());
                     s.setValorTotalPedido(mRestauranteExibicao.getPrecoEntrega() + mProduto.getPreco() * total);
 
                     mPedidoDAO.atualizarSacola(s);
                 }
 
-                ProdutoPedido p = new ProdutoPedido();
                 p.setId(mProduto.getId());
                 p.setNome(mProduto.getNome());
                 p.setPreco(mProduto.getPreco());
                 p.setQuantidade(total);
 
-                mPedidoDAO.salvarProduto(p);
+                if(p.getQuantidade() == 1)
+                    mPedidoDAO.salvarProduto(p, "novo");
+                else
+                    mPedidoDAO.salvarProduto(p, "editar");
                 break;
             case R.id.btn_menos_um:
-                Toast.makeText(this, "Menos 1", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btn_total_produtos:
-                Toast.makeText(this, "Valor total", Toast.LENGTH_SHORT).show();
+                if (total > 0) {
+                    total--;
+                    btnTotal.setText(String.valueOf(total));
+
+                    p.setId(mProduto.getId());
+                    p.setNome(mProduto.getNome());
+                    p.setPreco(mProduto.getPreco());
+                    p.setQuantidade(total);
+
+                    if (p.getQuantidade() > 0)
+                        mPedidoDAO.salvarProduto(p, "editar");
+                    else if (p.getQuantidade() == 0)
+                        mPedidoDAO.salvarProduto(p, "excluir");
+                }
                 break;
             case R.id.valor_total:
                 finish();
