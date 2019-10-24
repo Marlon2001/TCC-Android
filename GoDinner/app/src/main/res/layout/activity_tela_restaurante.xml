@@ -14,12 +14,12 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="52dp"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:background="#d6d1d1">
+            android:background="#f8f8f8">
 
             <ImageButton
                 android:layout_width="wrap_content"
