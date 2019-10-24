@@ -1,19 +1,21 @@
 package godinner.lab.com.godinner;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Cidade;
@@ -32,24 +34,27 @@ public class SplashActivity extends Activity {
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.imageView));
 
         final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
-
         String mToken = mTokenUsuarioDAO.consultarToken();
 
-        if (!mToken.equals("")) {
-            ValidarToken validarToken = new ValidarToken(mToken, new ValidarToken.ResultRequest() {
-                @Override
-                public void Request(boolean result) {
-                    if (result) {
-                        mStartInicialActivity();
-                    } else if (!result) {
-                        mStartMainActivity();
+        if (isNetworkAvailable()) {
+            if (!mToken.equals("")) {
+                ValidarToken validarToken = new ValidarToken(mToken, new ValidarToken.ResultRequest() {
+                    @Override
+                    public void Request(boolean result) {
+                        if (result) {
+                            mStartInicialActivity();
+                        } else if (!result) {
+                            mStartMainActivity();
+                        }
                     }
-                }
-            });
+                });
 
-            validarToken.execute();
+                validarToken.execute();
+            } else {
+                mStartMainActivity();
+            }
         } else {
-            mStartMainActivity();
+            Toast.makeText(this, "SEM INTERNET", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -93,6 +98,14 @@ public class SplashActivity extends Activity {
                 SplashActivity.this.finish();
             }
         }, 2000);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ;
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 //        final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(SplashActivity.this);

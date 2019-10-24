@@ -49,6 +49,7 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
     @Override
     public void onBindViewHolder(@NonNull RestauranteViewHolder restauranteViewHolder, final int i) {
         RestauranteExibicao r = mRestaurantes.get(i);
+        restauranteViewHolder.imgRestaurante.setBackgroundResource(R.drawable.ic_chef);
         restauranteViewHolder.nome.setText(r.getRazaoSocial());
         if (r.getNota() != null){
             restauranteViewHolder.rank.setText(r.getNota()+"º mais visitado.");

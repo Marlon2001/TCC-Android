@@ -13,7 +13,7 @@ import godinner.lab.com.godinner.model.Endereco;
 public class ConsumidorDAO extends SQLiteOpenHelper {
 
     public ConsumidorDAO(Context context) {
-        super(context, "db_godinner1", null, 1);
+        super(context, "db_godinner2", null, 1);
     }
 
     @Override

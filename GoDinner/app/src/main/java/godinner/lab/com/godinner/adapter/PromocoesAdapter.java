@@ -42,6 +42,7 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
     public void onBindViewHolder(@NonNull PromocoesViewholder promocoesViewholder, final int i) {
         Produto p = mProdutos.get(i);
 
+        promocoesViewholder.imgProduto.setBackgroundResource(R.drawable.ic_food);
         promocoesViewholder.txtProduto.setText(p.getNome());
         promocoesViewholder.txtPrecoAntigo.setText(Html.fromHtml("<del>R$ "+p.getPreco()+"</del>"));
 

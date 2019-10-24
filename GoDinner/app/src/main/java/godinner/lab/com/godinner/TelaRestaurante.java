@@ -1,11 +1,12 @@
 package godinner.lab.com.godinner;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,12 +20,14 @@ import godinner.lab.com.godinner.model.RestauranteExibicao;
 import godinner.lab.com.godinner.tasks.BuscarProdutosRestaurante;
 import godinner.lab.com.godinner.tasks.BuscarPromocoesRestaurante;
 
-public class TelaRestaurante extends AppCompatActivity {
+public class TelaRestaurante extends AppCompatActivity implements View.OnClickListener {
 
     private TextView txtRestaurante;
     private TextView txtPreco;
     private TextView txtEntrega;
     private TextView txtAvaliacao;
+
+    private ImageButton btnVoltar;
 
     private RecyclerView mPromocoes;
     private RecyclerView mTodosProdutos;
@@ -42,6 +45,7 @@ public class TelaRestaurante extends AppCompatActivity {
         txtPreco = findViewById(R.id.preco);
         txtEntrega = findViewById(R.id.tempo_entrega);
         txtAvaliacao = findViewById(R.id.avaliacao_restaurante);
+        btnVoltar = findViewById(R.id.btn_voltar);
         mPromocoes = findViewById(R.id.promocoes);
         mTodosProdutos = findViewById(R.id.todos);
 
@@ -58,6 +62,7 @@ public class TelaRestaurante extends AppCompatActivity {
         txtPreco.setText("R$ " + mRestaurante.getPrecoEntrega());
         txtEntrega.setText(mRestaurante.getTempoEntrega());
         txtAvaliacao.setText(mRestaurante.getNota());
+        btnVoltar.setOnClickListener(this);
 
         try {
             TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(TelaRestaurante.this);
@@ -108,5 +113,14 @@ public class TelaRestaurante extends AppCompatActivity {
             }
         });
         mTodosProdutos.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_voltar:
+                finish();
+                break;
+        }
     }
 }

@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-        android:background="#cdcdcd"
+        android:background="#e1dede"
         app:tabSelectedTextColor="#f15b25"
         app:tabTextColor="@android:color/black"/>
 </LinearLayout>

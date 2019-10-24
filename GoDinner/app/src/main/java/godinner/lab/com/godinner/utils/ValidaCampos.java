@@ -1,7 +1,5 @@
 package godinner.lab.com.godinner.utils;
 
-import android.util.Log;
-
 import java.util.InputMismatchException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,32 +9,32 @@ import godinner.lab.com.godinner.model.Estado;
 
 public class ValidaCampos {
 
-    public static boolean isValidEmail(String email){
+    public static boolean isValidEmail(String email) {
         String EMAIL_PATTERN = "^[_A-Za-z0-9]+(\\.[_A-Za-z0-9]+)*@[a-z0-9]+(\\.[a-z0-9]+)*(\\.[a-z0-9]{2,})$";
         Pattern patternEmail = Pattern.compile(EMAIL_PATTERN);
         Matcher matcherEmail = patternEmail.matcher(email);
 
-        if(matcherEmail.matches()){
+        if (matcherEmail.matches()) {
             return true;
         }
         return false;
     }
 
-    public static boolean isValidCep(String cep){
+    public static boolean isValidCep(String cep) {
         String CEP_PATTERN = "[0-9]{5}-?[0-9]{3}$";
         Pattern patternCEP = Pattern.compile(CEP_PATTERN);
         Matcher matcherCEP = patternCEP.matcher(cep);
-        if(matcherCEP.matches()){
+        if (matcherCEP.matches()) {
             return true;
         }
         return false;
     }
 
-    public static boolean isValidTelefone(String telefone){
-        String FONE_PATTERN = "\\(?[0-9]{2}\\)? ?9?[0-9]{4}-?[0-9]{4}$";
+    public static boolean isValidTelefone(String telefone) {
+        String FONE_PATTERN = "\\(?[0-9]{2}\\)? ?9[0-9]{4}-?[0-9]{4}$";
         Pattern patternFONE = Pattern.compile(FONE_PATTERN);
         Matcher matcherFONE = patternFONE.matcher(telefone);
-        if(matcherFONE.matches()){
+        if (matcherFONE.matches()) {
             return true;
         }
         return false;
@@ -44,10 +42,10 @@ public class ValidaCampos {
 
     public static boolean isValidCpf(String CPF) {
         if (CPF.equals("00000000000") || CPF.equals("11111111111") ||
-            CPF.equals("22222222222") || CPF.equals("33333333333") ||
-            CPF.equals("44444444444") || CPF.equals("55555555555") ||
-            CPF.equals("66666666666") || CPF.equals("77777777777") ||
-            CPF.equals("88888888888") || CPF.equals("99999999999") || (CPF.length() != 11))
+                CPF.equals("22222222222") || CPF.equals("33333333333") ||
+                CPF.equals("44444444444") || CPF.equals("55555555555") ||
+                CPF.equals("66666666666") || CPF.equals("77777777777") ||
+                CPF.equals("88888888888") || CPF.equals("99999999999") || (CPF.length() != 11))
             return false;
 
         char dig10, dig11;
@@ -94,15 +92,15 @@ public class ValidaCampos {
         }
     }
 
-    public static boolean isValidEstado(Estado e){
-        if(e.getIdEstado() == 0){
+    public static boolean isValidEstado(Estado e) {
+        if (e.getIdEstado() == 0) {
             return true;
         }
         return false;
     }
 
-    public static boolean isValidCidade(Cidade c){
-        if(c.getIdCidade() == 0){
+    public static boolean isValidCidade(Cidade c) {
+        if (c.getIdCidade() == 0) {
             return true;
         }
         return false;

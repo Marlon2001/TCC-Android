@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class Cadastro3Activity extends AppCompatActivity {
 
-    private TextView txtCep;
+    private MaskEditText txtCep;
     private TextView txtNumero;
     private TextView txtReferencia;
     private TextView txtLogradouro;
@@ -94,7 +95,7 @@ public class Cadastro3Activity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus){
-                    if(txtCep.getText().length() == 8) {
+                    if(txtCep.getText().length() == 9) {
                         try {
                             ConsultarCep consultarCep = new ConsultarCep(txtCep.getText().toString());
                             consultarCep.execute().get();

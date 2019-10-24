@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        findViewById(R.id.scrollView).requestFocus();
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.logo));
 
         btnLogar = findViewById(R.id.btn_logar);

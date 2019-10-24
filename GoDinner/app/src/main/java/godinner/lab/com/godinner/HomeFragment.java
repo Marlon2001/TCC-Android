@@ -59,6 +59,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);;
+        view.requestFocus();
         context = view.getContext();
 
         mRestaurantesProximos = view.findViewById(R.id.restaurantes_proximos);
@@ -66,8 +67,6 @@ public class HomeFragment extends Fragment {
         mListaRestaurantes = view.findViewById(R.id.lista_restaurantes);
         txtEnderecoEntrega = view.findViewById(R.id.txt_endereco_entrega);
         txtBuscar = view.findViewById(R.id.txt_buscar);
-
-        txtBuscar.clearFocus();
 
         LinearLayoutManager horizontalLayoutManagerRestaurante = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager horizontalLayoutManagerCategoria = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);

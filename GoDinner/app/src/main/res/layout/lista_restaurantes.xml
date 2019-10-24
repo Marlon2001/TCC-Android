@@ -142,8 +142,8 @@
             android:layout_height="match_parent"
             android:maxHeight="100px"
             android:maxWidth="100px"
-            android:background="@color/Image"
-            android:contentDescription="@string/lbl_logo_restaurante"/>
+            android:contentDescription="@string/lbl_logo_restaurante"
+            android:src="@drawable/ic_chef" />
 
     </FrameLayout>
     </LinearLayout>

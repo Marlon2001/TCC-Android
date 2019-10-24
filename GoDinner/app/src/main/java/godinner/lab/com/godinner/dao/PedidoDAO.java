@@ -15,7 +15,7 @@ import godinner.lab.com.godinner.model.SacolaPedido;
 public class PedidoDAO extends SQLiteOpenHelper {
 
     public PedidoDAO(Context context) {
-        super(context, "db_godinner_produto_pedido", null, 1);
+        super(context, "db_godinner3", null, 1);
     }
 
     @Override

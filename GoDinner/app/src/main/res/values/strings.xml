@@ -14,7 +14,7 @@
     <string name="lbl_senha2">Senha</string>
     <string name="btn_proximo">Próximo</string>
     <string name="lbl_contato">Algumas informações básicas</string>
-    <string name="lbl_telefone">Telefone</string>
+    <string name="lbl_celular">Celular</string>
     <string name="lbl_email2">E-mail</string>
     <string name="lbl_quasela">Quase lá</string>
     <string name="lbl_cep">CEP</string>

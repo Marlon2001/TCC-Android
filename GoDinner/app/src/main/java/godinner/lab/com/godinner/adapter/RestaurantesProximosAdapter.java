@@ -35,7 +35,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
     @Override
     public RestauranteViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context)
-                .inflate(R.layout.lista_image, viewGroup, false);
+                .inflate(R.layout.lista_image2, viewGroup, false);
         return new RestauranteViewHolder(view);
     }
 
@@ -43,6 +43,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
     public void onBindViewHolder(@NonNull RestauranteViewHolder restauranteViewHolder, final int i) {
         Restaurante r = mRestaurantes.get(i);
 
+        restauranteViewHolder.imgRestaurante.setBackgroundResource(R.drawable.ic_chef);
         restauranteViewHolder.txtRestaurante.setText(r.getRazaoSocial());
         restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
