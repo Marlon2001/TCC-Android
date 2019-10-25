@@ -1,17 +1,21 @@
 package godinner.lab.com.godinner;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -21,6 +25,7 @@ import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Cidade;
 import godinner.lab.com.godinner.model.Estado;
 import godinner.lab.com.godinner.tasks.ValidarToken;
+import godinner.lab.com.godinner.utils.NetworkManager;
 
 public class SplashActivity extends Activity {
 
@@ -36,7 +41,7 @@ public class SplashActivity extends Activity {
         final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
         String mToken = mTokenUsuarioDAO.consultarToken();
 
-        if (isNetworkAvailable()) {
+        if (NetworkManager.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
             if (!mToken.equals("")) {
                 ValidarToken validarToken = new ValidarToken(mToken, new ValidarToken.ResultRequest() {
                     @Override
@@ -54,7 +59,7 @@ public class SplashActivity extends Activity {
                 mStartMainActivity();
             }
         } else {
-            Toast.makeText(this, "SEM INTERNET", Toast.LENGTH_SHORT).show();
+            NetworkManager.getSnackBarNetwork(this, findViewById(R.id.splash)).show();
         }
     }
 
@@ -98,14 +103,6 @@ public class SplashActivity extends Activity {
                 SplashActivity.this.finish();
             }
         }, 2000);
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        ;
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 //        final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(SplashActivity.this);

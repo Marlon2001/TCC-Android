@@ -2,8 +2,8 @@ package godinner.lab.com.godinner.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +43,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
     public void onBindViewHolder(@NonNull RestauranteViewHolder restauranteViewHolder, final int i) {
         Restaurante r = mRestaurantes.get(i);
 
-        restauranteViewHolder.imgRestaurante.setBackgroundResource(R.drawable.ic_chef);
+        restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_chef));
         restauranteViewHolder.txtRestaurante.setText(r.getRazaoSocial());
         restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

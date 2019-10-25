@@ -27,26 +27,33 @@ import godinner.lab.com.godinner.model.RestauranteExibicao;
 import godinner.lab.com.godinner.tasks.BuscarCategorias;
 import godinner.lab.com.godinner.tasks.BuscarRestaurantesProximos;
 import godinner.lab.com.godinner.tasks.RestaurantesMaisVisitados;
+import godinner.lab.com.godinner.utils.NetworkManager;
 
 public class HomeFragment extends Fragment {
 
+    private static final String ARG_PARAM1 = "param1";
+    public static ArrayList<Categoria> categorias;
+    public static ArrayList<RestauranteExibicao> restaurantesMaisVisitados;
+    public static ArrayList<RestauranteExibicao> restaurantesProximos;
     private RecyclerView mRestaurantesProximos;
     private RecyclerView mCategorias;
     private RecyclerView mListaRestaurantes;
     private TextView txtEnderecoEntrega;
     private EditText txtBuscar;
-
-    public static ArrayList<Categoria> categorias;
-    public static ArrayList<RestauranteExibicao> restaurantesMaisVisitados;
-    public static ArrayList<RestauranteExibicao> restaurantesProximos;
-
-    private static final String ARG_PARAM1 = "param1";
-
     private String mParam1;
 
     private Context context;
 
-    public HomeFragment() { }
+    public HomeFragment() {
+    }
+
+    public static HomeFragment newInstance(String param1, String param2) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +65,8 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);;
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        ;
         view.requestFocus();
         context = view.getContext();
 
@@ -76,35 +84,31 @@ public class HomeFragment extends Fragment {
         mCategorias.setLayoutManager(horizontalLayoutManagerCategoria);
         mListaRestaurantes.setLayoutManager(verticalLayoutManagerRestaurante);
 
-        try {
-            ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(context);
-            Consumidor c = mConsumidorDAO.consultarConsumidor();
+        if (!NetworkManager.isNetworkAvailable(context.getSystemService(Context.CONNECTIVITY_SERVICE))) {
+            NetworkManager.getSnackBarNetwork(context, view.findViewById(R.id.fragment_home)).show();
+        } else {
+            try {
+                ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(context);
+                Consumidor c = mConsumidorDAO.consultarConsumidor();
 
-            txtEnderecoEntrega.setText(c.getEndereco().getLogradouro() + ", " + c.getEndereco().getNumero());
+                txtEnderecoEntrega.setText(c.getEndereco().getLogradouro() + ", " + c.getEndereco().getNumero());
 
-            TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(context);
-            String token = mTokenUsuarioDAO.consultarToken();
+                TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(context);
+                String token = mTokenUsuarioDAO.consultarToken();
 
-            BuscarRestaurantesProximos mRestaurantesProximos = new BuscarRestaurantesProximos(c.getIdServidor(), token);
-            mRestaurantesProximos.execute().get();
+                BuscarRestaurantesProximos mRestaurantesProximos = new BuscarRestaurantesProximos(c.getIdServidor(), token);
+                mRestaurantesProximos.execute().get();
 
-            BuscarCategorias mBuscarCategorias = new BuscarCategorias(token);
-            mBuscarCategorias.execute().get();
+                BuscarCategorias mBuscarCategorias = new BuscarCategorias(token);
+                mBuscarCategorias.execute().get();
 
-            RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(c.getIdServidor(), token);
-            mRestaurantesMaisVisitados.execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+                RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(c.getIdServidor(), token);
+                mRestaurantesMaisVisitados.execute().get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return view;
-    }
-
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -115,7 +119,7 @@ public class HomeFragment extends Fragment {
         mAdapterListaDeRestaurantes();
     }
 
-    private void mAdapterRestaurantesProximos(){
+    private void mAdapterRestaurantesProximos() {
         RestaurantesProximosAdapter mRestaurantesProximosAdapter = new RestaurantesProximosAdapter(restaurantesProximos, context, new RestaurantesProximosAdapter.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {
@@ -130,17 +134,17 @@ public class HomeFragment extends Fragment {
         mRestaurantesProximos.setAdapter(mRestaurantesProximosAdapter);
     }
 
-    private void mAdapterCategorias(){
+    private void mAdapterCategorias() {
         CategoriasAdapter categoriasAdapter = new CategoriasAdapter(categorias, context, new CategoriasAdapter.CategoriaOnClickListener() {
             @Override
             public void onClickCategoria(View view, int index) {
-                Toast.makeText(getActivity(), "Clicou id " + index , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Clicou id " + index, Toast.LENGTH_SHORT).show();
             }
         });
         mCategorias.setAdapter(categoriasAdapter);
     }
 
-    private void mAdapterListaDeRestaurantes(){
+    private void mAdapterListaDeRestaurantes() {
         ListaRestaurantesAdapter mRestaurantesAdapter = new ListaRestaurantesAdapter(restaurantesMaisVisitados, context, new ListaRestaurantesAdapter.RestauranteOnClickListener() {
             @Override
             public void onClickRestaurante(View view, int index) {

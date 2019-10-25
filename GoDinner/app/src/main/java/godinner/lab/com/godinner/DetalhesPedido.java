@@ -66,7 +66,13 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
 
         txtNomeProduto.setText(mProduto.getNome());
         txtDetalhesDoProduto.setText(mProduto.getDescricao());
-        btnValorTotal.setText("R$ " + mProduto.getPreco().toString());
+
+        if (mProduto.getDesconto() != 0) {
+            Double desconto = mProduto.getPreco() * (mProduto.getDesconto() / 100);
+            btnValorTotal.setText("R$ " + (mProduto.getPreco() - desconto));
+        } else {
+            btnValorTotal.setText("R$ " + mProduto.getPreco().toString());
+        }
 
         toolbar.setTitle(mProduto.getNome());
     }
@@ -81,6 +87,7 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
             case R.id.btn_mais_um:
                 total++;
                 btnTotal.setText(String.valueOf(total));
+                Double preco = Double.parseDouble(btnValorTotal.getText().toString().replace("R$ ", ""));
 
                 if (mPedidoDAO.sacolaIsNull()) {
                     SacolaPedido s = new SacolaPedido();
@@ -89,17 +96,17 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                     s.setNomeRestaurante(mRestauranteExibicao.getRazaoSocial());
                     s.setTempoEntrega(mRestauranteExibicao.getTempoEntrega());
                     s.setValorEntrega(mRestauranteExibicao.getPrecoEntrega());
-                    s.setValorTotalPedido(mRestauranteExibicao.getPrecoEntrega() + mProduto.getPreco() * total);
+                    s.setValorTotalPedido(mRestauranteExibicao.getPrecoEntrega() + preco * total);
 
                     mPedidoDAO.atualizarSacola(s);
                 }
 
                 p.setId(mProduto.getId());
                 p.setNome(mProduto.getNome());
-                p.setPreco(mProduto.getPreco());
+                p.setPreco(preco);
                 p.setQuantidade(total);
 
-                if(p.getQuantidade() == 1)
+                if (p.getQuantidade() == 1)
                     mPedidoDAO.salvarProduto(p, "novo");
                 else
                     mPedidoDAO.salvarProduto(p, "editar");
@@ -108,10 +115,11 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                 if (total > 0) {
                     total--;
                     btnTotal.setText(String.valueOf(total));
+                    preco = Double.parseDouble(btnValorTotal.getText().toString().replace("R$ ", ""));
 
                     p.setId(mProduto.getId());
                     p.setNome(mProduto.getNome());
-                    p.setPreco(mProduto.getPreco());
+                    p.setPreco(preco);
                     p.setQuantidade(total);
 
                     if (p.getQuantidade() > 0)

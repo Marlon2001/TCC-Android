@@ -12,7 +12,6 @@ public class Restaurante implements Serializable{
     private int idEndereco;
     private String foto;
 
-
     public void setId(int id) {
         this.id = id;
     }

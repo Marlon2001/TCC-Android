@@ -2,6 +2,7 @@ package godinner.lab.com.godinner.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -42,12 +43,12 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
     public void onBindViewHolder(@NonNull PromocoesViewholder promocoesViewholder, final int i) {
         Produto p = mProdutos.get(i);
 
-        promocoesViewholder.imgProduto.setBackgroundResource(R.drawable.ic_food);
+        promocoesViewholder.imgProduto.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_food));
         promocoesViewholder.txtProduto.setText(p.getNome());
-        promocoesViewholder.txtPrecoAntigo.setText(Html.fromHtml("<del>R$ "+p.getPreco()+"</del>"));
+        promocoesViewholder.txtPrecoAntigo.setText(Html.fromHtml("<del>R$ " + p.getPreco() + "</del>"));
 
-        Double desconto = p.getPreco() * (p.getDesconto()/100);
-        promocoesViewholder.txtPrecoNovo.setText((p.getPreco()-desconto)+"");
+        Double desconto = p.getPreco() * (p.getDesconto() / 100);
+        promocoesViewholder.txtPrecoNovo.setText((p.getPreco() - desconto) + "");
 
         promocoesViewholder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +58,7 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
         });
 
 
-        String url = MainActivity.ipServidorFotos + (p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao:  p.getFotos().get(0).getFoto());
+        String url = MainActivity.ipServidorFotos + (p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao : p.getFotos().get(0).getFoto());
         Picasso.get().load(url).resize(120, 120).into(promocoesViewholder.imgProduto);
     }
 
