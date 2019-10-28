@@ -57,10 +57,12 @@ public class ConsultarCep extends AsyncTask {
             endereco.setLogradouro(mObject.getString("logradouro"));
             endereco.setBairro(mObject.getString("bairro"));
             endereco.setCep(mObject.getString("cep"));
-            endereco.setIdCidade(mObject.getJSONObject("cidade").getInt("id"));
-            endereco.setCidadeNome(mObject.getJSONObject("cidade").getString("cidade"));
-            endereco.setIdEstado(mObject.getJSONObject("cidade").getJSONObject("estado").getInt("id"));
-            endereco.setEstadoNome(mObject.getJSONObject("cidade").getJSONObject("estado").getString("estado"));
+            if(mObject.getJSONObject("cidade") != null){
+                endereco.setIdCidade(mObject.getJSONObject("cidade").getInt("id"));
+                endereco.setCidadeNome(mObject.getJSONObject("cidade").getString("cidade"));
+                endereco.setIdEstado(mObject.getJSONObject("cidade").getJSONObject("estado").getInt("id"));
+                endereco.setEstadoNome(mObject.getJSONObject("cidade").getJSONObject("estado").getString("estado"));
+            }
 
             Cadastro3Activity.endereco = endereco;
         } catch (MalformedURLException e) {

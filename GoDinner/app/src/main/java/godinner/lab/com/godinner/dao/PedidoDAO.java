@@ -78,30 +78,34 @@ public class PedidoDAO extends SQLiteOpenHelper {
 
         ContentValues dadosProduto = new ContentValues();
 
-        if (acao.equals("novo")) {
-            dadosProduto.put("id_produto2", p.getId());
-            dadosProduto.put("nome", p.getNome());
-            dadosProduto.put("preco", p.getPreco());
-            dadosProduto.put("quantidade", p.getQuantidade());
-            dbWrite.insert("tbl_produto", null, dadosProduto);
+        switch (acao) {
+            case "novo":
+                dadosProduto.put("id_produto2", p.getId());
+                dadosProduto.put("nome", p.getNome());
+                dadosProduto.put("preco", p.getPreco());
+                dadosProduto.put("quantidade", p.getQuantidade());
+                dbWrite.insert("tbl_produto", null, dadosProduto);
 
-            ProdutoPedido pedido = new ProdutoPedido();
-            pedido.setId(p.getId());
+                ProdutoPedido pedido = new ProdutoPedido();
+                pedido.setId(p.getId());
 
-            salvarProdutoPedido(pedido);
-        } else if (acao.equals("editar")) {
-            String[] args = {p.getId().toString()};
+                salvarProdutoPedido(pedido);
+                break;
+            case "editar":
+                String[] args = {p.getId().toString()};
 
-            dadosProduto.put("quantidade", p.getQuantidade());
-            dbWrite.update("tbl_produto", dadosProduto, "id_produto2 = ?", args);
-        } else if (acao.equals("excluir")) {
-            String[] args = {p.getId().toString()};
+                dadosProduto.put("quantidade", p.getQuantidade());
+                dbWrite.update("tbl_produto", dadosProduto, "id_produto2 = ?", args);
+                break;
+            case "excluir":
+                String[] args2 = {p.getId().toString()};
 
-            dbWrite.delete("tbl_produto", "id_produto2 = ?", args);
+                dbWrite.delete("tbl_produto", "id_produto2 = ?", args2);
+                break;
         }
     }
 
-    public void salvarProdutoPedido(ProdutoPedido p) {
+    private void salvarProdutoPedido(ProdutoPedido p) {
         SQLiteDatabase dbWrite = getWritableDatabase();
 
         ContentValues dadosProdutoSacola = new ContentValues();
@@ -121,9 +125,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
             String nomeRestaurante = c.getString(c.getColumnIndex("nome_restaurante"));
             c.close();
 
-            if (nomeRestaurante.equals("")) {
-                return true;
-            }
+            return nomeRestaurante.equals("");
         }
         return false;
     }
@@ -162,6 +164,25 @@ public class PedidoDAO extends SQLiteOpenHelper {
         return s;
     }
 
+    public List<ProdutoPedido> consultarProdutos() {
+        SQLiteDatabase dbRead = getReadableDatabase();
+
+        List<ProdutoPedido> listProdutos = new ArrayList<>();
+        String sql = "SELECT * FROM tbl_produto";
+
+        Cursor c = dbRead.rawQuery(sql, null);
+
+        while (c.moveToNext()) {
+            ProdutoPedido p = new ProdutoPedido();
+            p.setId(c.getInt(c.getColumnIndex("id_produto2")));
+            p.setQuantidade(c.getInt(c.getColumnIndex("quantidade")));
+            listProdutos.add(p);
+        }
+        c.close();
+
+        return listProdutos;
+    }
+
     public List<ProdutoPedido> getItensSacola() {
         SQLiteDatabase dbRead = getReadableDatabase();
         List<ProdutoPedido> listProdutos = new ArrayList<>();
@@ -177,6 +198,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
             p.setPreco(c.getDouble(c.getColumnIndex("preco")));
             listProdutos.add(p);
         }
+        c.close();
 
         return listProdutos;
     }

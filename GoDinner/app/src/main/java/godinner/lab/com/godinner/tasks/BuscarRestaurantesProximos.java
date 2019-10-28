@@ -1,7 +1,6 @@
 package godinner.lab.com.godinner.tasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 
 import godinner.lab.com.godinner.HomeFragment;
 import godinner.lab.com.godinner.MainActivity;
-import godinner.lab.com.godinner.TelaInicialActivity;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class BuscarRestaurantesProximos extends AsyncTask {
@@ -64,7 +62,7 @@ public class BuscarRestaurantesProximos extends AsyncTask {
                 restaurante.setId(mObject.getInt("id"));
                 restaurante.setRazaoSocial(mObject.getString("razaoSocial"));
                 restaurante.setTelefone(mObject.getString("telefone"));
-                restaurante.setPrecoEntrega(mObject.getDouble("valorEntrega"));
+                restaurante.setValorEntrega(mObject.getDouble("valorEntrega"));
                 restaurante.setFoto(mObject.getString("foto"));
                 restaurante.setDistancia(mObject.getString("distancia"));
                 restaurante.setTempoEntrega(mObject.getString("tempoEntrega"));

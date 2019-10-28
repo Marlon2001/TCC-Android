@@ -22,18 +22,10 @@ import godinner.lab.com.godinner.tasks.BuscarPromocoesRestaurante;
 
 public class TelaRestaurante extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView txtRestaurante;
-    private TextView txtPreco;
-    private TextView txtEntrega;
-    private TextView txtAvaliacao;
-
-    private ImageButton btnVoltar;
-
-    private RecyclerView mPromocoes;
-    private RecyclerView mTodosProdutos;
-
     public static ArrayList<Produto> mProdutosPromocao;
     public static ArrayList<Produto> mProdutosTodos;
+    private RecyclerView mPromocoes;
+    private RecyclerView mTodosProdutos;
     private RestauranteExibicao mRestaurante;
 
     @Override
@@ -41,11 +33,11 @@ public class TelaRestaurante extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_restaurante);
 
-        txtRestaurante = findViewById(R.id.nome_restaurante);
-        txtPreco = findViewById(R.id.preco);
-        txtEntrega = findViewById(R.id.tempo_entrega);
-        txtAvaliacao = findViewById(R.id.avaliacao_restaurante);
-        btnVoltar = findViewById(R.id.btn_voltar);
+        TextView txtRestaurante = findViewById(R.id.nome_restaurante);
+        TextView txtPreco = findViewById(R.id.preco);
+        TextView txtEntrega = findViewById(R.id.tempo_entrega);
+        TextView txtAvaliacao = findViewById(R.id.avaliacao_restaurante);
+        ImageButton btnVoltar = findViewById(R.id.btn_voltar);
         mPromocoes = findViewById(R.id.promocoes);
         mTodosProdutos = findViewById(R.id.todos);
 
@@ -59,7 +51,7 @@ public class TelaRestaurante extends AppCompatActivity implements View.OnClickLi
         mRestaurante = (RestauranteExibicao) mIntent.getSerializableExtra("restaurante");
 
         txtRestaurante.setText(mRestaurante.getRazaoSocial());
-        txtPreco.setText("R$ " + mRestaurante.getPrecoEntrega());
+        txtPreco.setText(String.format("R$ %s", mRestaurante.getValorEntrega()));
         txtEntrega.setText(mRestaurante.getTempoEntrega());
         txtAvaliacao.setText(mRestaurante.getNota());
         btnVoltar.setOnClickListener(this);
@@ -76,9 +68,7 @@ public class TelaRestaurante extends AppCompatActivity implements View.OnClickLi
 
             mAdapterPromocoes();
             mAdapterProdutos();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }

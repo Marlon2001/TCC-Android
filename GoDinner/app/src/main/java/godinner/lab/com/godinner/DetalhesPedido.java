@@ -95,8 +95,8 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                     s.setIdRestaurante(mRestauranteExibicao.getId());
                     s.setNomeRestaurante(mRestauranteExibicao.getRazaoSocial());
                     s.setTempoEntrega(mRestauranteExibicao.getTempoEntrega());
-                    s.setValorEntrega(mRestauranteExibicao.getPrecoEntrega());
-                    s.setValorTotalPedido(mRestauranteExibicao.getPrecoEntrega() + preco * total);
+                    s.setValorEntrega(mRestauranteExibicao.getValorEntrega());
+                    s.setValorTotalPedido(mRestauranteExibicao.getValorEntrega() + preco * total);
 
                     mPedidoDAO.atualizarSacola(s);
                 }

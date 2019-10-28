@@ -5,13 +5,11 @@ import android.os.AsyncTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,7 +17,6 @@ import java.util.ArrayList;
 
 import godinner.lab.com.godinner.HomeFragment;
 import godinner.lab.com.godinner.MainActivity;
-import godinner.lab.com.godinner.TelaInicialActivity;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class RestaurantesMaisVisitados extends AsyncTask {
@@ -65,7 +62,7 @@ public class RestaurantesMaisVisitados extends AsyncTask {
                 restaurante.setId(mObject.getInt("id"));
                 restaurante.setRazaoSocial(mObject.getString("razaoSocial"));
                 restaurante.setTelefone(mObject.getString("telefone"));
-                restaurante.setPrecoEntrega(mObject.getDouble("valorEntrega"));
+                restaurante.setValorEntrega(mObject.getDouble("valorEntrega"));
                 restaurante.setFoto(mObject.getString("foto"));
                 restaurante.setDistancia(mObject.getString("distancia"));
                 restaurante.setTempoEntrega(mObject.getString("tempoEntrega"));
