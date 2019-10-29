@@ -351,7 +351,7 @@
                     android:backgroundTint="#E07148"
                     android:paddingBottom="12dp"
                     android:paddingTop="12dp"
-                    android:text="@string/lbl_finaliar_compra"
+                    android:text="@string/lbl_finalizar_compra"
                     android:textAlignment="center"
                     android:textColor="#f8f8f8"
                     android:textSize="16sp"

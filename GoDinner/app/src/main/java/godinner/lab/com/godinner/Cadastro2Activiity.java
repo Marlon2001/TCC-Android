@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.santalu.maskedittext.MaskEditText;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.model.Cadastro;
@@ -78,7 +79,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validarCampos()) {
-                    ValidarEmailCpf mValidarEmailCpf = new ValidarEmailCpf("cpf", txtCpf.getRawText().toString(), new ValidarEmailCpf.ValidarCampo() {
+                    ValidarEmailCpf mValidarEmailCpf = new ValidarEmailCpf("cpf", txtCpf.getRawText(), new ValidarEmailCpf.ValidarCampo() {
                         @Override
                         public void Request(Boolean result) {
                             if (!result) {
@@ -91,8 +92,8 @@ public class Cadastro2Activiity extends AppCompatActivity {
 
                                 Contato con = new Contato();
                                 con.setNome(txtNome.getText().toString());
-                                con.setTelefone(txtCelular.getText().toString());
-                                con.setCpf(txtCpf.getText().toString());
+                                con.setTelefone(Objects.requireNonNull(txtCelular.getText()).toString());
+                                con.setCpf(Objects.requireNonNull(txtCpf.getText()).toString());
                                 con.setNotificacoes(rdoNotificacoes.isChecked());
                                 abrirCadastro3.putExtra("cadastro", cadastroIntent);
                                 abrirCadastro3.putExtra("contato", con);
@@ -144,7 +145,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
             txtNomeLayout.setErrorEnabled(false);
         }
 
-        if (!ValidaCampos.isValidTelefone(txtCelular.getText().toString())) {
+        if (!ValidaCampos.isValidTelefone(Objects.requireNonNull(txtCelular.getText()).toString())) {
             txtTelefoneLayout.setErrorEnabled(true);
             txtTelefoneLayout.setError("O celular é inválido.");
             semErro = false;
@@ -152,7 +153,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
             txtTelefoneLayout.setErrorEnabled(false);
         }
 
-        if (!ValidaCampos.isValidCpf(txtCpf.getText().toString().replace(".", "").replace("-", ""))) {
+        if (!ValidaCampos.isValidCpf(Objects.requireNonNull(txtCpf.getText()).toString().replace(".", "").replace("-", ""))) {
             txtCpfLayout.setErrorEnabled(true);
             txtCpfLayout.setError("O CPF é inválido.");
             semErro = false;

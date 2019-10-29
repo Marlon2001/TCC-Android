@@ -64,12 +64,12 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
         void onClickRestaurante(View view, int index);
     }
 
-    protected class RestauranteViewHolder extends RecyclerView.ViewHolder {
+    class RestauranteViewHolder extends RecyclerView.ViewHolder {
         private ImageView imgRestaurante;
         private TextView txtRestaurante;
 
 
-        public RestauranteViewHolder(@NonNull View itemView) {
+        RestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imgRestaurante = itemView.findViewById(R.id.image_item);

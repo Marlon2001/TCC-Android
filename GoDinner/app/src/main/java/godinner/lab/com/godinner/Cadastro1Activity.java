@@ -101,8 +101,8 @@ public class Cadastro1Activity extends AppCompatActivity {
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent abrirMainActivity = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(abrirMainActivity);
+                Intent openMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(openMainActivity);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });

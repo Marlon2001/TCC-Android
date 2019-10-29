@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
                 ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(context);
                 Consumidor c = mConsumidorDAO.consultarConsumidor();
 
-                txtEnderecoEntrega.setText(c.getEndereco().getLogradouro() + ", " + c.getEndereco().getNumero());
+                txtEnderecoEntrega.setText(String.format("%s, %s", c.getEndereco().getLogradouro(), c.getEndereco().getNumero()));
 
                 TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(context);
                 String token = mTokenUsuarioDAO.consultarToken();

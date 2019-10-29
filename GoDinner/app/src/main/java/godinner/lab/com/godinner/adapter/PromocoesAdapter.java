@@ -48,7 +48,7 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
         promocoesViewholder.txtPrecoAntigo.setText(Html.fromHtml("<del>R$ " + p.getPreco() + "</del>"));
 
         Double desconto = p.getPreco() * (p.getDesconto() / 100);
-        promocoesViewholder.txtPrecoNovo.setText((p.getPreco() - desconto) + "");
+        promocoesViewholder.txtPrecoNovo.setText(String.format("%s", p.getPreco() - desconto));
 
         promocoesViewholder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +56,6 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
                 mPromocaoOnClickListener.onClickPromocao(v, i);
             }
         });
-
 
         String url = MainActivity.ipServidorFotos + (p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao : p.getFotos().get(0).getFoto());
         Picasso.get().load(url).resize(120, 120).into(promocoesViewholder.imgProduto);
@@ -71,7 +70,7 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
         void onClickPromocao(View view, int index);
     }
 
-    protected class PromocoesViewholder extends RecyclerView.ViewHolder {
+    class PromocoesViewholder extends RecyclerView.ViewHolder {
 
         private ImageView imgProduto;
         private TextView txtProduto;

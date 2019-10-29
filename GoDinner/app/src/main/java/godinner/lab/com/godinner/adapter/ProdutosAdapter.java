@@ -47,7 +47,7 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
         produtoViewHolder.nomeProdto.setText(p.getNome());
         produtoViewHolder.descProduto.setText(p.getDescricao());
         DecimalFormat f = new DecimalFormat("0.00");
-        produtoViewHolder.precoProduto.setText("R$ " + f.format(p.getPreco()));
+        produtoViewHolder.precoProduto.setText(String.format("R$ %s", f.format(p.getPreco())));
 
         produtoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,14 +69,14 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
         void onClickProduto(View view, int index);
     }
 
-    protected class ProdutoViewHolder extends RecyclerView.ViewHolder {
+    class ProdutoViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageProduto;
         private TextView nomeProdto;
         private TextView descProduto;
         private TextView precoProduto;
 
-        public ProdutoViewHolder(@NonNull View itemView) {
+        ProdutoViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imageProduto = itemView.findViewById(R.id.image_produto);

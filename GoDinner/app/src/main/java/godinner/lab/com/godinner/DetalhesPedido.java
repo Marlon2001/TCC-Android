@@ -1,5 +1,6 @@
 package godinner.lab.com.godinner;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -16,40 +17,30 @@ import godinner.lab.com.godinner.model.Produto;
 import godinner.lab.com.godinner.model.ProdutoPedido;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 import godinner.lab.com.godinner.model.SacolaPedido;
+import godinner.lab.com.godinner.utils.OnSingleClickListener;
 
-public class DetalhesPedido extends AppCompatActivity implements View.OnClickListener {
+public class DetalhesPedido extends AppCompatActivity {
 
     private Produto mProduto;
     private RestauranteExibicao mRestauranteExibicao;
 
-    private ImageView imageProduto;
-    private TextView txtNomeProduto;
-    private TextView txtDetalhesDoProduto;
     private Button btnValorTotal;
-    private Button btnSomar;
-    private Button btnSubtrair;
     private Button btnTotal;
 
-    private CollapsingToolbarLayout toolbar;
-
+    @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_do_pedido);
 
-        imageProduto = findViewById(R.id.image_produto_detalhes);
-        txtNomeProduto = findViewById(R.id.text_nome_produto);
-        txtDetalhesDoProduto = findViewById(R.id.text_descricao_produto);
-        btnSomar = findViewById(R.id.btn_mais_um);
-        btnSubtrair = findViewById(R.id.btn_menos_um);
+        ImageView imageProduto = findViewById(R.id.image_produto_detalhes);
+        TextView txtNomeProduto = findViewById(R.id.text_nome_produto);
+        TextView txtDetalhesDoProduto = findViewById(R.id.text_descricao_produto);
+        Button btnSomar = findViewById(R.id.btn_mais_um);
+        Button btnSubtrair = findViewById(R.id.btn_menos_um);
         btnTotal = findViewById(R.id.btn_total_produtos);
         btnValorTotal = findViewById(R.id.valor_total);
-        toolbar = findViewById(R.id.collapseToolbar);
-
-        btnSomar.setOnClickListener(this);
-        btnSubtrair.setOnClickListener(this);
-        btnTotal.setOnClickListener(this);
-        btnValorTotal.setOnClickListener(this);
+        CollapsingToolbarLayout toolbar = findViewById(R.id.collapseToolbar);
 
         Intent intent = getIntent();
         mProduto = (Produto) intent.getSerializableExtra("produto_clicado");
@@ -61,30 +52,29 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
         PedidoDAO mPedidoDAO = new PedidoDAO(this);
         ProdutoPedido p = mPedidoDAO.consultarProdutoById(mProduto.getId());
 
-        if (p.getQuantidade() != 0)
-            btnTotal.setText(p.getQuantidade() + "");
+        if (p.getQuantidade() != 0) {
+            btnTotal.setText(String.format("%d", p.getQuantidade()));
+        }
 
         txtNomeProduto.setText(mProduto.getNome());
         txtDetalhesDoProduto.setText(mProduto.getDescricao());
 
         if (mProduto.getDesconto() != 0) {
             Double desconto = mProduto.getPreco() * (mProduto.getDesconto() / 100);
-            btnValorTotal.setText("R$ " + (mProduto.getPreco() - desconto));
+            btnValorTotal.setText(String.format("R$ %s", mProduto.getPreco() - desconto));
         } else {
-            btnValorTotal.setText("R$ " + mProduto.getPreco().toString());
+            btnValorTotal.setText(String.format("R$ %s", mProduto.getPreco().toString()));
         }
 
         toolbar.setTitle(mProduto.getNome());
-    }
 
-    @Override
-    public void onClick(View v) {
-        int total = Integer.parseInt(btnTotal.getText().toString());
-        PedidoDAO mPedidoDAO = new PedidoDAO(this);
-        ProdutoPedido p = new ProdutoPedido();
+        btnSomar.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                int total = Integer.parseInt(btnTotal.getText().toString());
+                PedidoDAO mPedidoDAO = new PedidoDAO(DetalhesPedido.this);
+                ProdutoPedido p = new ProdutoPedido();
 
-        switch (v.getId()) {
-            case R.id.btn_mais_um:
                 total++;
                 btnTotal.setText(String.valueOf(total));
                 Double preco = Double.parseDouble(btnValorTotal.getText().toString().replace("R$ ", ""));
@@ -110,12 +100,21 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                     mPedidoDAO.salvarProduto(p, "novo");
                 else
                     mPedidoDAO.salvarProduto(p, "editar");
-                break;
-            case R.id.btn_menos_um:
+                reset();
+            }
+        });
+
+        btnSubtrair.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                int total = Integer.parseInt(btnTotal.getText().toString());
+                PedidoDAO mPedidoDAO = new PedidoDAO(DetalhesPedido.this);
+                ProdutoPedido p = new ProdutoPedido();
+
                 if (total > 0) {
                     total--;
                     btnTotal.setText(String.valueOf(total));
-                    preco = Double.parseDouble(btnValorTotal.getText().toString().replace("R$ ", ""));
+                    Double preco = Double.parseDouble(btnValorTotal.getText().toString().replace("R$ ", ""));
 
                     p.setId(mProduto.getId());
                     p.setNome(mProduto.getNome());
@@ -126,13 +125,17 @@ public class DetalhesPedido extends AppCompatActivity implements View.OnClickLis
                         mPedidoDAO.salvarProduto(p, "editar");
                     else if (p.getQuantidade() == 0)
                         mPedidoDAO.salvarProduto(p, "excluir");
+                    reset();
                 }
-                break;
-            case R.id.valor_total:
+            }
+        });
+
+        btnValorTotal.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
                 finish();
-                break;
-            default:
-                break;
-        }
+                reset();
+            }
+        });
     }
 }

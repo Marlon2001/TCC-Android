@@ -1,13 +1,11 @@
 package godinner.lab.com.godinner;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -20,9 +18,9 @@ import com.santalu.maskedittext.MaskEditText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-import godinner.lab.com.godinner.dao.CidadeEstadoDAO;
 import godinner.lab.com.godinner.model.Cadastro;
 import godinner.lab.com.godinner.model.Cidade;
 import godinner.lab.com.godinner.model.Contato;
@@ -34,6 +32,7 @@ import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class Cadastro3Activity extends AppCompatActivity {
 
+    public static Endereco endereco;
     private MaskEditText txtCep;
     private TextView txtNumero;
     private TextView txtReferencia;
@@ -42,7 +41,6 @@ public class Cadastro3Activity extends AppCompatActivity {
     private TextView txtBairro;
     private Spinner spinnerEstado;
     private Spinner spinnerCidade;
-
     private TextInputLayout txtCepLayout;
     private TextInputLayout txtNumeroLayout;
     private TextInputLayout txtReferenciaLayout;
@@ -51,21 +49,17 @@ public class Cadastro3Activity extends AppCompatActivity {
     private TextInputLayout txtBairroLayout;
     private TextView txtErrorEstado;
     private TextView txtErrorCidade;
-
     private ImageButton btnVoltar;
     private Button btnFinalizar;
-
     private Cadastro cadastroIntent;
     private Contato contatoIntent;
-
-    public static Endereco endereco;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro3);
         Glide.with(this).load(R.drawable.logo).into((ImageView) findViewById(R.id.logo));
-        
+
         txtCep = findViewById(R.id.txt_cep);
         txtNumero = findViewById(R.id.txt_numero);
         txtReferencia = findViewById(R.id.txt_referencia);
@@ -78,7 +72,7 @@ public class Cadastro3Activity extends AppCompatActivity {
         txtCepLayout = findViewById(R.id.txt_cep_layout);
         txtNumeroLayout = findViewById(R.id.txt_numero_layout);
         txtReferenciaLayout = findViewById(R.id.txt_referencia_layout);
-        txtComplementoLayout= findViewById(R.id.txt_complemento_layout);
+        txtComplementoLayout = findViewById(R.id.txt_complemento_layout);
         txtLogradouroLayout = findViewById(R.id.txt_logradouro_layout);
         txtBairroLayout = findViewById(R.id.txt_bairro_layout);
         txtErrorEstado = findViewById(R.id.txt_error_estado);
@@ -94,8 +88,8 @@ public class Cadastro3Activity extends AppCompatActivity {
         txtCep.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-                    if(txtCep.getText().length() == 9) {
+                if (!hasFocus) {
+                    if (txtCep.getText().length() == 9) {
                         try {
                             ConsultarCep consultarCep = new ConsultarCep(txtCep.getText().toString());
                             consultarCep.execute().get();
@@ -142,7 +136,7 @@ public class Cadastro3Activity extends AppCompatActivity {
         btnFinalizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validarCampos()){
+                if (validarCampos()) {
                     Endereco e = new Endereco();
                     e.setCep(txtCep.getText().toString());
                     e.setNumero(txtNumero.getText().toString());
@@ -195,40 +189,40 @@ public class Cadastro3Activity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public boolean validarCampos(){
+    public boolean validarCampos() {
         boolean semErro = true;
 
-        if(!ValidaCampos.isValidCep(txtCep.getText().toString())){
+        if (!ValidaCampos.isValidCep(Objects.requireNonNull(txtCep.getText()).toString())) {
             txtCepLayout.setErrorEnabled(true);
             txtCepLayout.setError("O cep é inválido.");
             semErro = false;
         }
 
-        if(txtNumero.getText().toString().trim().isEmpty()){
+        if (txtNumero.getText().toString().trim().isEmpty()) {
             txtNumeroLayout.setErrorEnabled(true);
             txtNumeroLayout.setError("O número é obrigatório.");
             semErro = false;
         }
 
-        if(txtLogradouro.getText().toString().trim().isEmpty()){
+        if (txtLogradouro.getText().toString().trim().isEmpty()) {
             txtLogradouroLayout.setErrorEnabled(true);
             txtLogradouroLayout.setError("O logradouro é obrigatório.");
             semErro = false;
         }
 
-        if(txtBairro.getText().toString().trim().isEmpty()){
+        if (txtBairro.getText().toString().trim().isEmpty()) {
             txtBairroLayout.setErrorEnabled(true);
             txtBairroLayout.setError("O bairro é obrigatório.");
             semErro = false;
         }
 
-        if(ValidaCampos.isValidEstado((Estado) spinnerEstado.getSelectedItem())){
+        if (ValidaCampos.isValidEstado((Estado) spinnerEstado.getSelectedItem())) {
             txtErrorEstado.setVisibility(View.VISIBLE);
             txtErrorEstado.setText("Escolha um estado.");
             semErro = false;
         }
 
-        if(ValidaCampos.isValidCidade((Cidade) spinnerCidade.getSelectedItem())){
+        if (ValidaCampos.isValidCidade((Cidade) spinnerCidade.getSelectedItem())) {
             txtErrorCidade.setVisibility(View.VISIBLE);
             txtErrorCidade.setText("Escolha uma cidade.");
             semErro = false;

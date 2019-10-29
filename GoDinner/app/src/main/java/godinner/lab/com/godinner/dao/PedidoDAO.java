@@ -183,7 +183,7 @@ public class PedidoDAO extends SQLiteOpenHelper {
         return listProdutos;
     }
 
-    public List<ProdutoPedido> getItensSacola() {
+    public List<ProdutoPedido> getProdutos() {
         SQLiteDatabase dbRead = getReadableDatabase();
         List<ProdutoPedido> listProdutos = new ArrayList<>();
 
@@ -201,6 +201,24 @@ public class PedidoDAO extends SQLiteOpenHelper {
         c.close();
 
         return listProdutos;
+    }
+
+    public void excluirProduto(int id) {
+        SQLiteDatabase dbWrite = getWritableDatabase();
+        SQLiteDatabase dbRead = getReadableDatabase();
+
+        String sql = "SELECT COUNT(*) AS qtde FROM tbl_produto";
+        Cursor c = dbRead.rawQuery(sql, null);
+
+        if (c.moveToNext()) {
+            int qtde = c.getInt(c.getColumnIndex("qtde"));
+
+            if (qtde == 1) {
+                esvaziarSacola();
+            } else {
+                dbWrite.delete("tbl_produto", "id_produto = ?", new String[]{String.valueOf(id)});
+            }
+        }
     }
 
     public void esvaziarSacola() {

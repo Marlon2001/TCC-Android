@@ -49,7 +49,7 @@
     <string name="lbl_pedido">Pedido:</string>
     <string name="lbl_entrega">Entrega:</string>
     <string name="lbl_total_geral">Total Geral:</string>
-    <string name="lbl_finaliar_compra">Finaliar Compra</string>
+    <string name="lbl_finalizar_compra">Finalizar Compra</string>
     <string name="lbl_esvaziar_sacola">Esvaziar sacola</string>
     <string name="title_section1">Início</string>
     <string name="title_section2">Sacola</string>

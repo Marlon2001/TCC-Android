@@ -45,11 +45,11 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_chef));
         restauranteViewHolder.nome.setText(r.getRazaoSocial());
         if (r.getNota() != null) {
-            restauranteViewHolder.rank.setText(r.getNota() + "º mais visitado.");
+            restauranteViewHolder.rank.setText(String.format("%sº mais visitado.", r.getNota()));
         }
-        restauranteViewHolder.avaliacao.setText(r.getNota().toString());
+        restauranteViewHolder.avaliacao.setText(r.getNota());
         restauranteViewHolder.distancia.setText(r.getDistancia());
-        restauranteViewHolder.preco.setText("R$ " + r.getNota());
+        restauranteViewHolder.preco.setText(String.format("R$ %s", r.getNota()));
         restauranteViewHolder.tempo.setText(r.getTempoEntrega());
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
 
@@ -72,7 +72,7 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         void onClickRestaurante(View view, int index);
     }
 
-    protected class RestauranteViewHolder extends RecyclerView.ViewHolder {
+    class RestauranteViewHolder extends RecyclerView.ViewHolder {
         private TextView nome;
         private TextView rank;
         private TextView avaliacao;
@@ -82,7 +82,7 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         private TextView tempo;
         private ImageView imgRestaurante;
 
-        public RestauranteViewHolder(@NonNull View itemView) {
+        RestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nome = itemView.findViewById(R.id.nome_restaurante);
