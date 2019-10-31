@@ -35,26 +35,31 @@ import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.BuscarConsumidor;
 import godinner.lab.com.godinner.tasks.LoginUsuario;
-import godinner.lab.com.godinner.tasks.ValidarToken;
+import godinner.lab.com.godinner.utils.OnSingleClickListener;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String ipServidor = "http://godinner.tk:8080";
     public static String token = null;
     public static String erro;
     public static Consumidor mConsumidorLogado;
-    public static final String ipServidor = "http://godinner.tk:8080";
     public static String fotoLanchePadrao = "/restaurante/produto/1569953042416-115-840x560.jpg";
     public static String ipServidorFotos = "http://fotos.godinner.tk";
-
+    AccessTokenTracker tokenTracker = new AccessTokenTracker() {
+        @Override
+        protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+            if (currentAccessToken != null) {
+                loadUserProfile(currentAccessToken);
+            }
+        }
+    };
     private MaterialButton btnLogar;
     private MaterialButton btnCadastrar;
     private CallbackManager callbackManager;
     private LoginButton loginButton;
-
     private TextView txtEmail;
     private TextView txtSenha;
-
     private TextInputLayout txtEmailLayout;
     private TextInputLayout txtSenhaLayout;
 
@@ -62,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        findViewById(R.id.scrollView).requestFocus();
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.logo));
 
         btnLogar = findViewById(R.id.btn_logar);
@@ -78,9 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
         final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
 
-        btnLogar.setOnClickListener(new View.OnClickListener() {
+        btnLogar.setOnClickListener(new OnSingleClickListener() {
+
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 erro = null;
                 token = null;
                 if (validarCampos()) {
@@ -116,15 +122,17 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+                reset();
             }
         });
 
-        btnCadastrar.setOnClickListener(new View.OnClickListener() {
+        btnCadastrar.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 Intent abrirCadastro = new Intent(getApplicationContext(), Cadastro1Activity.class);
                 startActivity(abrirCadastro);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                reset();
             }
         });
 
@@ -153,15 +161,6 @@ public class MainActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    AccessTokenTracker tokenTracker = new AccessTokenTracker() {
-        @Override
-        protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-            if (currentAccessToken != null) {
-                loadUserProfile(currentAccessToken);
-            }
-        }
-    };
 
     private void loadUserProfile(AccessToken token) {
         // Enviando uma solicitação ao Facebook para pegar os dados do usuário através da API Graph

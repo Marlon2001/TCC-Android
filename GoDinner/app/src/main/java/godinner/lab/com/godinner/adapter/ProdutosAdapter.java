@@ -2,6 +2,7 @@ package godinner.lab.com.godinner.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,20 +43,21 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
     public void onBindViewHolder(@NonNull ProdutoViewHolder produtoViewHolder, final int i) {
         Produto p = mProdutos.get(i);
 
+        produtoViewHolder.imageProduto.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_food));
         produtoViewHolder.nomeProdto.setText(p.getNome());
         produtoViewHolder.descProduto.setText(p.getDescricao());
         DecimalFormat f = new DecimalFormat("0.00");
-        produtoViewHolder.precoProduto.setText("R$ "+f.format(p.getPreco()));
+        produtoViewHolder.precoProduto.setText(String.format("R$ %s", f.format(p.getPreco())));
 
         produtoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProdutoOnClickListener.onClickProduto(v , i);
+                mProdutoOnClickListener.onClickProduto(v, i);
             }
         });
 
-        String url = MainActivity.ipServidorFotos +(p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao:  p.getFotos().get(0).getFoto());
-        Picasso.get().load(url).resize(100, 100).into( produtoViewHolder.imageProduto);
+        String url = MainActivity.ipServidorFotos + (p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao : p.getFotos().get(0).getFoto());
+        Picasso.get().load(url).resize(100, 100).into(produtoViewHolder.imageProduto);
     }
 
     @Override
@@ -67,14 +69,14 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
         void onClickProduto(View view, int index);
     }
 
-    protected class ProdutoViewHolder extends RecyclerView.ViewHolder {
+    class ProdutoViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageProduto;
         private TextView nomeProdto;
         private TextView descProduto;
         private TextView precoProduto;
 
-        public ProdutoViewHolder(@NonNull View itemView) {
+        ProdutoViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imageProduto = itemView.findViewById(R.id.image_produto);

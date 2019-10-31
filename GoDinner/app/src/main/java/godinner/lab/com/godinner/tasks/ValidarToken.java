@@ -19,9 +19,9 @@ public class ValidarToken extends AsyncTask<Void, Void, Boolean> {
     private ResultRequest mListener;
     private String token;
 
-    public ValidarToken(@NonNull ResultRequest mListener, String token) {
-        this.mListener = mListener;
+    public ValidarToken(String token, @NonNull ResultRequest mListener) {
         this.token = token;
+        this.mListener = mListener;
     }
 
     @Override
@@ -48,6 +48,7 @@ public class ValidarToken extends AsyncTask<Void, Void, Boolean> {
             }
 
             JSONObject json = new JSONObject(dados);
+
             if (json.has("status") && json.has("error")) {
                 int status = json.getInt("status");
                 String error = json.getString("error");

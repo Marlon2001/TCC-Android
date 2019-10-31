@@ -1,9 +1,9 @@
 package godinner.lab.com.godinner;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import godinner.lab.com.godinner.adapter.TabsAdapter;
 
@@ -16,11 +16,11 @@ public class TelaInicialActivity extends AppCompatActivity {
         setUpViewPager();
     }
 
-    public void setUpViewPager(){
+    public void setUpViewPager() {
         final ViewPager viewPager = findViewById(R.id.viewPager);
         final TabLayout tabLayout = findViewById(R.id.tabLayout);
 
-        if(viewPager != null) {
+        if (viewPager != null) {
             TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager());
             tabsAdapter.addFragment(new HomeFragment(), "Início");
             tabsAdapter.addFragment(new SacolaFragment(), "Sacolas");
@@ -54,7 +54,7 @@ public class TelaInicialActivity extends AppCompatActivity {
     }
 
     public int getIcon(int position) {
-        switch(position) {
+        switch (position) {
             case 0:
                 return R.drawable.ic_home;
             case 1:

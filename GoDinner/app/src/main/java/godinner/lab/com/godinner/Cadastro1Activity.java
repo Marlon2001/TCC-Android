@@ -4,10 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -16,7 +16,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.concurrent.ExecutionException;
+
 import godinner.lab.com.godinner.model.Cadastro;
+import godinner.lab.com.godinner.tasks.ValidarEmailCpf;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class Cadastro1Activity extends AppCompatActivity {
@@ -30,6 +33,12 @@ public class Cadastro1Activity extends AppCompatActivity {
     private ImageButton btnVoltar;
 
     private Cadastro cadastroIntent;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +57,7 @@ public class Cadastro1Activity extends AppCompatActivity {
         Intent intent = getIntent();
         cadastroIntent = (Cadastro) intent.getSerializableExtra("cadastro");
 
-        if(cadastroIntent != null){
+        if (cadastroIntent != null) {
             txtEmail.setText(cadastroIntent.getEmail());
             txtSenha.setText(cadastroIntent.getSenha());
         }
@@ -56,17 +65,35 @@ public class Cadastro1Activity extends AppCompatActivity {
         btnProximo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validarCampos()){
-                    Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activiity.class);
+                if (validarCampos()) {
+                    ValidarEmailCpf mValidarEmailCpf = new ValidarEmailCpf("email", txtEmail.getText().toString(), new ValidarEmailCpf.ValidarCampo() {
+                        @Override
+                        public void Request(Boolean result) {
+                            if (!result) {
+                                txtEmailLayout.setErrorEnabled(true);
+                                txtEmailLayout.setError("E-mail já cadastrado.");
+                            } else {
+                                txtEmailLayout.setErrorEnabled(false);
 
-                    Cadastro c = new Cadastro();
-                    c.setEmail(txtEmail.getText().toString());
-                    c.setSenha(txtSenha.getText().toString());
+                                Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activiity.class);
 
-                    abrirCadastro2.putExtra("cadastro", c);
+                                Cadastro c = new Cadastro();
+                                c.setEmail(txtEmail.getText().toString());
+                                c.setSenha(txtSenha.getText().toString());
 
-                    startActivity(abrirCadastro2);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                abrirCadastro2.putExtra("cadastro", c);
+
+                                startActivity(abrirCadastro2);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            }
+                        }
+                    });
+
+                    try {
+                        mValidarEmailCpf.execute().get();
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -74,8 +101,8 @@ public class Cadastro1Activity extends AppCompatActivity {
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent abrirMainActivity = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(abrirMainActivity);
+                Intent openMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(openMainActivity);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
@@ -91,30 +118,27 @@ public class Cadastro1Activity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public boolean validarCampos(){
+    public boolean validarCampos() {
         boolean semErro = true;
 
-        if(!ValidaCampos.isValidEmail(txtEmail.getText().toString())){
+        if (!ValidaCampos.isValidEmail(txtEmail.getText().toString())) {
             txtEmailLayout.setErrorEnabled(true);
             txtEmailLayout.setError("E-mail inválido.");
             semErro = false;
+        } else {
+            txtEmailLayout.setErrorEnabled(false);
         }
 
-        if(txtSenha.getText().toString().trim().length() < 8){
+        if (txtSenha.getText().toString().trim().length() < 8) {
             txtSenhaLayout.setErrorEnabled(true);
             txtSenhaLayout.setError("A senha deve conter no minímo 8 caracteres.");
             semErro = false;
+        } else {
+            txtSenhaLayout.setErrorEnabled(false);
         }
 
         return semErro;
     }
-
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            finish();
-        }
-    };
 
     @Override
     protected void onDestroy() {

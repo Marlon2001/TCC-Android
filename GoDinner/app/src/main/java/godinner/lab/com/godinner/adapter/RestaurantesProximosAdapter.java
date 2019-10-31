@@ -2,6 +2,7 @@ package godinner.lab.com.godinner.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
     @Override
     public RestauranteViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context)
-                .inflate(R.layout.lista_image, viewGroup, false);
+                .inflate(R.layout.lista_image2, viewGroup, false);
         return new RestauranteViewHolder(view);
     }
 
@@ -42,6 +43,7 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
     public void onBindViewHolder(@NonNull RestauranteViewHolder restauranteViewHolder, final int i) {
         Restaurante r = mRestaurantes.get(i);
 
+        restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_chef));
         restauranteViewHolder.txtRestaurante.setText(r.getRazaoSocial());
         restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,12 +64,12 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
         void onClickRestaurante(View view, int index);
     }
 
-    protected class RestauranteViewHolder extends RecyclerView.ViewHolder {
+    class RestauranteViewHolder extends RecyclerView.ViewHolder {
         private ImageView imgRestaurante;
         private TextView txtRestaurante;
 
 
-        public RestauranteViewHolder(@NonNull View itemView) {
+        RestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imgRestaurante = itemView.findViewById(R.id.image_item);

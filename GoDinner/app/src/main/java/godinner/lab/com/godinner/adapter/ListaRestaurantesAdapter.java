@@ -1,8 +1,6 @@
 package godinner.lab.com.godinner.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -10,20 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.R;
-import godinner.lab.com.godinner.model.Restaurante;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaurantesAdapter.RestauranteViewHolder> {
@@ -49,15 +41,16 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
     @Override
     public void onBindViewHolder(@NonNull RestauranteViewHolder restauranteViewHolder, final int i) {
         RestauranteExibicao r = mRestaurantes.get(i);
+
+        restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_chef));
         restauranteViewHolder.nome.setText(r.getRazaoSocial());
-        if (r.getNota() != null){
-            restauranteViewHolder.rank.setText(r.getNota()+"º mais visitado.");
+        if (r.getNota() != null) {
+            restauranteViewHolder.rank.setText(String.format("%sº mais visitado.", r.getNota()));
         }
-        restauranteViewHolder.avaliacao.setText(r.getNota().toString());
+        restauranteViewHolder.avaliacao.setText(r.getNota());
         restauranteViewHolder.distancia.setText(r.getDistancia());
-        restauranteViewHolder.preco.setText("R$ "+r.getNota());
+        restauranteViewHolder.preco.setText(String.format("R$ %s", r.getNota()));
         restauranteViewHolder.tempo.setText(r.getTempoEntrega());
-        restauranteViewHolder.descricao.setText(r.getRazaoSocial());
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.color.colorWhite));
 
         restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +72,7 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         void onClickRestaurante(View view, int index);
     }
 
-    protected class RestauranteViewHolder extends RecyclerView.ViewHolder {
+    class RestauranteViewHolder extends RecyclerView.ViewHolder {
         private TextView nome;
         private TextView rank;
         private TextView avaliacao;
@@ -87,10 +80,9 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         private TextView distancia;
         private TextView preco;
         private TextView tempo;
-        private TextView descricao;
         private ImageView imgRestaurante;
 
-        public RestauranteViewHolder(@NonNull View itemView) {
+        RestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nome = itemView.findViewById(R.id.nome_restaurante);
@@ -99,7 +91,6 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
             distancia = itemView.findViewById(R.id.distancia);
             preco = itemView.findViewById(R.id.preco);
             tempo = itemView.findViewById(R.id.tempo);
-            descricao = itemView.findViewById(R.id.descricao);
             imgRestaurante = itemView.findViewById(R.id.image);
         }
     }

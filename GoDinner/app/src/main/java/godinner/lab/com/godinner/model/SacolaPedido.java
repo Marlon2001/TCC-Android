@@ -5,6 +5,7 @@ public class SacolaPedido {
     private Integer idSacola;
     private Integer idRestaurante;
     private String nomeRestaurante;
+    private String tempoEntrega;
     private Double valorEntrega;
     private Double valorTotalPedido;
 
@@ -16,6 +17,14 @@ public class SacolaPedido {
         this.idSacola = idSacola;
     }
 
+    public Integer getIdRestaurante() {
+        return idRestaurante;
+    }
+
+    public void setIdRestaurante(Integer idRestaurante) {
+        this.idRestaurante = idRestaurante;
+    }
+
     public String getNomeRestaurante() {
         return nomeRestaurante;
     }
@@ -24,12 +33,12 @@ public class SacolaPedido {
         this.nomeRestaurante = nomeRestaurante;
     }
 
-    public void setIdRestaurante(Integer idRestaurante) {
-        this.idRestaurante = idRestaurante;
+    public String getTempoEntrega() {
+        return tempoEntrega;
     }
 
-    public Integer getIdRestaurante() {
-        return idRestaurante;
+    public void setTempoEntrega(String tempoEntrega) {
+        this.tempoEntrega = tempoEntrega;
     }
 
     public Double getValorEntrega() {

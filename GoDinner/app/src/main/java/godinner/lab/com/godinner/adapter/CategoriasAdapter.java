@@ -62,7 +62,7 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
         void onClickCategoria(View view, int index);
     }
 
-    protected class CategoriasViewholder extends RecyclerView.ViewHolder {
+    class CategoriasViewholder extends RecyclerView.ViewHolder {
         private ImageView imgCategoria;
         private TextView txtCategoria;
 

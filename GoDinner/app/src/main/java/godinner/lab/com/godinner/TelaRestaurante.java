@@ -1,11 +1,12 @@
 package godinner.lab.com.godinner;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,18 +20,12 @@ import godinner.lab.com.godinner.model.RestauranteExibicao;
 import godinner.lab.com.godinner.tasks.BuscarProdutosRestaurante;
 import godinner.lab.com.godinner.tasks.BuscarPromocoesRestaurante;
 
-public class TelaRestaurante extends AppCompatActivity {
-
-    private TextView txtRestaurante;
-    private TextView txtPreco;
-    private TextView txtEntrega;
-    private TextView txtAvaliacao;
-
-    private RecyclerView mPromocoes;
-    private RecyclerView mTodosProdutos;
+public class TelaRestaurante extends AppCompatActivity implements View.OnClickListener {
 
     public static ArrayList<Produto> mProdutosPromocao;
     public static ArrayList<Produto> mProdutosTodos;
+    private RecyclerView mPromocoes;
+    private RecyclerView mTodosProdutos;
     private RestauranteExibicao mRestaurante;
 
     @Override
@@ -38,10 +33,11 @@ public class TelaRestaurante extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_restaurante);
 
-        txtRestaurante = findViewById(R.id.nome_restaurante);
-        txtPreco = findViewById(R.id.preco);
-        txtEntrega = findViewById(R.id.tempo_entrega);
-        txtAvaliacao = findViewById(R.id.avaliacao_restaurante);
+        TextView txtRestaurante = findViewById(R.id.nome_restaurante);
+        TextView txtPreco = findViewById(R.id.preco);
+        TextView txtEntrega = findViewById(R.id.tempo_entrega);
+        TextView txtAvaliacao = findViewById(R.id.avaliacao_restaurante);
+        ImageButton btnVoltar = findViewById(R.id.btn_voltar);
         mPromocoes = findViewById(R.id.promocoes);
         mTodosProdutos = findViewById(R.id.todos);
 
@@ -55,9 +51,10 @@ public class TelaRestaurante extends AppCompatActivity {
         mRestaurante = (RestauranteExibicao) mIntent.getSerializableExtra("restaurante");
 
         txtRestaurante.setText(mRestaurante.getRazaoSocial());
-        txtPreco.setText("R$ " + mRestaurante.getPrecoEntrega());
+        txtPreco.setText(String.format("R$ %s", mRestaurante.getValorEntrega()));
         txtEntrega.setText(mRestaurante.getTempoEntrega());
         txtAvaliacao.setText(mRestaurante.getNota());
+        btnVoltar.setOnClickListener(this);
 
         try {
             TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(TelaRestaurante.this);
@@ -71,9 +68,7 @@ public class TelaRestaurante extends AppCompatActivity {
 
             mAdapterPromocoes();
             mAdapterProdutos();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -108,5 +103,14 @@ public class TelaRestaurante extends AppCompatActivity {
             }
         });
         mTodosProdutos.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_voltar:
+                finish();
+                break;
+        }
     }
 }

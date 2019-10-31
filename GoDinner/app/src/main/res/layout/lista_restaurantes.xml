@@ -111,23 +111,6 @@
                 android:textSize="12sp"
                 android:lines="1"
                 android:ellipsize="end"/>
-
-            <View
-                android:layout_width="3dp"
-                android:layout_height="3dp"
-                android:background="#555"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"/>
-
-            <TextView
-                android:id="@+id/descricao"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#2D2D2D"
-                android:textSize="12sp"
-                android:lines="1"
-                android:ellipsize="end"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -142,8 +125,8 @@
             android:layout_height="match_parent"
             android:maxHeight="100px"
             android:maxWidth="100px"
-            android:background="@color/Image"
-            android:contentDescription="@string/lbl_logo_restaurante"/>
+            android:contentDescription="@string/lbl_logo_restaurante"
+            android:src="@drawable/ic_chef" />
 
     </FrameLayout>
     </LinearLayout>

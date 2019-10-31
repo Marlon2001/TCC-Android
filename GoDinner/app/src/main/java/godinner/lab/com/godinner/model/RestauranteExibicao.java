@@ -6,15 +6,15 @@ public class RestauranteExibicao extends Restaurante implements Serializable {
 
     private String distancia;
     private String tempoEntrega;
-    private Double precoEntrega;
+    private Double valorEntrega;
     private String nota;
 
-    public Double getPrecoEntrega() {
-        return precoEntrega;
+    public Double getValorEntrega() {
+        return valorEntrega;
     }
 
-    public void setPrecoEntrega(Double precoEntrega) {
-        this.precoEntrega = precoEntrega;
+    public void setValorEntrega(Double valorEntrega) {
+        this.valorEntrega = valorEntrega;
     }
 
     public String getDistancia() {
