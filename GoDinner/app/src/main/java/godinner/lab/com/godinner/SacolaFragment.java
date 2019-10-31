@@ -97,8 +97,6 @@ public class SacolaFragment extends Fragment {
             public void onSingleClick(View v) {
                 final PedidoDAO mPedidoDAO = new PedidoDAO(context);
 
-                if (mPedidoDAO.)
-
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
                 mBuilder.setTitle("Finalizar Compra");
                 mBuilder.setMessage("Deseja finalizar compra!");

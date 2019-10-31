@@ -91,40 +91,49 @@ public class Cadastro3Activity extends AppCompatActivity {
                 if (!hasFocus) {
                     if (txtCep.getText().length() == 9) {
                         try {
-                            ConsultarCep consultarCep = new ConsultarCep(txtCep.getText().toString());
+                            ConsultarCep consultarCep = new ConsultarCep(txtCep.getText().toString(), Cadastro3Activity.this);
                             consultarCep.execute().get();
 
-                            txtLogradouro.setText(endereco.getLogradouro());
-                            txtBairro.setText(endereco.getBairro());
+                            if (endereco != null) {
+                                txtLogradouro.setText(endereco.getLogradouro());
+                                txtBairro.setText(endereco.getBairro());
 
-                            Estado e = new Estado();
-                            e.setEstado("Escolha um Estado");
-                            e.setIdEstado(0);
-                            Estado e2 = new Estado();
-                            e2.setEstado(endereco.getEstadoNome());
-                            e2.setIdEstado(endereco.getIdEstado());
+                                List estados = new ArrayList();
 
-                            List estados = new ArrayList();
-                            estados.add(e);
-                            estados.add(e2);
-                            ArrayAdapter mAdapter = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, estados);
+                                Estado e1 = new Estado();
+                                e1.setEstado("Escolha um Estado");
+                                e1.setIdEstado(0);
+                                estados.add(e1);
 
-                            Cidade c = new Cidade();
-                            c.setCidade("Escolha uma Cidade");
-                            c.setIdCidade(0);
-                            Cidade c2 = new Cidade();
-                            c2.setCidade(endereco.getCidadeNome());
-                            c2.setIdCidade(endereco.getIdCidade());
+                                if (endereco.getIdEstado() != null) {
+                                    Estado e2 = new Estado();
+                                    e2.setEstado(endereco.getEstadoNome());
+                                    e2.setIdEstado(endereco.getIdEstado());
+                                    estados.add(e2);
+                                }
 
-                            List cidades = new ArrayList();
-                            cidades.add(e);
-                            cidades.add(c2);
-                            ArrayAdapter mAdapter2 = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, cidades);
+                                ArrayAdapter mAdapter = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, estados);
 
-                            spinnerEstado.setAdapter(mAdapter);
-                            spinnerEstado.setSelection(1);
-                            spinnerCidade.setAdapter(mAdapter2);
-                            spinnerCidade.setSelection(1);
+                                List cidades = new ArrayList();
+                                Cidade c1 = new Cidade();
+                                c1.setCidade("Escolha uma Cidade");
+                                c1.setIdCidade(0);
+                                cidades.add(c1);
+
+                                if (endereco.getIdCidade() != null) {
+                                    Cidade c2 = new Cidade();
+                                    c2.setCidade(endereco.getCidadeNome());
+                                    c2.setIdCidade(endereco.getIdCidade());
+                                    cidades.add(c2);
+                                }
+
+                                ArrayAdapter mAdapter2 = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, cidades);
+
+                                spinnerEstado.setAdapter(mAdapter);
+                                spinnerEstado.setSelection(1);
+                                spinnerCidade.setAdapter(mAdapter2);
+                                spinnerCidade.setSelection(1);
+                            }
                         } catch (ExecutionException | InterruptedException e) {
                             e.printStackTrace();
                         }
