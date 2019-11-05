@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Cadastro1Activity" />
-        <activity android:name=".Cadastro2Activiity" />
+        <activity android:name=".Cadastro2Activity" />
         <activity android:name=".Cadastro3Activity" />
         <activity android:name=".BemVindoActivity" />
         <activity android:name=".TelaInicialActivity" />

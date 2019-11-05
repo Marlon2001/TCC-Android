@@ -60,5 +60,5 @@
     <string name="lbl_todos">Todos</string>
     <string name="lbl_restaurantes_proximos">Restaurantes próximos</string>
     <string name="lbl_preco_padrao">R$ 0,00</string>
-    <string name="lbl_sacola_vazia">Sacola Vazia</string>
+    <string name="lbl_nenhum_pedido">Nenhum Pedido</string>
 </resources>

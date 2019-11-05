@@ -26,7 +26,8 @@ public class TokenUsuarioDAO extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
 
     public void salvarToken(String token) {
         SQLiteDatabase dbWrite = getWritableDatabase();
@@ -44,10 +45,19 @@ public class TokenUsuarioDAO extends SQLiteOpenHelper {
         String sql = "SELECT token FROM tbl_token WHERE id_token = 1";
         Cursor c = dbRead.rawQuery(sql, null);
 
-        if(c.moveToNext()){
+        if (c.moveToNext()) {
             token = c.getString(c.getColumnIndex("token"));
         }
 
         return token;
+    }
+
+    public void limparToken() {
+        SQLiteDatabase dbWrite = getWritableDatabase();
+
+        ContentValues dados = new ContentValues();
+        dados.put("token", "");
+
+        dbWrite.update("tbl_token", dados, "id_token = 1", null);
     }
 }

@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.santalu.maskedittext.MaskEditText;
@@ -27,6 +28,7 @@ import godinner.lab.com.godinner.model.Contato;
 import godinner.lab.com.godinner.model.Endereco;
 import godinner.lab.com.godinner.model.Estado;
 import godinner.lab.com.godinner.tasks.CadastroUsuario;
+import godinner.lab.com.godinner.tasks.CadastroUsuarioFacebook;
 import godinner.lab.com.godinner.tasks.ConsultarCep;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
@@ -53,6 +55,7 @@ public class Cadastro3Activity extends AppCompatActivity {
     private Button btnFinalizar;
     private Cadastro cadastroIntent;
     private Contato contatoIntent;
+    private String tipoCadastro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,7 @@ public class Cadastro3Activity extends AppCompatActivity {
         Intent intent = getIntent();
         cadastroIntent = (Cadastro) intent.getSerializableExtra("cadastro");
         contatoIntent = (Contato) intent.getSerializableExtra("contato");
+        tipoCadastro = intent.getStringExtra("type");
 
         txtCep.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -91,7 +95,7 @@ public class Cadastro3Activity extends AppCompatActivity {
                 if (!hasFocus) {
                     if (txtCep.getText().length() == 9) {
                         try {
-                            ConsultarCep consultarCep = new ConsultarCep(txtCep.getText().toString(), Cadastro3Activity.this);
+                            ConsultarCep consultarCep = new ConsultarCep(txtCep.getRawText(), Cadastro3Activity.this);
                             consultarCep.execute().get();
 
                             if (endereco != null) {
@@ -133,6 +137,8 @@ public class Cadastro3Activity extends AppCompatActivity {
                                 spinnerEstado.setSelection(1);
                                 spinnerCidade.setAdapter(mAdapter2);
                                 spinnerCidade.setSelection(1);
+                            } else {
+                                Toast.makeText(Cadastro3Activity.this, "CEP não encontrado.", Toast.LENGTH_SHORT).show();
                             }
                         } catch (ExecutionException | InterruptedException e) {
                             e.printStackTrace();
@@ -159,16 +165,20 @@ public class Cadastro3Activity extends AppCompatActivity {
                     e.setIdEstado(estado.getIdEstado());
 
                     try {
-                        CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e);
-                        cadastroUsuario.execute();
-                        cadastroUsuario.get();
+                        if (tipoCadastro.equals("normal")) {
+                            CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e);
+                            cadastroUsuario.execute().get();
+                        } else if (tipoCadastro.equals("facebook")) {
+                            CadastroUsuarioFacebook cadastroUsuarioFacebook = new CadastroUsuarioFacebook(cadastroIntent, contatoIntent, e);
+                            cadastroUsuarioFacebook.execute().get();
+                        }
 
                         Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
                         startActivity(abrirBemVindo);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
                         LocalBroadcastManager.getInstance(Cadastro3Activity.this).sendBroadcast(new Intent("fecharActivity"));
-                        finish();
+                        Cadastro3Activity.this.finish();
                     } catch (ExecutionException | InterruptedException e1) {
                         e1.printStackTrace();
                     }
@@ -179,9 +189,10 @@ public class Cadastro3Activity extends AppCompatActivity {
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activiity.class);
+                Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activity.class);
                 abrirCadastro2.putExtra("cadastro", cadastroIntent);
                 abrirCadastro2.putExtra("contato", contatoIntent);
+                abrirCadastro2.putExtra("type", tipoCadastro);
                 startActivity(abrirCadastro2);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
@@ -190,9 +201,10 @@ public class Cadastro3Activity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activiity.class);
+        Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activity.class);
         abrirCadastro2.putExtra("cadastro", cadastroIntent);
         abrirCadastro2.putExtra("contato", contatoIntent);
+        abrirCadastro2.putExtra("type", tipoCadastro);
         startActivity(abrirCadastro2);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         super.onBackPressed();

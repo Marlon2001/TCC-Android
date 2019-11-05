@@ -75,13 +75,14 @@ public class Cadastro1Activity extends AppCompatActivity {
                             } else {
                                 txtEmailLayout.setErrorEnabled(false);
 
-                                Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activiity.class);
+                                Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activity.class);
 
                                 Cadastro c = new Cadastro();
                                 c.setEmail(txtEmail.getText().toString());
                                 c.setSenha(txtSenha.getText().toString());
 
                                 abrirCadastro2.putExtra("cadastro", c);
+                                abrirCadastro2.putExtra("type", "normal");
 
                                 startActivity(abrirCadastro2);
                                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

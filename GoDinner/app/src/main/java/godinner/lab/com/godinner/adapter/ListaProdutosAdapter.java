@@ -63,7 +63,6 @@ public class ListaProdutosAdapter extends BaseAdapter {
             @SuppressLint("ViewHolder")
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Testee", Toast.LENGTH_SHORT).show();
                 PopupMenu popup = new PopupMenu(context, mOpcoesPedido);
                 popup.inflate(R.menu.menu_pedidos);
 

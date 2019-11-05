@@ -3,7 +3,6 @@ package godinner.lab.com.godinner.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,12 +53,10 @@ public class ConsultarCep extends AsyncTask {
             }
 
             JSONObject mObject = new JSONObject(dados);
-            endereco = new Endereco();
 
-            Log.d("aaaaaaaa ---", mObject.toString());
-            Log.d("aaaaaaaa ---", mObject.getString("cep"));
+            if (!mObject.getString("cep").equals("null")) {
+                endereco = new Endereco();
 
-            if (mObject.getString("cep").equals("null")) {
                 endereco.setLogradouro(mObject.getString("logradouro"));
                 endereco.setBairro(mObject.getString("bairro"));
                 endereco.setCep(mObject.getString("cep"));
@@ -68,11 +65,9 @@ public class ConsultarCep extends AsyncTask {
                 endereco.setCidadeNome(mObject.getJSONObject("cidade").getString("cidade"));
                 endereco.setIdEstado(mObject.getJSONObject("cidade").getJSONObject("estado").getInt("id"));
                 endereco.setEstadoNome(mObject.getJSONObject("cidade").getJSONObject("estado").getString("estado"));
-            } else {
-                Toast.makeText(context, "CEP não encontrado.", Toast.LENGTH_SHORT).show();
-            }
 
-            Cadastro3Activity.endereco = endereco;
+                Cadastro3Activity.endereco = endereco;
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -26,11 +26,13 @@ public class FinalizarCompra extends AsyncTask {
     private SacolaPedido mSacolaPedido;
     private List<ProdutoPedido> mListPedidos;
     private String mToken;
+    private String descricao;
 
-    public FinalizarCompra(SacolaPedido mSacolaPedido, List<ProdutoPedido> mListPedidos, String mToken) {
+    public FinalizarCompra(SacolaPedido mSacolaPedido, List<ProdutoPedido> mListPedidos, String mToken, String descricao) {
         this.mSacolaPedido = mSacolaPedido;
         this.mListPedidos = mListPedidos;
         this.mToken = mToken;
+        this.descricao = descricao;
     }
 
     @Override
@@ -64,6 +66,7 @@ public class FinalizarCompra extends AsyncTask {
                 jsonProdutos.put(object);
             }
             jsonPedidos.key("produtos").value(jsonProdutos);
+            jsonPedidos.key("descricao").value(descricao);
             jsonPedidos.endObject();
 
             URL url = new URL(MainActivity.ipServidor + "/pedidos");
