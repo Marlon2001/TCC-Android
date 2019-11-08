@@ -19,7 +19,7 @@ import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.TelaInicialActivity;
 import godinner.lab.com.godinner.model.Categoria;
 
-public class BuscarCategorias extends AsyncTask{
+public class BuscarCategorias extends AsyncTask {
 
     private ArrayList<Categoria> categorias;
     private String token;

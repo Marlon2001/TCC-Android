@@ -41,6 +41,17 @@ public class PerfilFragment extends Fragment {
         view.requestFocus();
 
         Button btnDeslogar = view.findViewById(R.id.btn_deslogar);
+        Button btnChat = view.findViewById(R.id.btn_chat);
+
+        btnChat.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                Intent abrirSuporte = new Intent(getActivity(), SuporteActivity.class);
+                startActivity(abrirSuporte);
+                reset();
+            }
+        });
+        
         btnDeslogar.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
@@ -50,6 +61,7 @@ public class PerfilFragment extends Fragment {
                 Intent abrirMain = new Intent(getActivity(), MainActivity.class);
                 startActivity(abrirMain);
                 getActivity().finish();
+                reset();
             }
         });
 

@@ -50,5 +50,7 @@
         <activity android:name=".TelaInicialActivity" />
         <activity android:name=".TelaRestaurante" />
         <activity android:name=".DetalhesPedido" />
+        <activity android:name=".SuporteActivity"></activity>
     </application>
+
 </manifest>
