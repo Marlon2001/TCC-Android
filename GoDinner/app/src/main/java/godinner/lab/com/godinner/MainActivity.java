@@ -43,7 +43,7 @@ import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String ipServidor = "http://godinner.tk:8080";
+    public static final String ipServidor = "https://godinner.tk:8080";
     public static final String ipServidorChat = "http://godinner.tk:3005";
     public static String token = null;
     public static String erro;
@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
 
         btnLogar.setOnClickListener(new OnSingleClickListener() {
-
             @Override
             public void onSingleClick(View v) {
                 erro = null;
@@ -190,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                                 cadastro.setNome(String.format("%s %s", first_name, last_name));
                                 cadastro.setEmail(email);
                                 cadastro.setFoto(image_url);
+                                cadastro.setSenha(id + "_consumidor");
 
                                 Intent abrirCadastro = new Intent(MainActivity.this, Cadastro2Activity.class);
                                 abrirCadastro.putExtra("cadastro", cadastro);

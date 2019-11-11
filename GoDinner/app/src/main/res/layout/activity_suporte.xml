@@ -5,15 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SuporteActivity">
+    tools:context=".SuporteActivity"
+    android:background="@drawable/bg_chat">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/message_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="48dp"/>
 
     <View
         android:layout_width="0dp"
@@ -45,6 +47,7 @@
             android:layout_weight="4"
             android:background="@android:color/transparent"
             android:hint="Digite a mensagem"
+            android:inputType="text"
             android:maxLines="6" />
 
         <Button

@@ -1,6 +1,7 @@
 package godinner.lab.com.godinner.tasks;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONStringer;
@@ -16,20 +17,22 @@ import godinner.lab.com.godinner.model.Cadastro;
 import godinner.lab.com.godinner.model.Contato;
 import godinner.lab.com.godinner.model.Endereco;
 
-public class CadastroUsuarioFacebook extends AsyncTask {
+public class CadastroUsuarioFacebook extends AsyncTask<Void, Void, Boolean> {
 
     private Cadastro cadastro;
     private Contato contato;
     private Endereco endereco;
+    private Result mResult;
 
-    public CadastroUsuarioFacebook(Cadastro cadastro, Contato contato, Endereco endereco) {
+    public CadastroUsuarioFacebook(Cadastro cadastro, Contato contato, Endereco endereco, @NonNull Result mResult) {
         this.cadastro = cadastro;
         this.contato = contato;
         this.endereco = endereco;
+        this.mResult = mResult;
     }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
+    protected Boolean doInBackground(Void... voids) {
         JSONStringer jsonCadastro = new JSONStringer();
 
         try {
@@ -68,9 +71,20 @@ public class CadastroUsuarioFacebook extends AsyncTask {
             conexao.connect();
             Scanner scanner = new Scanner(conexao.getInputStream());
             String resposta = scanner.nextLine();
+            return true;
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return false;
+    }
+
+    @Override
+    protected void onPostExecute(Boolean aBoolean) {
+        super.onPostExecute(aBoolean);
+        mResult.onResult(aBoolean);
+    }
+
+    public interface Result {
+        void onResult(boolean bool);
     }
 }

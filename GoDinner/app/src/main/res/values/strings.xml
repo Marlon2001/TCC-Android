@@ -61,4 +61,5 @@
     <string name="lbl_restaurantes_proximos">Restaurantes próximos</string>
     <string name="lbl_preco_padrao">R$ 0,00</string>
     <string name="lbl_nenhum_pedido">Nenhum Pedido</string>
+    <string name="descricao_img_random">Descrição Random</string>
 </resources>

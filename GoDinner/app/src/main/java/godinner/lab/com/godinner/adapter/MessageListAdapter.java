@@ -12,6 +12,7 @@ import java.util.List;
 
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Mensagem;
+import godinner.lab.com.godinner.utils.Data;
 
 public class MessageListAdapter extends RecyclerView.Adapter {
 
@@ -24,6 +25,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     public MessageListAdapter(Context context, List<Mensagem> mMensagemList) {
         this.context = context;
         this.mMensagemList = mMensagemList;
+    }
+
+    public void refreshData(Mensagem m){
+        mMensagemList.add(m);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -83,7 +89,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         void bind(Mensagem message) {
             messageText.setText(message.getMessage());
-            timeText.setText("18:30");
+            timeText.setText(Data.getHoraAtual());
         }
     }
 
@@ -103,12 +109,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         void bind(Mensagem message) {
             nameText.setText(message.getUsername());
             messageText.setText(message.getMessage());
-            timeText.setText("19:30");
+            timeText.setText(Data.getHoraAtual());
         }
     }
 
     @Override
     public int getItemCount() {
-        return mMensagemList.size();
+        return mMensagemList != null ? mMensagemList.size() : 0;
     }
 }

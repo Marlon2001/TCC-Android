@@ -166,16 +166,34 @@ public class Cadastro3Activity extends AppCompatActivity {
 
                     try {
                         if (tipoCadastro.equals("normal")) {
-                            CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e);
+                            CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e, new CadastroUsuario.Result() {
+                                @Override
+                                public void onResult(boolean bool) {
+                                    if (bool) {
+                                        Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
+                                        startActivity(abrirBemVindo);
+                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                    } else {
+                                        Toast.makeText(Cadastro3Activity.this, "Erro no Cadastro.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
                             cadastroUsuario.execute().get();
                         } else if (tipoCadastro.equals("facebook")) {
-                            CadastroUsuarioFacebook cadastroUsuarioFacebook = new CadastroUsuarioFacebook(cadastroIntent, contatoIntent, e);
+                            CadastroUsuarioFacebook cadastroUsuarioFacebook = new CadastroUsuarioFacebook(cadastroIntent, contatoIntent, e, new CadastroUsuarioFacebook.Result() {
+                                @Override
+                                public void onResult(boolean bool) {
+                                    if (bool) {
+                                        Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
+                                        startActivity(abrirBemVindo);
+                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                    } else {
+                                        Toast.makeText(Cadastro3Activity.this, "Erro no Cadastro.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
                             cadastroUsuarioFacebook.execute().get();
                         }
-
-                        Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
-                        startActivity(abrirBemVindo);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
                         LocalBroadcastManager.getInstance(Cadastro3Activity.this).sendBroadcast(new Intent("fecharActivity"));
                         Cadastro3Activity.this.finish();
