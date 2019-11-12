@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.model.Cadastro;
 import godinner.lab.com.godinner.model.Contato;
-import godinner.lab.com.godinner.tasks.ValidarEmailCpf;
+import godinner.lab.com.godinner.tasks.ValidarDadosCadastro;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class Cadastro2Activity extends AppCompatActivity {
@@ -87,7 +87,7 @@ public class Cadastro2Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validarCampos()) {
-                    ValidarEmailCpf mValidarEmailCpf = new ValidarEmailCpf("cpf", txtCpf.getRawText(), new ValidarEmailCpf.ValidarCampo() {
+                    ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("cpf", txtCpf.getRawText(), new ValidarDadosCadastro.ValidarCampo() {
                         @Override
                         public void Request(Boolean result) {
                             if (!result) {
@@ -113,7 +113,7 @@ public class Cadastro2Activity extends AppCompatActivity {
                         }
                     });
                     try {
-                        mValidarEmailCpf.execute().get();
+                        mValidarDadosCadastro.execute().get();
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }

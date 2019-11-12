@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide;
 import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.model.Cadastro;
-import godinner.lab.com.godinner.tasks.ValidarEmailCpf;
+import godinner.lab.com.godinner.tasks.ValidarDadosCadastro;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class Cadastro1Activity extends AppCompatActivity {
@@ -66,7 +66,7 @@ public class Cadastro1Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validarCampos()) {
-                    ValidarEmailCpf mValidarEmailCpf = new ValidarEmailCpf("email", txtEmail.getText().toString(), new ValidarEmailCpf.ValidarCampo() {
+                    ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("email", txtEmail.getText().toString(), new ValidarDadosCadastro.ValidarCampo() {
                         @Override
                         public void Request(Boolean result) {
                             if (!result) {
@@ -91,7 +91,7 @@ public class Cadastro1Activity extends AppCompatActivity {
                     });
 
                     try {
-                        mValidarEmailCpf.execute().get();
+                        mValidarDadosCadastro.execute().get();
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }

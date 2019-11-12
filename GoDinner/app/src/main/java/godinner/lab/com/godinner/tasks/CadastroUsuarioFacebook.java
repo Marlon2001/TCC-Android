@@ -43,6 +43,7 @@ public class CadastroUsuarioFacebook extends AsyncTask<Void, Void, Boolean> {
             jsonCadastro.key("cpf").value(contato.getCpf());
             jsonCadastro.key("telefone").value(contato.getTelefone());
             jsonCadastro.key("fotoPerfil").value(cadastro.getFoto());
+            jsonCadastro.key("redesocial").value(true);
             jsonCadastro.key("endereco").object()
                     .key("cep").value(endereco.getCep())
                     .key("numero").value(endereco.getNumero())

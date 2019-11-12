@@ -1,17 +1,16 @@
 package godinner.lab.com.godinner;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
@@ -37,8 +36,9 @@ import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.BuscarConsumidor;
 import godinner.lab.com.godinner.tasks.LoginUsuario;
-import godinner.lab.com.godinner.tasks.ValidarEmailCpf;
+import godinner.lab.com.godinner.tasks.ValidarDadosCadastro;
 import godinner.lab.com.godinner.utils.OnSingleClickListener;
+import godinner.lab.com.godinner.utils.TrustCertificates;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
 
         checkLoginStatus();
+        TrustCertificates.trustEveryone();
 
         txtEmail = findViewById(R.id.txt_email);
         txtSenha = findViewById(R.id.txt_password);
@@ -177,10 +178,15 @@ public class MainActivity extends AppCompatActivity {
                     final String id = object.getString("id");
                     final String image_url = "https://graph.facebook.com/" + id + "/picture?type=normal";
 
-                    ValidarEmailCpf mValidarEmailCpf = new ValidarEmailCpf("email", email, new ValidarEmailCpf.ValidarCampo() {
+                    ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("email", email, new ValidarDadosCadastro.ValidarCampo() {
                         @Override
                         public void Request(Boolean result) {
                             if(!result){
+                                Login login = new Login();
+                                login.setEmail(email);
+                                login.setSenha(id + "_consumidor");
+
+                                LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
                                 // Vai para login
                                 // criar task de login por facebook
                                 // a task vai validar se o email nao possui senha no cadastro do banco
@@ -200,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    mValidarEmailCpf.execute().get();
+                    mValidarDadosCadastro.execute().get();
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
