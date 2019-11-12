@@ -1,8 +1,9 @@
 package godinner.lab.com.godinner;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.button.MaterialButton;
@@ -11,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,30 +100,58 @@ public class SacolaFragment extends Fragment {
             public void onSingleClick(View v) {
                 final PedidoDAO mPedidoDAO = new PedidoDAO(context);
 
-                if (mPedidoDAO.)
+                if (txtNomeRestaurante.getText().equals("Nenhum Pedido")) {
+                    Toast.makeText(context, "Sacola Vazia", Toast.LENGTH_SHORT).show();
+                    reset();
+                } else {
+                    final AlertDialog.Builder mBuilder = new AlertDialog.Builder(SacolaFragment.this.getContext());
+                    @SuppressLint("InflateParams") final View mView = getLayoutInflater().inflate(R.layout.finalizar_compra, null);
 
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-                mBuilder.setTitle("Finalizar Compra");
-                mBuilder.setMessage("Deseja finalizar compra!");
-                mBuilder.setPositiveButton("Finalizar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SacolaPedido s = mPedidoDAO.consultarSacola();
-                        List<ProdutoPedido> l = mPedidoDAO.consultarProdutos();
-                        TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(context);
-                        String token = mTokenUsuarioDAO.consultarToken();
+                    final LinearLayout layout = mView.findViewById(R.id.linear);
 
-                        FinalizarCompra mFinalizarCompra = new FinalizarCompra(s, l, token);
-                        try {
-                            mFinalizarCompra.execute().get();
-                        } catch (ExecutionException | InterruptedException e) {
-                            e.printStackTrace();
+                    GradientDrawable gradientDrawable = new GradientDrawable();
+                    gradientDrawable.setCornerRadius(32);
+                    layout.setBackground(gradientDrawable);
+
+                    final EditText txtComentario = mView.findViewById(R.id.txt_comentario);
+                    final MaterialButton btnCancelar = mView.findViewById(R.id.btn_cancelar);
+                    final MaterialButton btnFinalizar = mView.findViewById(R.id.btn_finalizar);
+
+                    mBuilder.setView(mView);
+                    final AlertDialog dialog = mBuilder.create();
+                    dialog.show();
+
+                    btnFinalizar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            SacolaPedido s = mPedidoDAO.consultarSacola();
+                            List<ProdutoPedido> l = mPedidoDAO.consultarProdutos();
+                            TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(context);
+                            String token = mTokenUsuarioDAO.consultarToken();
+                            String desc = txtComentario.getText().toString();
+
+                            FinalizarCompra mFinalizarCompra = new FinalizarCompra(s, l, token, desc);
+                            try {
+                                mFinalizarCompra.execute().get();
+                                Toast.makeText(context, "Pedido em Andamento", Toast.LENGTH_SHORT).show();
+                                mPedidoDAO.esvaziarSacola();
+                                onResume();
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            } finally {
+                                dialog.dismiss();
+                            }
                         }
-                    }
-                });
-                mBuilder.setNegativeButton("Ainda não!", null);
-                mBuilder.show();
-                reset();
+                    });
+
+                    btnCancelar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    reset();
+                }
             }
         });
 

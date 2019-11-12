@@ -17,6 +17,7 @@ import java.util.Scanner;
 
 import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.model.Login;
+import godinner.lab.com.godinner.utils.TrustCertificates;
 
 public class LoginUsuario extends AsyncTask {
 

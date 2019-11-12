@@ -1,7 +1,9 @@
 package godinner.lab.com.godinner;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -23,10 +25,10 @@ import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.model.Cadastro;
 import godinner.lab.com.godinner.model.Contato;
-import godinner.lab.com.godinner.tasks.ValidarEmailCpf;
+import godinner.lab.com.godinner.tasks.ValidarDadosCadastro;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
-public class Cadastro2Activiity extends AppCompatActivity {
+public class Cadastro2Activity extends AppCompatActivity {
 
     private EditText txtNome;
     private MaskEditText txtCelular;
@@ -40,6 +42,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
 
     private Cadastro cadastroIntent;
     private Contato contatoIntent;
+    private String tipoCadastro;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -67,6 +70,11 @@ public class Cadastro2Activiity extends AppCompatActivity {
         Intent intent = getIntent();
         cadastroIntent = (Cadastro) intent.getSerializableExtra("cadastro");
         contatoIntent = (Contato) intent.getSerializableExtra("contato");
+        tipoCadastro = intent.getStringExtra("type");
+
+        if (tipoCadastro.equals("facebook")) {
+            txtNome.setText(cadastroIntent.getNome());
+        }
 
         if (contatoIntent != null) {
             txtNome.setText(contatoIntent.getNome());
@@ -79,7 +87,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validarCampos()) {
-                    ValidarEmailCpf mValidarEmailCpf = new ValidarEmailCpf("cpf", txtCpf.getRawText(), new ValidarEmailCpf.ValidarCampo() {
+                    ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("cpf", txtCpf.getRawText(), new ValidarDadosCadastro.ValidarCampo() {
                         @Override
                         public void Request(Boolean result) {
                             if (!result) {
@@ -97,6 +105,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
                                 con.setNotificacoes(rdoNotificacoes.isChecked());
                                 abrirCadastro3.putExtra("cadastro", cadastroIntent);
                                 abrirCadastro3.putExtra("contato", con);
+                                abrirCadastro3.putExtra("type", tipoCadastro);
 
                                 startActivity(abrirCadastro3);
                                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -104,7 +113,7 @@ public class Cadastro2Activiity extends AppCompatActivity {
                         }
                     });
                     try {
-                        mValidarEmailCpf.execute().get();
+                        mValidarDadosCadastro.execute().get();
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -115,10 +124,27 @@ public class Cadastro2Activiity extends AppCompatActivity {
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent abrirCadastro1 = new Intent(getApplicationContext(), Cadastro1Activity.class);
-                abrirCadastro1.putExtra("cadastro", cadastroIntent);
-                startActivity(abrirCadastro1);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                if (tipoCadastro.equals("facebook")) {
+                    new AlertDialog.Builder(Cadastro2Activity.this)
+                            .setTitle("Confirmação")
+                            .setMessage("Deseja cancelar o cadastro?")
+                            .setPositiveButton("Fechar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent fechar = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(fechar);
+                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                    Cadastro2Activity.this.finish();
+                                }
+                            })
+                            .setNegativeButton("Continuar", null)
+                            .show();
+                } else {
+                    Intent abrirCadastro1 = new Intent(getApplicationContext(), Cadastro1Activity.class);
+                    abrirCadastro1.putExtra("cadastro", cadastroIntent);
+                    startActivity(abrirCadastro1);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                }
             }
         });
 
@@ -127,10 +153,27 @@ public class Cadastro2Activiity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent abrirCadastro1 = new Intent(getApplicationContext(), Cadastro1Activity.class);
-        abrirCadastro1.putExtra("cadastro", cadastroIntent);
-        startActivity(abrirCadastro1);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        if (tipoCadastro.equals("facebook")) {
+            new AlertDialog.Builder(Cadastro2Activity.this)
+                    .setTitle("Confirmação")
+                    .setMessage("Deseja cancelar o cadastro?")
+                    .setPositiveButton("Fechar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent fechar = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(fechar);
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            Cadastro2Activity.this.finish();
+                        }
+                    })
+                    .setNegativeButton("Continuar", null)
+                    .show();
+        } else {
+            Intent abrirCadastro1 = new Intent(getApplicationContext(), Cadastro1Activity.class);
+            abrirCadastro1.putExtra("cadastro", cadastroIntent);
+            startActivity(abrirCadastro1);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
         super.onBackPressed();
     }
 

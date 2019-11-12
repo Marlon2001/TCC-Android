@@ -1,13 +1,13 @@
 package godinner.lab.com.godinner;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,16 +31,20 @@ import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.dao.ConsumidorDAO;
 import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
+import godinner.lab.com.godinner.model.Cadastro;
 import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.BuscarConsumidor;
 import godinner.lab.com.godinner.tasks.LoginUsuario;
+import godinner.lab.com.godinner.tasks.ValidarDadosCadastro;
 import godinner.lab.com.godinner.utils.OnSingleClickListener;
+import godinner.lab.com.godinner.utils.TrustCertificates;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String ipServidor = "http://godinner.tk:8080";
+    public static final String ipServidor = "https://godinner.tk:8080";
+    public static final String ipServidorChat = "http://godinner.tk:3005";
     public static String token = null;
     public static String erro;
     public static Consumidor mConsumidorLogado;
@@ -74,17 +78,17 @@ public class MainActivity extends AppCompatActivity {
         btnCadastrar = findViewById(R.id.btn_cadastrar);
         loginButton = findViewById(R.id.login_button);
 
+        checkLoginStatus();
+        TrustCertificates.trustEveryone();
+
         txtEmail = findViewById(R.id.txt_email);
         txtSenha = findViewById(R.id.txt_password);
         txtEmailLayout = findViewById(R.id.txt_email_layout);
         txtSenhaLayout = findViewById(R.id.txt_password_layout);
 
-//        checkLoginStatus();
-
         final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
 
         btnLogar.setOnClickListener(new OnSingleClickListener() {
-
             @Override
             public void onSingleClick(View v) {
                 erro = null;
@@ -168,15 +172,43 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 try {
-                    String first_name = object.getString("first_name");
-                    String last_name = object.getString("last_name");
-                    String email = object.getString("email");
-                    String id = object.getString("id");
-                    String image_url = "https://graph.facebook.com/" + id + "/picture?type=normal";
+                    final String first_name = object.getString("first_name");
+                    final String last_name = object.getString("last_name");
+                    final String email = object.getString("email");
+                    final String id = object.getString("id");
+                    final String image_url = "https://graph.facebook.com/" + id + "/picture?type=normal";
 
-                    Log.d("NOME", first_name + " " + last_name);
-                    Log.d("E-MAIL", email);
-                    Log.d("IMAGE", image_url);
+                    ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("email", email, new ValidarDadosCadastro.ValidarCampo() {
+                        @Override
+                        public void Request(Boolean result) {
+                            if(!result){
+                                Login login = new Login();
+                                login.setEmail(email);
+                                login.setSenha(id + "_consumidor");
+
+                                LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
+                                // Vai para login
+                                // criar task de login por facebook
+                                // a task vai validar se o email nao possui senha no cadastro do banco
+                            }else{
+                                Cadastro cadastro = new Cadastro();
+                                cadastro.setNome(String.format("%s %s", first_name, last_name));
+                                cadastro.setEmail(email);
+                                cadastro.setFoto(image_url);
+                                cadastro.setSenha(id + "_consumidor");
+
+                                Intent abrirCadastro = new Intent(MainActivity.this, Cadastro2Activity.class);
+                                abrirCadastro.putExtra("cadastro", cadastro);
+                                abrirCadastro.putExtra("type", "facebook");
+
+                                startActivity(abrirCadastro);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            }
+                        }
+                    });
+                    mValidarDadosCadastro.execute().get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -192,7 +224,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkLoginStatus() {
         if (AccessToken.getCurrentAccessToken() != null) {
-            loadUserProfile(AccessToken.getCurrentAccessToken());
+            AccessToken.setCurrentAccessToken(null);
+            //loadUserProfile(AccessToken.getCurrentAccessToken());
         }
     }
 

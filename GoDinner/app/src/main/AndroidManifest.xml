@@ -44,11 +44,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".Cadastro1Activity" />
-        <activity android:name=".Cadastro2Activiity" />
+        <activity android:name=".Cadastro2Activity" />
         <activity android:name=".Cadastro3Activity" />
         <activity android:name=".BemVindoActivity" />
         <activity android:name=".TelaInicialActivity" />
         <activity android:name=".TelaRestaurante" />
         <activity android:name=".DetalhesPedido" />
+        <activity android:name=".SuporteActivity"></activity>
     </application>
+
 </manifest>

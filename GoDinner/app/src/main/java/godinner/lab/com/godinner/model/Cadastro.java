@@ -4,15 +4,25 @@ import java.io.Serializable;
 
 public class Cadastro implements Serializable{
 
+    private String nome;
+    private String foto;
     private String email;
     private String senha;
 
-    public String getSenha() {
-        return senha;
+    public String getNome() {
+        return nome;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public String getEmail() {
@@ -21,5 +31,13 @@ public class Cadastro implements Serializable{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

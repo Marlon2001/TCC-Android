@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.santalu.maskedittext.MaskEditText;
@@ -27,6 +28,7 @@ import godinner.lab.com.godinner.model.Contato;
 import godinner.lab.com.godinner.model.Endereco;
 import godinner.lab.com.godinner.model.Estado;
 import godinner.lab.com.godinner.tasks.CadastroUsuario;
+import godinner.lab.com.godinner.tasks.CadastroUsuarioFacebook;
 import godinner.lab.com.godinner.tasks.ConsultarCep;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
@@ -53,6 +55,7 @@ public class Cadastro3Activity extends AppCompatActivity {
     private Button btnFinalizar;
     private Cadastro cadastroIntent;
     private Contato contatoIntent;
+    private String tipoCadastro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,7 @@ public class Cadastro3Activity extends AppCompatActivity {
         Intent intent = getIntent();
         cadastroIntent = (Cadastro) intent.getSerializableExtra("cadastro");
         contatoIntent = (Contato) intent.getSerializableExtra("contato");
+        tipoCadastro = intent.getStringExtra("type");
 
         txtCep.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -91,40 +95,51 @@ public class Cadastro3Activity extends AppCompatActivity {
                 if (!hasFocus) {
                     if (txtCep.getText().length() == 9) {
                         try {
-                            ConsultarCep consultarCep = new ConsultarCep(txtCep.getText().toString());
+                            ConsultarCep consultarCep = new ConsultarCep(txtCep.getRawText(), Cadastro3Activity.this);
                             consultarCep.execute().get();
 
-                            txtLogradouro.setText(endereco.getLogradouro());
-                            txtBairro.setText(endereco.getBairro());
+                            if (endereco != null) {
+                                txtLogradouro.setText(endereco.getLogradouro());
+                                txtBairro.setText(endereco.getBairro());
 
-                            Estado e = new Estado();
-                            e.setEstado("Escolha um Estado");
-                            e.setIdEstado(0);
-                            Estado e2 = new Estado();
-                            e2.setEstado(endereco.getEstadoNome());
-                            e2.setIdEstado(endereco.getIdEstado());
+                                List estados = new ArrayList();
 
-                            List estados = new ArrayList();
-                            estados.add(e);
-                            estados.add(e2);
-                            ArrayAdapter mAdapter = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, estados);
+                                Estado e1 = new Estado();
+                                e1.setEstado("Escolha um Estado");
+                                e1.setIdEstado(0);
+                                estados.add(e1);
 
-                            Cidade c = new Cidade();
-                            c.setCidade("Escolha uma Cidade");
-                            c.setIdCidade(0);
-                            Cidade c2 = new Cidade();
-                            c2.setCidade(endereco.getCidadeNome());
-                            c2.setIdCidade(endereco.getIdCidade());
+                                if (endereco.getIdEstado() != null) {
+                                    Estado e2 = new Estado();
+                                    e2.setEstado(endereco.getEstadoNome());
+                                    e2.setIdEstado(endereco.getIdEstado());
+                                    estados.add(e2);
+                                }
 
-                            List cidades = new ArrayList();
-                            cidades.add(e);
-                            cidades.add(c2);
-                            ArrayAdapter mAdapter2 = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, cidades);
+                                ArrayAdapter mAdapter = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, estados);
 
-                            spinnerEstado.setAdapter(mAdapter);
-                            spinnerEstado.setSelection(1);
-                            spinnerCidade.setAdapter(mAdapter2);
-                            spinnerCidade.setSelection(1);
+                                List cidades = new ArrayList();
+                                Cidade c1 = new Cidade();
+                                c1.setCidade("Escolha uma Cidade");
+                                c1.setIdCidade(0);
+                                cidades.add(c1);
+
+                                if (endereco.getIdCidade() != null) {
+                                    Cidade c2 = new Cidade();
+                                    c2.setCidade(endereco.getCidadeNome());
+                                    c2.setIdCidade(endereco.getIdCidade());
+                                    cidades.add(c2);
+                                }
+
+                                ArrayAdapter mAdapter2 = new ArrayAdapter(Cadastro3Activity.this, android.R.layout.simple_list_item_1, cidades);
+
+                                spinnerEstado.setAdapter(mAdapter);
+                                spinnerEstado.setSelection(1);
+                                spinnerCidade.setAdapter(mAdapter2);
+                                spinnerCidade.setSelection(1);
+                            } else {
+                                Toast.makeText(Cadastro3Activity.this, "CEP não encontrado.", Toast.LENGTH_SHORT).show();
+                            }
                         } catch (ExecutionException | InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -150,16 +165,38 @@ public class Cadastro3Activity extends AppCompatActivity {
                     e.setIdEstado(estado.getIdEstado());
 
                     try {
-                        CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e);
-                        cadastroUsuario.execute();
-                        cadastroUsuario.get();
-
-                        Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
-                        startActivity(abrirBemVindo);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        if (tipoCadastro.equals("normal")) {
+                            CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e, new CadastroUsuario.Result() {
+                                @Override
+                                public void onResult(boolean bool) {
+                                    if (bool) {
+                                        Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
+                                        startActivity(abrirBemVindo);
+                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                    } else {
+                                        Toast.makeText(Cadastro3Activity.this, "Erro no Cadastro.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                            cadastroUsuario.execute().get();
+                        } else if (tipoCadastro.equals("facebook")) {
+                            CadastroUsuarioFacebook cadastroUsuarioFacebook = new CadastroUsuarioFacebook(cadastroIntent, contatoIntent, e, new CadastroUsuarioFacebook.Result() {
+                                @Override
+                                public void onResult(boolean bool) {
+                                    if (bool) {
+                                        Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
+                                        startActivity(abrirBemVindo);
+                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                    } else {
+                                        Toast.makeText(Cadastro3Activity.this, "Erro no Cadastro.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                            cadastroUsuarioFacebook.execute().get();
+                        }
 
                         LocalBroadcastManager.getInstance(Cadastro3Activity.this).sendBroadcast(new Intent("fecharActivity"));
-                        finish();
+                        Cadastro3Activity.this.finish();
                     } catch (ExecutionException | InterruptedException e1) {
                         e1.printStackTrace();
                     }
@@ -170,9 +207,10 @@ public class Cadastro3Activity extends AppCompatActivity {
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activiity.class);
+                Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activity.class);
                 abrirCadastro2.putExtra("cadastro", cadastroIntent);
                 abrirCadastro2.putExtra("contato", contatoIntent);
+                abrirCadastro2.putExtra("type", tipoCadastro);
                 startActivity(abrirCadastro2);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
@@ -181,9 +219,10 @@ public class Cadastro3Activity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activiity.class);
+        Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activity.class);
         abrirCadastro2.putExtra("cadastro", cadastroIntent);
         abrirCadastro2.putExtra("contato", contatoIntent);
+        abrirCadastro2.putExtra("type", tipoCadastro);
         startActivity(abrirCadastro2);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         super.onBackPressed();

@@ -13,12 +13,12 @@ import java.net.URL;
 
 import godinner.lab.com.godinner.MainActivity;
 
-public class ValidarEmailCpf extends AsyncTask<Void, Void, Boolean> {
+public class ValidarDadosCadastro extends AsyncTask<Void, Void, Boolean> {
 
     private ValidarCampo validarCampo;
     private String url;
 
-    public ValidarEmailCpf(String tipo, String data, ValidarCampo validarCampo) {
+    public ValidarDadosCadastro(String tipo, String data, ValidarCampo validarCampo) {
         this.validarCampo = validarCampo;
         switch (tipo) {
             case "cpf":
@@ -26,6 +26,9 @@ public class ValidarEmailCpf extends AsyncTask<Void, Void, Boolean> {
                 break;
             case "email":
                 url = MainActivity.ipServidor + "/consumidor/valida/email/" + data;
+                break;
+            case "facebook":
+                url = MainActivity.ipServidor + "/";
                 break;
         }
     }
