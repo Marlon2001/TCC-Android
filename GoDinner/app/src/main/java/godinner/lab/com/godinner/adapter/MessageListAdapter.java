@@ -89,7 +89,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         void bind(Mensagem message) {
             messageText.setText(message.getMessage());
-            timeText.setText(Data.getHoraAtual());
+            timeText.setText(message.getCreatedAt());
         }
     }
 
@@ -109,7 +109,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         void bind(Mensagem message) {
             nameText.setText(message.getUsername());
             messageText.setText(message.getMessage());
-            timeText.setText(Data.getHoraAtual());
+            timeText.setText(message.getCreatedAt());
         }
     }
 

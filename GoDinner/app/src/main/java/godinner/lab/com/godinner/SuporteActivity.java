@@ -25,6 +25,7 @@ import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Mensagem;
 import godinner.lab.com.godinner.tasks.SuporteUsuario;
+import godinner.lab.com.godinner.utils.Data;
 import godinner.lab.com.godinner.utils.OnSingleClickListener;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -68,7 +69,7 @@ public class SuporteActivity extends AppCompatActivity {
         String token = mTokenUsuarioDAO.consultarToken();
 
         try {
-            socket = IO.socket(MainActivity.ipServidorChat);
+            socket = IO.socket(MainActivity.ipServidorSocket);
             socket.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -130,7 +131,6 @@ public class SuporteActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //Log.d("aaaaaaaaa", args[0].toString());
 
                         try {
                             JSONObject o = new JSONObject(args[0].toString());
@@ -139,6 +139,7 @@ public class SuporteActivity extends AppCompatActivity {
                             m.setUsername(o.getString("nome"));
                             m.setMessage(o.getString("message"));
                             m.setRemetente(o.getString("remetente"));
+                            m.setCreatedAt(Data.getHoraAtual());
 
                             messageListAdapter.refreshData(m);
                             mMessageList.smoothScrollToPosition(messageListAdapter.getItemCount());

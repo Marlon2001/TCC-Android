@@ -6,7 +6,7 @@ public class Mensagem {
     private String fotoUrl;
     private String message;
     private String remetente;
-    private long createdAt;
+    private String createdAt;
 
     public String getUsername() {
         return username;
@@ -40,11 +40,11 @@ public class Mensagem {
         this.remetente = remetente;
     }
 
-    public long getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 }
