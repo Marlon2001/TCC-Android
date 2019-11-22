@@ -8,7 +8,7 @@ public class Data {
 
     public static String getHoraAtual(){
         Date data = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+        DateFormat dateFormat = new SimpleDateFormat("EEE hh:mm aaa");
         String dataFormatada = dateFormat.format(data);
 
         return dataFormatada;

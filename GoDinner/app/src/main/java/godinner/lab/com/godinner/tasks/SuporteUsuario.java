@@ -2,10 +2,8 @@ package godinner.lab.com.godinner.tasks;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.json.JSONStringer;
 
 import java.io.IOException;
@@ -38,7 +36,7 @@ public class SuporteUsuario extends AsyncTask<Void, Void, String> {
             jsonSuporte.key("token").value(token);
             jsonSuporte.endObject();
 
-            URL url = new URL(MainActivity.ipServidorChat + "/suporte-usuario");
+            URL url = new URL(MainActivity.ipServidorSocket + "/suporte-usuario");
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 

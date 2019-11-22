@@ -38,7 +38,6 @@ dependencies {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
-//    implementation 'com.sendbird.sdk:sendbird-android-sdk:3.0.107'
     implementation "com.android.support:support-emoji:28.0.0"
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'

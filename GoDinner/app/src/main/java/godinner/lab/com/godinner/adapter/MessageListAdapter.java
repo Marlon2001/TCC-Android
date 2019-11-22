@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import godinner.lab.com.godinner.R;
@@ -67,10 +70,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         switch (viewHolder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
-                ((SentMessageHolder) viewHolder).bind(mensagem);
+                ((SentMessageHolder) viewHolder).bind(mensagem, position);
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
-                ((ReceivedMessageHolder) viewHolder).bind(mensagem);
+                ((ReceivedMessageHolder) viewHolder).bind(mensagem, position);
                 break;
         }
     }
@@ -87,7 +90,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             timeText = itemView.findViewById(R.id.text_message_time);
         }
 
-        void bind(Mensagem message) {
+        void bind(Mensagem message, int position) {
             messageText.setText(message.getMessage());
             timeText.setText(message.getCreatedAt());
         }
@@ -106,7 +109,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             nameText = itemView.findViewById(R.id.text_message_name);
         }
 
-        void bind(Mensagem message) {
+        void bind(Mensagem message, int position) {
             nameText.setText(message.getUsername());
             messageText.setText(message.getMessage());
             timeText.setText(message.getCreatedAt());
