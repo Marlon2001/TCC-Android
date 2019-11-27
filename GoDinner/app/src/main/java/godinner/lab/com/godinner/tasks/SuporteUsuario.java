@@ -45,9 +45,6 @@ public class SuporteUsuario extends AsyncTask<Void, Void, String> {
             conexao.setRequestMethod("POST");
             conexao.setDoInput(true);
 
-//            conexao.setRequestProperty("idConsumidor", idConsumidor);
-//            conexao.setRequestProperty("token", token);
-
             PrintStream outputStream = new PrintStream(conexao.getOutputStream());
             outputStream.print(jsonSuporte);
 

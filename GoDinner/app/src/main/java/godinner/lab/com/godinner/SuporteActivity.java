@@ -1,10 +1,6 @@
 package godinner.lab.com.godinner;
 
 import android.os.Bundle;
-import android.support.text.emoji.EmojiCompat;
-import android.support.text.emoji.FontRequestEmojiCompatConfig;
-import android.support.text.emoji.widget.EmojiTextView;
-import android.support.v4.provider.FontRequest;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -42,10 +38,8 @@ public class SuporteActivity extends AppCompatActivity {
 
     private RecyclerView mMessageList;
     private EditText txtMessageChat;
-    private Button btnEnviar;
     private Consumidor consumidor;
     private Socket socket;
-    private List<Mensagem> mMensagens;
     private MessageListAdapter messageListAdapter;
 
     @Override
@@ -60,13 +54,11 @@ public class SuporteActivity extends AppCompatActivity {
 
         mMessageList = findViewById(R.id.message_list);
         txtMessageChat = findViewById(R.id.message_chat);
-        btnEnviar = findViewById(R.id.btn_enviar);
+        Button btnEnviar = findViewById(R.id.btn_enviar);
 
-        mMensagens = new ArrayList<>();
+        List<Mensagem> mMensagens = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        layoutManager.setStackFromEnd(true);
-//        layoutManager.setReverseLayout(true);
         mMessageList.setLayoutManager(layoutManager);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mMessageList.getContext(), 0);
@@ -91,17 +83,16 @@ public class SuporteActivity extends AppCompatActivity {
             @Override
             public void onResult(String resposta) {
                 try {
-                    if(resposta != null) {
+                    if (resposta != null) {
                         JSONObject mSala = new JSONObject(resposta);
 
                         if (mSala.has("sala")) {
                             int sala = mSala.getInt("sala");
+                            Log.d("SALA ---", sala + "");
                             joinChat(sala);
                         }
                     }
-                } catch (JSONException e) {
-                    if (resposta.equals("Unauthorized"));
-                }
+                } catch (JSONException ignored) {}
             }
         });
         mSuporteUsuario.execute();
@@ -145,7 +136,6 @@ public class SuporteActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
                         try {
                             JSONObject o = new JSONObject(args[0].toString());
 
@@ -157,13 +147,6 @@ public class SuporteActivity extends AppCompatActivity {
 
                             messageListAdapter.refreshData(m);
                             mMessageList.smoothScrollToPosition(messageListAdapter.getItemCount());
-
-                            int index = mMensagens.size() - 1 == -1 ? 0 : mMensagens.size() - 1;
-                            //mMensagens.add(m);
-
-                            for (Mensagem mm : mMensagens)
-                                Log.d(mm.getRemetente() + " ---", mm.getMessage());
-                            //messageListAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -191,7 +174,6 @@ public class SuporteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.homeAsUp:
                 finish();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

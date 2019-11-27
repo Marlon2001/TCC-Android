@@ -1,5 +1,6 @@
 package godinner.lab.com.godinner.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -38,15 +39,21 @@ public class ListaRestaurantesAdapter extends RecyclerView.Adapter<ListaRestaura
         return new RestauranteViewHolder(view);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull RestauranteViewHolder restauranteViewHolder, final int i) {
         RestauranteExibicao r = mRestaurantes.get(i);
 
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_chef));
         restauranteViewHolder.nome.setText(r.getRazaoSocial());
-        if (r.getNota() != null) {
-            restauranteViewHolder.rank.setText(String.format("%sº mais visitado.", r.getNota()));
+
+        if(i < 3){
+            restauranteViewHolder.rank.setVisibility(View.VISIBLE);
+            restauranteViewHolder.rank.setText(String.format("%dº mais visitado.", i+1));
+        } else {
+            restauranteViewHolder.rank.setVisibility(View.INVISIBLE);
         }
+
         restauranteViewHolder.avaliacao.setText(r.getNota());
         restauranteViewHolder.distancia.setText(r.getDistancia());
         restauranteViewHolder.preco.setText(String.format("R$ %s", r.getNota()));

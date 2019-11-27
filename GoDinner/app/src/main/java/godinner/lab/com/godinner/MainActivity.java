@@ -44,7 +44,7 @@ import godinner.lab.com.godinner.utils.ValidaCampos;
 public class MainActivity extends AppCompatActivity {
 
     public static final String ipServidor = "https://godinner.tk:8080";
-    public static final String ipServidorSocket = "http://godinner.tk:3010";
+    public static final String ipServidorSocket = "https://godinner.tk:3000";
     public static String token = null;
     public static String erro;
     public static Consumidor mConsumidorLogado;

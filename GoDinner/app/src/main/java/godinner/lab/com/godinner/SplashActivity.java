@@ -37,21 +37,22 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.imageView));
+    }
 
+    @Override
+    protected void onResume() {
         final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
         String mToken = mTokenUsuarioDAO.consultarToken();
 
         if (NetworkManager.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
             if (!mToken.equals("")) {
-                ValidarToken validarToken = new ValidarToken(mToken, new ValidarToken.ResultRequest() {
-                    @Override
-                    public void Request(boolean result) {
+
+                ValidarToken validarToken = new ValidarToken(mToken, result -> {
                         if (result) {
                             mStartInicialActivity();
                         } else if (!result) {
                             mStartMainActivity();
                         }
-                    }
                 });
 
                 validarToken.execute();
@@ -61,6 +62,7 @@ public class SplashActivity extends Activity {
         } else {
             NetworkManager.getSnackBarNetwork(this, findViewById(R.id.splash)).show();
         }
+        super.onResume();
     }
 
     private void mStartMainActivity() {
