@@ -38,8 +38,8 @@ public class FinalizarCompra extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         JSONStringer jsonPedidos = new JSONStringer();
-
         try {
+
             jsonPedidos.object();
             jsonPedidos.key("restaurante").object()
                     .key("id").value(mSacolaPedido.getIdRestaurante())
@@ -47,9 +47,11 @@ public class FinalizarCompra extends AsyncTask {
             jsonPedidos.key("valorEntrega").value(mSacolaPedido.getValorEntrega());
             jsonPedidos.key("valorTotal").value(mSacolaPedido.getValorEntrega() + mSacolaPedido.getValorTotalPedido());
 
+
+
             SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             jsonPedidos.key("dataDoPedido").value(f.format(new Date()));
-            jsonPedidos.key("comissaoPaga").value(false);
+            jsonPedidos.key("comissaoPaga").value(1);
 
             JSONArray jsonProdutos = new JSONArray();
             for (ProdutoPedido p : mListPedidos) {
@@ -68,14 +70,15 @@ public class FinalizarCompra extends AsyncTask {
             jsonPedidos.key("produtos").value(jsonProdutos);
             jsonPedidos.key("descricao").value(descricao);
             jsonPedidos.endObject();
-
+            Log.d("---------", jsonPedidos.toString());
             URL url = new URL(MainActivity.ipServidor + "/pedidos");
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
             conexao.setRequestProperty("Content-Type", "application/json");
-            conexao.setRequestProperty("Accept", "application/json");
+            Log.d("ddddddddddddddddd", jsonPedidos.toString());
             conexao.setRequestProperty("token", mToken);
             conexao.setRequestMethod("POST");
+            Log.d("ddddddddddddddddd", jsonPedidos.toString());
             conexao.setDoInput(true);
 
             PrintStream outputStream = new PrintStream(conexao.getOutputStream());
@@ -84,9 +87,8 @@ public class FinalizarCompra extends AsyncTask {
             conexao.connect();
 
             Scanner scanner = new Scanner(conexao.getInputStream());
-            String resposta = scanner.nextLine();
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
+            } catch (JSONException | IOException e) {
+             e.printStackTrace();
         }
 
         return null;

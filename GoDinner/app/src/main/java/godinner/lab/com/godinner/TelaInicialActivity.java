@@ -24,7 +24,6 @@ public class TelaInicialActivity extends AppCompatActivity {
             TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager());
             tabsAdapter.addFragment(new HomeFragment(), "Início");
             tabsAdapter.addFragment(new SacolaFragment(), "Sacolas");
-            tabsAdapter.addFragment(new PedidosFragment(), "Pedidos");
             tabsAdapter.addFragment(new PerfilFragment(), "Perfil");
             viewPager.setAdapter(tabsAdapter);
         }
@@ -60,8 +59,6 @@ public class TelaInicialActivity extends AppCompatActivity {
             case 1:
                 return R.drawable.ic_bag;
             case 2:
-                return R.drawable.ic_list;
-            case 3:
                 return R.drawable.ic_perfil;
         }
 

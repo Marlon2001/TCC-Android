@@ -44,12 +44,12 @@ import godinner.lab.com.godinner.utils.ValidaCampos;
 public class MainActivity extends AppCompatActivity {
 
     public static final String ipServidor = "https://godinner.tk:8080";
-    public static final String ipServidorChat = "http://godinner.tk:3005";
+    public static final String ipServidorChat = "https://godinner.tk:3000";
     public static String token = null;
     public static String erro;
     public static Consumidor mConsumidorLogado;
     public static String fotoLanchePadrao = "/restaurante/produto/1569953042416-115-840x560.jpg";
-    public static String ipServidorFotos = "http://fotos.godinner.tk";
+    public static String ipServidorFotos = "https://fotos.godinner.tk";
     AccessTokenTracker tokenTracker = new AccessTokenTracker() {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
