@@ -32,7 +32,6 @@ import godinner.lab.com.godinner.utils.Data;
 import godinner.lab.com.godinner.utils.OnSingleClickListener;
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class SuporteActivity extends AppCompatActivity {
 
@@ -73,26 +72,23 @@ public class SuporteActivity extends AppCompatActivity {
         String token = mTokenUsuarioDAO.consultarToken();
 
         try {
-            socket = IO.socket(MainActivity.ipServidorSocket);
+            socket = IO.socket(getResources().getString(R.string.ipServidorSocket));
             socket.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
-        SuporteUsuario mSuporteUsuario = new SuporteUsuario(token, consumidor.getIdServidor(), new SuporteUsuario.ResultRequest() {
-            @Override
-            public void onResult(String resposta) {
-                try {
-                    if (resposta != null) {
-                        JSONObject mSala = new JSONObject(resposta);
+        SuporteUsuario mSuporteUsuario = new SuporteUsuario(token, consumidor.getIdServidor(), this, resposta -> {
+            try {
+                if (resposta != null) {
+                    JSONObject mSala = new JSONObject(resposta);
 
-                        if (mSala.has("sala")) {
-                            int sala = mSala.getInt("sala");
-                            Log.d("SALA ---", sala + "");
-                            joinChat(sala);
-                        }
+                    if (mSala.has("sala")) {
+                        int sala = mSala.getInt("sala");
+                        joinChat(sala);
                     }
-                } catch (JSONException ignored) {}
+                }
+            } catch (JSONException ignored) {
             }
         });
         mSuporteUsuario.execute();
@@ -130,53 +126,42 @@ public class SuporteActivity extends AppCompatActivity {
 
         socket.emit("join", jsonJoinChat);
 
-        socket.on("message", new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            JSONObject o = new JSONObject(args[0].toString());
+        socket.on("message", args -> runOnUiThread(() -> {
+            try {
+                JSONObject o = new JSONObject(args[0].toString());
 
-                            Mensagem m = new Mensagem();
-                            m.setUsername(o.getString("nome"));
-                            m.setMessage(o.getString("message"));
-                            m.setRemetente(o.getString("remetente"));
-                            m.setCreatedAt(Data.getHoraAtual());
+                Mensagem m = new Mensagem();
+                m.setUsername(o.getString("nome"));
+                m.setMessage(o.getString("message"));
+                m.setRemetente(o.getString("remetente"));
+                m.setCreatedAt(Data.getHoraAtual());
 
-                            messageListAdapter.refreshData(m);
-                            mMessageList.smoothScrollToPosition(messageListAdapter.getItemCount());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                messageListAdapter.refreshData(m);
+                mMessageList.smoothScrollToPosition(messageListAdapter.getItemCount());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        });
+        }));
 
-        socket.on("userjoinedthechat", new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String dados = (String) args[0];
-                        Toast.makeText(SuporteActivity.this, dados, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
+        socket.on("userjoinedthechat", args -> runOnUiThread(() -> {
+            String dados = (String) args[0];
+            Toast.makeText(SuporteActivity.this, dados, Toast.LENGTH_LONG).show();
+        }));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.homeAsUp:
-                finish();
+                Log.d("BBBBBBBBB", "BBBBBBBBB");
+                break;
+            case R.id.showHome:
+                Log.d("AAAAAAAAAAA", "AAAAAAAAA");
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return false;
     }
 
     @Override

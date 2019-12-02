@@ -1,5 +1,6 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -10,27 +11,27 @@ import org.json.JSONStringer;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Scanner;
 
-import godinner.lab.com.godinner.MainActivity;
+import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Login;
-import godinner.lab.com.godinner.utils.TrustCertificates;
 
-public class LoginUsuario extends AsyncTask {
+public class LoginUsuario extends AsyncTask<Void, Void, String> {
 
     private Login login;
+    @SuppressLint("StaticFieldLeak")
     private Context context;
+    private LoginResult mLoginResult;
 
-    public LoginUsuario(Login login, Context context) {
+    public LoginUsuario(Login login, Context context, LoginResult mLoginResult) {
         this.login = login;
         this.context = context;
+        this.mLoginResult = mLoginResult;
     }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
+    protected String doInBackground(Void... voids) {
         JSONStringer jsonLogin = new JSONStringer();
 
         try {
@@ -39,7 +40,7 @@ public class LoginUsuario extends AsyncTask {
             jsonLogin.key("password").value(login.getSenha());
             jsonLogin.endObject();
 
-            URL url = new URL(MainActivity.ipServidor+"/login/consumidor");
+            URL url = new URL(String.format("%s/login/consumidor", context.getResources().getString(R.string.ipServidor)));
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
@@ -58,22 +59,24 @@ public class LoginUsuario extends AsyncTask {
 
             JSONObject mObject = new JSONObject(resposta);
 
-            try {
-                if(mObject.getString("token") != null)
-                    MainActivity.token = mObject.getString("token");
-            } catch (JSONException e) {
-                if(mObject.getString("error") != null)
-                    MainActivity.erro = "nao cadastrado";
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            return mObject.has("token") ? mObject.getString("token") : "";
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
+
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        if (mLoginResult != null) {
+            mLoginResult.onResult(s);
+        }
+
+        super.onPostExecute(s);
+    }
+
+    public interface LoginResult {
+        void onResult(String token);
     }
 }

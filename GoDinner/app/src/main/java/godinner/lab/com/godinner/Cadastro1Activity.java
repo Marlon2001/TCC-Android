@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,10 +28,6 @@ public class Cadastro1Activity extends AppCompatActivity {
     private TextInputLayout txtEmailLayout;
     private TextInputLayout txtSenhaLayout;
 
-    private Button btnProximo;
-    private ImageButton btnVoltar;
-
-    private Cadastro cadastroIntent;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -51,61 +46,53 @@ public class Cadastro1Activity extends AppCompatActivity {
         txtEmailLayout = findViewById(R.id.txt_email_layout);
         txtSenhaLayout = findViewById(R.id.txt_senha_layout);
 
-        btnProximo = findViewById(R.id.btn_proximo);
-        btnVoltar = findViewById(R.id.btn_voltar);
+        Button btnProximo = findViewById(R.id.btn_proximo);
+        ImageButton btnVoltar = findViewById(R.id.btn_voltar);
 
         Intent intent = getIntent();
-        cadastroIntent = (Cadastro) intent.getSerializableExtra("cadastro");
+        Cadastro cadastroIntent = (Cadastro) intent.getSerializableExtra("cadastro");
 
         if (cadastroIntent != null) {
             txtEmail.setText(cadastroIntent.getEmail());
             txtSenha.setText(cadastroIntent.getSenha());
         }
 
-        btnProximo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validarCampos()) {
-                    ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("email", txtEmail.getText().toString(), new ValidarDadosCadastro.ValidarCampo() {
-                        @Override
-                        public void Request(Boolean result) {
-                            if (!result) {
-                                txtEmailLayout.setErrorEnabled(true);
-                                txtEmailLayout.setError("E-mail já cadastrado.");
-                            } else {
-                                txtEmailLayout.setErrorEnabled(false);
+        btnProximo.setOnClickListener(v -> {
+            if (validarCampos()) {
+                ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("email", txtEmail.getText().toString(), getApplicationContext(), result -> {
+                    if (!result) {
+                        txtEmailLayout.setErrorEnabled(true);
+                        txtEmailLayout.setError("E-mail já cadastrado.");
+                    } else {
+                        txtEmailLayout.setErrorEnabled(false);
 
-                                Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activity.class);
+                        Intent abrirCadastro2 = new Intent(getApplicationContext(), Cadastro2Activity.class);
 
-                                Cadastro c = new Cadastro();
-                                c.setEmail(txtEmail.getText().toString());
-                                c.setSenha(txtSenha.getText().toString());
+                        Cadastro c = new Cadastro();
+                        c.setEmail(txtEmail.getText().toString());
+                        c.setSenha(txtSenha.getText().toString());
+                        c.setFoto("");
 
-                                abrirCadastro2.putExtra("cadastro", c);
-                                abrirCadastro2.putExtra("type", "normal");
+                        abrirCadastro2.putExtra("cadastro", c);
+                        abrirCadastro2.putExtra("type", "normal");
 
-                                startActivity(abrirCadastro2);
-                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                            }
-                        }
-                    });
-
-                    try {
-                        mValidarDadosCadastro.execute().get();
-                    } catch (ExecutionException | InterruptedException e) {
-                        e.printStackTrace();
+                        startActivity(abrirCadastro2);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
+                });
+
+                try {
+                    mValidarDadosCadastro.execute().get();
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
 
-        btnVoltar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent openMainActivity = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(openMainActivity);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            }
+        btnVoltar.setOnClickListener(v -> {
+            Intent openMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(openMainActivity);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("fecharActivity"));

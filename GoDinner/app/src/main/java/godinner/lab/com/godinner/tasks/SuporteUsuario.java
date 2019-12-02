@@ -1,5 +1,7 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
@@ -12,17 +14,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
-import godinner.lab.com.godinner.MainActivity;
+import godinner.lab.com.godinner.R;
 
 public class SuporteUsuario extends AsyncTask<Void, Void, String> {
 
     private String token;
     private int idConsumidor;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
     private ResultRequest resultRequest;
 
-    public SuporteUsuario(String token, int idConsumidor, @NonNull ResultRequest resultRequest) {
+    public SuporteUsuario(String token, int idConsumidor, Context context, @NonNull ResultRequest resultRequest) {
         this.token = token;
         this.idConsumidor = idConsumidor;
+        this.context = context;
         this.resultRequest = resultRequest;
     }
 
@@ -36,7 +41,7 @@ public class SuporteUsuario extends AsyncTask<Void, Void, String> {
             jsonSuporte.key("token").value(token);
             jsonSuporte.endObject();
 
-            URL url = new URL(MainActivity.ipServidorSocket + "/suporte-usuario");
+            URL url = new URL(String.format("%s/suporte-usuario", context.getResources().getString(R.string.ipServidorSocket)));
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 

@@ -49,14 +49,9 @@ public class ProdutosAdapter extends RecyclerView.Adapter<ProdutosAdapter.Produt
         DecimalFormat f = new DecimalFormat("0.00");
         produtoViewHolder.precoProduto.setText(String.format("R$ %s", f.format(p.getPreco())));
 
-        produtoViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mProdutoOnClickListener.onClickProduto(v, i);
-            }
-        });
+        produtoViewHolder.itemView.setOnClickListener(v -> mProdutoOnClickListener.onClickProduto(v, i));
 
-        String url = MainActivity.ipServidorFotos + (p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao : p.getFotos().get(0).getFoto());
+        String url = context.getResources().getString(R.string.ipServidorFotos) + (p.getFotos().size() == 0 ? context.getResources().getString(R.string.fotoLanchePadrao) : p.getFotos().get(0).getFoto());
         Picasso.get().load(url).resize(100, 100).into(produtoViewHolder.imageProduto);
     }
 

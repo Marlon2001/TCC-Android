@@ -1,6 +1,11 @@
 <resources>
+    <string name="ipServidor">"https://godinner.tk:8080"</string>
+    <string name="ipServidorSocket">"https://godinner.tk:3000"</string>
+    <string name="ipServidorFotos">"https://fotos.godinner.tk"</string>
+    <string name="fotoLanchePadrao">"/restaurante/produto/1569953042416–115–840x560.jpg"</string>
+
     <string name="app_name">GoDinner</string>
-    <string name="carregando">Carregando...</string>
+    <string name="carregando">Carregando…</string>
     <string name="logo_app">Logo da aplicação</string>
     <string name="lbl_email">E-MAIL</string>
     <string name="lbl_senha">SENHA</string>

@@ -1,34 +1,33 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import godinner.lab.com.godinner.MainActivity;
+import godinner.lab.com.godinner.R;
 
 public class ValidarDadosCadastro extends AsyncTask<Void, Void, Boolean> {
 
     private ValidarCampo validarCampo;
     private String url;
 
-    public ValidarDadosCadastro(String tipo, String data, ValidarCampo validarCampo) {
+    public ValidarDadosCadastro(String tipo, String data, Context context, ValidarCampo validarCampo) {
         this.validarCampo = validarCampo;
         switch (tipo) {
             case "cpf":
-                url = MainActivity.ipServidor + "/consumidor/valida/cpf/" + data;
+                url = context.getResources().getString(R.string.ipServidor) + "/consumidor/valida/cpf/" + data;
                 break;
             case "email":
-                url = MainActivity.ipServidor + "/consumidor/valida/email/" + data;
+                url = context.getResources().getString(R.string.ipServidor) + "/consumidor/valida/email/" + data;
                 break;
             case "facebook":
-                url = MainActivity.ipServidor + "/";
+                url = context.getResources().getString(R.string.ipServidor) + "/consumidor/verifica/email/" + data;
                 break;
         }
     }
@@ -46,8 +45,6 @@ public class ValidarDadosCadastro extends AsyncTask<Void, Void, Boolean> {
             String dados = bufferedReader.readLine();
 
             return Boolean.parseBoolean(dados);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

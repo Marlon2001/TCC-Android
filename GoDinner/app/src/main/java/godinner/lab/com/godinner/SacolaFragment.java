@@ -44,6 +44,7 @@ public class SacolaFragment extends Fragment {
     private TextView txtTotalGeral;
     private Context context;
     private String mParam1;
+    private int idConsumidor;
 
     public SacolaFragment() {
     }
@@ -122,6 +123,7 @@ public class SacolaFragment extends Fragment {
                     dialog.show();
 
                     btnFinalizar.setOnClickListener(new View.OnClickListener() {
+
                         @Override
                         public void onClick(View v) {
                             SacolaPedido s = mPedidoDAO.consultarSacola();
@@ -130,7 +132,7 @@ public class SacolaFragment extends Fragment {
                             String token = mTokenUsuarioDAO.consultarToken();
                             String desc = txtComentario.getText().toString();
 
-                            FinalizarCompra mFinalizarCompra = new FinalizarCompra(s, l, token, desc);
+                            FinalizarCompra mFinalizarCompra = new FinalizarCompra(s, l, token, desc, context);
                             try {
                                 mFinalizarCompra.execute().get();
                                 Toast.makeText(context, "Pedido em Andamento", Toast.LENGTH_SHORT).show();
@@ -162,6 +164,9 @@ public class SacolaFragment extends Fragment {
         final PedidoDAO mPedidoDAO = new PedidoDAO(context);
         ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(context);
         Consumidor c = mConsumidorDAO.consultarConsumidor();
+
+        this.idConsumidor = c.getIdConsumidor();
+
         SacolaPedido mSacolaPedido = mPedidoDAO.consultarSacola();
         final List<ProdutoPedido> listaProdutos = mPedidoDAO.getProdutos();
 

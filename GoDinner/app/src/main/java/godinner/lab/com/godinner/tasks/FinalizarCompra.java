@@ -1,7 +1,8 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import godinner.lab.com.godinner.MainActivity;
+import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.ProdutoPedido;
 import godinner.lab.com.godinner.model.SacolaPedido;
 
@@ -27,19 +28,22 @@ public class FinalizarCompra extends AsyncTask {
     private List<ProdutoPedido> mListPedidos;
     private String mToken;
     private String descricao;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
 
-    public FinalizarCompra(SacolaPedido mSacolaPedido, List<ProdutoPedido> mListPedidos, String mToken, String descricao) {
+    public FinalizarCompra(SacolaPedido mSacolaPedido, List<ProdutoPedido> mListPedidos, String mToken, String descricao, Context context) {
         this.mSacolaPedido = mSacolaPedido;
         this.mListPedidos = mListPedidos;
         this.mToken = mToken;
         this.descricao = descricao;
+        this.context = context;
     }
 
     @Override
     protected Object doInBackground(Object[] objects) {
         JSONStringer jsonPedidos = new JSONStringer();
-
         try {
+
             jsonPedidos.object();
             jsonPedidos.key("restaurante").object()
                     .key("id").value(mSacolaPedido.getIdRestaurante())
@@ -47,19 +51,21 @@ public class FinalizarCompra extends AsyncTask {
             jsonPedidos.key("valorEntrega").value(mSacolaPedido.getValorEntrega());
             jsonPedidos.key("valorTotal").value(mSacolaPedido.getValorEntrega() + mSacolaPedido.getValorTotalPedido());
 
+
+            @SuppressLint("SimpleDateFormat")
             SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             jsonPedidos.key("dataDoPedido").value(f.format(new Date()));
-            jsonPedidos.key("comissaoPaga").value(false);
+            jsonPedidos.key("comissaoPaga").value(1);
 
             JSONArray jsonProdutos = new JSONArray();
             for (ProdutoPedido p : mListPedidos) {
                 JSONStringer mOStringer = new JSONStringer();
                 mOStringer.object()
-                    .key("produto").object()
+                        .key("produto").object()
                         .key("id").value(p.getId())
-                    .endObject()
-                    .key("quantidade").value(p.getQuantidade())
-                .endObject();
+                        .endObject()
+                        .key("quantidade").value(p.getQuantidade())
+                        .endObject();
 
                 JSONObject object = new JSONObject(String.valueOf(mOStringer));
 
@@ -69,11 +75,10 @@ public class FinalizarCompra extends AsyncTask {
             jsonPedidos.key("descricao").value(descricao);
             jsonPedidos.endObject();
 
-            URL url = new URL(MainActivity.ipServidor + "/pedidos");
+            URL url = new URL(String.format("%s/pedidos", context.getResources().getString(R.string.ipServidor)));
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
             conexao.setRequestProperty("Content-Type", "application/json");
-            conexao.setRequestProperty("Accept", "application/json");
             conexao.setRequestProperty("token", mToken);
             conexao.setRequestMethod("POST");
             conexao.setDoInput(true);
@@ -83,8 +88,7 @@ public class FinalizarCompra extends AsyncTask {
 
             conexao.connect();
 
-            Scanner scanner = new Scanner(conexao.getInputStream());
-            String resposta = scanner.nextLine();
+            new Scanner(conexao.getInputStream());
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }

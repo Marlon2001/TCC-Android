@@ -1,6 +1,9 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,24 +15,28 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import godinner.lab.com.godinner.MainActivity;
+import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Endereco;
 
-public class BuscarConsumidor  extends AsyncTask {
+public class BuscarConsumidor extends AsyncTask<Void, Void, Consumidor> {
 
     private String token;
-    private Consumidor mConsumidor;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
+    private Result mResult;
 
-    public BuscarConsumidor(String token) {
+    public BuscarConsumidor(String token, Context context, @NonNull Result result) {
         this.token = token;
+        this.context = context;
+        this.mResult = result;
     }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
-        mConsumidor = new Consumidor();
+    protected Consumidor doInBackground(Void... voids) {
+        Consumidor mConsumidor = new Consumidor();
         try {
-            URL url = new URL(MainActivity.ipServidor + "/consumidor/este");
+            URL url = new URL(String.format("%s/consumidor/este", context.getResources().getString(R.string.ipServidor)));
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("token", token);
@@ -42,14 +49,14 @@ public class BuscarConsumidor  extends AsyncTask {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
             String linha = "";
-            String dados = "";
+            StringBuilder dados = new StringBuilder();
 
-            while (linha != null){
-                dados = dados + linha;
+            while (linha != null) {
+                dados.append(linha);
                 linha = bufferedReader.readLine();
             }
 
-            JSONObject json = new JSONObject(dados);
+            JSONObject json = new JSONObject(dados.toString());
             mConsumidor.setIdServidor(json.getInt("id"));
             mConsumidor.setNome(json.getString("nome"));
             mConsumidor.setEmail(json.getString("email"));
@@ -70,13 +77,23 @@ public class BuscarConsumidor  extends AsyncTask {
             endereco.setCidadeNome(json.getJSONObject("endereco").getJSONObject("cidade").getJSONObject("estado").getString("estado"));
             mConsumidor.setEndereco(endereco);
 
-            MainActivity.mConsumidorLogado = mConsumidor;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+            return mConsumidor;
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Consumidor consumidor) {
+        super.onPostExecute(consumidor);
+        if (mResult != null) {
+            mResult.onResult(consumidor);
+        }
+    }
+
+    public interface Result {
+        void onResult(Consumidor consumidor);
     }
 }
 

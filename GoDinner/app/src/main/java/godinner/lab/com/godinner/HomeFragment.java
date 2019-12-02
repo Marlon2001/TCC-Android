@@ -95,13 +95,13 @@ public class HomeFragment extends Fragment {
                 TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(context);
                 String token = mTokenUsuarioDAO.consultarToken();
 
-                BuscarRestaurantesProximos mRestaurantesProximos = new BuscarRestaurantesProximos(c.getIdServidor(), token);
+                BuscarRestaurantesProximos mRestaurantesProximos = new BuscarRestaurantesProximos(c.getIdServidor(), token, context);
                 mRestaurantesProximos.execute().get();
 
-                BuscarCategorias mBuscarCategorias = new BuscarCategorias(token);
+                BuscarCategorias mBuscarCategorias = new BuscarCategorias(token, context);
                 mBuscarCategorias.execute().get();
 
-                RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(c.getIdServidor(), token);
+                RestaurantesMaisVisitados mRestaurantesMaisVisitados = new RestaurantesMaisVisitados(c.getIdServidor(), token, context);
                 mRestaurantesMaisVisitados.execute().get();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment {
         CategoriasAdapter categoriasAdapter = new CategoriasAdapter(categorias, context, new CategoriasAdapter.CategoriaOnClickListener() {
             @Override
             public void onClickCategoria(View view, int index) {
-                Toast.makeText(getActivity(), "Clicou id " + index, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Clicou id " + index, Toast.LENGTH_SHORT).show();
             }
         });
         mCategorias.setAdapter(categoriasAdapter);

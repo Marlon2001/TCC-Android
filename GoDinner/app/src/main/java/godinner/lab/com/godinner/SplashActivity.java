@@ -1,17 +1,10 @@
 package godinner.lab.com.godinner;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -47,12 +40,12 @@ public class SplashActivity extends Activity {
         if (NetworkManager.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))) {
             if (!mToken.equals("")) {
 
-                ValidarToken validarToken = new ValidarToken(mToken, result -> {
-                        if (result) {
-                            mStartInicialActivity();
-                        } else if (!result) {
-                            mStartMainActivity();
-                        }
+                ValidarToken validarToken = new ValidarToken(mToken, this, result -> {
+                    if (result) {
+                        mStartInicialActivity();
+                    } else {
+                        mStartMainActivity();
+                    }
                 });
 
                 validarToken.execute();
@@ -76,13 +69,10 @@ public class SplashActivity extends Activity {
         }
 
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
-                SplashActivity.this.finish();
-            }
+        handler.postDelayed(() -> {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            SplashActivity.this.finish();
         }, 2000);
     }
 
@@ -97,13 +87,10 @@ public class SplashActivity extends Activity {
         }
 
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent abrirTelaInicial = new Intent(SplashActivity.this, TelaInicialActivity.class);
-                startActivity(abrirTelaInicial);
-                SplashActivity.this.finish();
-            }
+        handler.postDelayed(() -> {
+            Intent abrirTelaInicial = new Intent(SplashActivity.this, TelaInicialActivity.class);
+            startActivity(abrirTelaInicial);
+            SplashActivity.this.finish();
         }, 2000);
     }
 
