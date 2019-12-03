@@ -157,7 +157,7 @@ public class Cadastro3Activity extends AppCompatActivity {
 
                 try {
                     if (tipoCadastro.equals("normal")) {
-                        CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e, "", this, bool -> {
+                        CadastroUsuario cadastroUsuario = new CadastroUsuario(cadastroIntent, contatoIntent, e, "n", this, bool -> {
                             if (bool) {
                                 Intent abrirBemVindo = new Intent(Cadastro3Activity.this, BemVindoActivity.class);
                                 startActivity(abrirBemVindo);

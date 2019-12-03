@@ -3,6 +3,7 @@ package godinner.lab.com.godinner.tasks;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONStringer;
@@ -51,7 +52,7 @@ public class CadastroUsuario extends AsyncTask<Void, Void, Boolean> {
             jsonCadastro.key("fotoPerfil").value(cadastro.getFoto());
 
             if (tipoCadastro.equals("f")) {
-                jsonCadastro.key("redesocial").value(1);
+                jsonCadastro.key("redeSocial").value("1");
             }
 
             jsonCadastro.key("endereco").object()
@@ -67,7 +68,9 @@ public class CadastroUsuario extends AsyncTask<Void, Void, Boolean> {
                     .endObject();
             jsonCadastro.endObject();
 
-            URL url = new URL(String.format("%s/", context.getResources().getString(R.string.ipServidor)));
+            Log.d("CADASTRO ---", jsonCadastro.toString());
+
+            URL url = new URL(String.format("%s/consumidor", context.getResources().getString(R.string.ipServidor)));
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 

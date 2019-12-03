@@ -36,11 +36,11 @@ import java.util.concurrent.ExecutionException;
 import godinner.lab.com.godinner.dao.ConsumidorDAO;
 import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Cadastro;
-import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.BuscarConsumidor;
 import godinner.lab.com.godinner.tasks.LoginUsuario;
 import godinner.lab.com.godinner.tasks.ValidarDadosCadastro;
+import godinner.lab.com.godinner.utils.LoadingDialog;
 import godinner.lab.com.godinner.utils.OnSingleClickListener;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
@@ -70,24 +70,6 @@ public class MainActivity extends AppCompatActivity {
         MaterialButton btnCadastrar = findViewById(R.id.btn_cadastrar);
         LoginButton loginButton = findViewById(R.id.login_button);
 
-        checkLoginStatus();
-
-        // --------------------------------------------------------------------------------------------------------------------
-        // Add code to print out the key hash
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
-
-        }
-        // --------------------------------------------------------------------------------------------------------------------
-
         txtEmail = findViewById(R.id.txt_email);
         txtSenha = findViewById(R.id.txt_password);
         txtEmailLayout = findViewById(R.id.txt_email_layout);
@@ -99,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 if (validarCampos()) {
+                    final AlertDialog dialog = LoadingDialog.showLoadingDialog(getLayoutInflater(), MainActivity.this);
+                    dialog.show();
+
                     Login login = new Login();
                     login.setEmail(txtEmail.getText().toString());
                     login.setSenha(txtSenha.getText().toString());
@@ -106,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         LoginUsuario mLogin = new LoginUsuario(login, getApplicationContext(), token -> {
                             if (token.isEmpty()) {
+                                dialog.dismiss();
                                 new AlertDialog.Builder(MainActivity.this)
                                         .setTitle("Não foi desta vez.")
                                         .setMessage("Usuário ou senha incorretos.")
@@ -115,31 +101,30 @@ public class MainActivity extends AppCompatActivity {
                                 mTokenUsuarioDAO.salvarToken(token);
 
                                 try {
-                                    BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token, getApplicationContext(), new BuscarConsumidor.Result() {
-                                        @Override
-                                        public void onResult(Consumidor consumidor) {
-                                            if (consumidor != null) {
-                                                ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(getApplicationContext());
-                                                mConsumidorDAO.salvarConsumidorLogado(consumidor);
+                                    BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token, getApplicationContext(), consumidor -> {
+                                        if (consumidor != null) {
+                                            ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(getApplicationContext());
+                                            mConsumidorDAO.salvarConsumidorLogado(consumidor);
+                                            dialog.dismiss();
 
-                                                Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
-                                                startActivity(abrirTelaInicial);
-                                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                                                MainActivity.this.finish();
-                                            }
+                                            Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
+                                            startActivity(abrirTelaInicial);
+                                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                            MainActivity.this.finish();
                                         }
                                     });
                                     mBuscarConsumidor.execute().get();
 
-                                } catch (ExecutionException | InterruptedException ignored) {
-                                }
+                                } catch (ExecutionException | InterruptedException ignored) {}
                             }
                         });
                         mLogin.execute().get();
-                    } catch (ExecutionException | InterruptedException ignored) {
+
+                    } catch (ExecutionException | InterruptedException ignored) {} finally {
+                        dialog.dismiss();
+                        reset();
                     }
                 }
-                reset();
             }
         });
 
@@ -191,6 +176,9 @@ public class MainActivity extends AppCompatActivity {
                 final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
 
                 ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("facebook", email, getApplicationContext(), result -> {
+                    final AlertDialog dialog = LoadingDialog.showLoadingDialog(getLayoutInflater(), MainActivity.this);
+                    dialog.show();
+
                     if (result) {
                         Login login = new Login();
                         login.setEmail(email);
@@ -199,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             LoginUsuario mLogin = new LoginUsuario(login, this, token1 -> {
                                 if (token1.isEmpty()) {
+                                    dialog.dismiss();
                                     new AlertDialog.Builder(MainActivity.this)
                                             .setTitle("Não foi desta vez.")
                                             .setMessage("Usuário ou senha incorretos.")
@@ -208,18 +197,16 @@ public class MainActivity extends AppCompatActivity {
                                     mTokenUsuarioDAO.salvarToken(token1);
 
                                     try {
-                                        BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token1, getApplicationContext(), new BuscarConsumidor.Result() {
-                                            @Override
-                                            public void onResult(Consumidor consumidor) {
-                                                if (consumidor != null) {
-                                                    ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(getApplicationContext());
-                                                    mConsumidorDAO.salvarConsumidorLogado(consumidor);
+                                        BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token1, getApplicationContext(), consumidor -> {
+                                            if (consumidor != null) {
+                                                ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(getApplicationContext());
+                                                mConsumidorDAO.salvarConsumidorLogado(consumidor);
+                                                dialog.dismiss();
 
-                                                    Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
-                                                    startActivity(abrirTelaInicial);
-                                                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                                                    MainActivity.this.finish();
-                                                }
+                                                Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
+                                                startActivity(abrirTelaInicial);
+                                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                                MainActivity.this.finish();
                                             }
                                         });
                                         mBuscarConsumidor.execute().get();
@@ -239,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                         cadastro.setEmail(email);
                         cadastro.setFoto(image_url);
                         cadastro.setSenha(id + "_consumidor");
+                        dialog.dismiss();
 
                         Intent abrirCadastro = new Intent(MainActivity.this, Cadastro2Activity.class);
                         abrirCadastro.putExtra("cadastro", cadastro);
@@ -253,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-
         Bundle parameters = new Bundle();
 
         parameters.putString("fields", "first_name,last_name,email,id");
@@ -264,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
     private void checkLoginStatus() {
         if (AccessToken.getCurrentAccessToken() != null) {
             AccessToken.setCurrentAccessToken(null);
-            //loadUserProfile(AccessToken.getCurrentAccessToken());
         }
     }
 
@@ -289,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        checkLoginStatus();
         findViewById(R.id.scrollView).requestFocus();
     }
 }
