@@ -1,5 +1,7 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import org.json.JSONArray;
@@ -15,23 +17,24 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import godinner.lab.com.godinner.HomeFragment;
-import godinner.lab.com.godinner.MainActivity;
-import godinner.lab.com.godinner.TelaInicialActivity;
+import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Categoria;
 
 public class BuscarCategorias extends AsyncTask {
 
-    private ArrayList<Categoria> categorias;
     private String token;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
 
-    public BuscarCategorias(String token) {
+    public BuscarCategorias(String token, Context context) {
         this.token = token;
+        this.context = context;
     }
 
     @Override
     protected Object doInBackground(Object[] o) {
-        try{
-            URL url = new URL(MainActivity.ipServidor+"/categoria");
+        try {
+            URL url = new URL(String.format("%s/categoria", context.getResources().getString(R.string.ipServidor)));
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("token", token);
@@ -40,18 +43,18 @@ public class BuscarCategorias extends AsyncTask {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
             String linha = "";
-            String dados = "";
+            StringBuilder dados = new StringBuilder();
 
-            while (linha != null){
+            while (linha != null) {
                 linha = bufferedReader.readLine();
-                dados = dados + linha;
+                dados.append(linha);
             }
 
-            JSONArray jsonArray = new JSONArray(dados);
-            categorias = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(dados.toString());
+            ArrayList<Categoria> categorias = new ArrayList<>();
             Categoria categoria;
 
-            for(int i = 0; i < jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject mObject = (JSONObject) jsonArray.get(i);
                 categoria = new Categoria();
                 categoria.setUrlImage(mObject.getString("foto"));
@@ -60,9 +63,7 @@ public class BuscarCategorias extends AsyncTask {
             }
 
             HomeFragment.categorias = categorias;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return null;

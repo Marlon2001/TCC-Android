@@ -1,6 +1,9 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONStringer;
@@ -11,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
-import godinner.lab.com.godinner.MainActivity;
+import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Cadastro;
 import godinner.lab.com.godinner.model.Contato;
 import godinner.lab.com.godinner.model.Endereco;
@@ -21,12 +24,17 @@ public class CadastroUsuario extends AsyncTask<Void, Void, Boolean> {
     private Cadastro cadastro;
     private Contato contato;
     private Endereco endereco;
+    private String tipoCadastro;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
     private Result mResult;
 
-    public CadastroUsuario(Cadastro cadastro, Contato contato, Endereco endereco, Result mResult) {
+    public CadastroUsuario(Cadastro cadastro, Contato contato, Endereco endereco, String tipoCadastro, Context context, Result mResult) {
         this.cadastro = cadastro;
         this.contato = contato;
         this.endereco = endereco;
+        this.tipoCadastro = tipoCadastro;
+        this.context = context;
         this.mResult = mResult;
     }
 
@@ -41,7 +49,12 @@ public class CadastroUsuario extends AsyncTask<Void, Void, Boolean> {
             jsonCadastro.key("senha").value(cadastro.getSenha());
             jsonCadastro.key("cpf").value(contato.getCpf());
             jsonCadastro.key("telefone").value(contato.getTelefone());
-            jsonCadastro.key("fotoPerfil").value(null);
+            jsonCadastro.key("fotoPerfil").value(cadastro.getFoto());
+
+            if (tipoCadastro.equals("f")) {
+                jsonCadastro.key("redeSocial").value("1");
+            }
+
             jsonCadastro.key("endereco").object()
                     .key("cep").value(endereco.getCep())
                     .key("numero").value(endereco.getNumero())
@@ -50,12 +63,14 @@ public class CadastroUsuario extends AsyncTask<Void, Void, Boolean> {
                     .key("complemento").value(endereco.getComplemento())
                     .key("referencia").value(endereco.getReferencia())
                     .key("cidade").object()
-                        .key("id").value(endereco.getIdCidade())
+                    .key("id").value(endereco.getIdCidade())
                     .endObject()
-            .endObject();
+                    .endObject();
             jsonCadastro.endObject();
 
-            URL url = new URL(MainActivity.ipServidor+"/consumidor");
+            Log.d("CADASTRO ---", jsonCadastro.toString());
+
+            URL url = new URL(String.format("%s/consumidor", context.getResources().getString(R.string.ipServidor)));
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
 
@@ -70,7 +85,7 @@ public class CadastroUsuario extends AsyncTask<Void, Void, Boolean> {
             conexao.connect();
 
             Scanner scanner = new Scanner(conexao.getInputStream());
-            String resposta = scanner.nextLine();
+            scanner.nextLine();
             return true;
         } catch (IOException | JSONException e) {
             e.printStackTrace();

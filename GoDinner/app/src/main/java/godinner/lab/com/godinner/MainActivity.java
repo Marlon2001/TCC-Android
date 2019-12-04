@@ -1,13 +1,17 @@
 package godinner.lab.com.godinner;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,37 +23,29 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import godinner.lab.com.godinner.dao.ConsumidorDAO;
 import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Cadastro;
-import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Login;
 import godinner.lab.com.godinner.tasks.BuscarConsumidor;
 import godinner.lab.com.godinner.tasks.LoginUsuario;
 import godinner.lab.com.godinner.tasks.ValidarDadosCadastro;
+import godinner.lab.com.godinner.utils.LoadingDialog;
 import godinner.lab.com.godinner.utils.OnSingleClickListener;
-import godinner.lab.com.godinner.utils.TrustCertificates;
 import godinner.lab.com.godinner.utils.ValidaCampos;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String ipServidor = "https://godinner.tk:8080";
-    public static final String ipServidorChat = "https://godinner.tk:3000";
-    public static String token = null;
-    public static String erro;
-    public static Consumidor mConsumidorLogado;
-    public static String fotoLanchePadrao = "/restaurante/produto/1569953042416-115-840x560.jpg";
-    public static String ipServidorFotos = "https://fotos.godinner.tk";
     AccessTokenTracker tokenTracker = new AccessTokenTracker() {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
@@ -58,10 +54,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-    private MaterialButton btnLogar;
-    private MaterialButton btnCadastrar;
     private CallbackManager callbackManager;
-    private LoginButton loginButton;
     private TextView txtEmail;
     private TextView txtSenha;
     private TextInputLayout txtEmailLayout;
@@ -71,15 +64,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.scrollView).requestFocus();
         Glide.with(this).load(R.drawable.logo2).into((ImageView) findViewById(R.id.logo));
 
-        btnLogar = findViewById(R.id.btn_logar);
-        btnCadastrar = findViewById(R.id.btn_cadastrar);
-        loginButton = findViewById(R.id.login_button);
-
-        checkLoginStatus();
-        TrustCertificates.trustEveryone();
+        MaterialButton btnLogar = findViewById(R.id.btn_logar);
+        MaterialButton btnCadastrar = findViewById(R.id.btn_cadastrar);
+        LoginButton loginButton = findViewById(R.id.login_button);
 
         txtEmail = findViewById(R.id.txt_email);
         txtSenha = findViewById(R.id.txt_password);
@@ -91,42 +80,51 @@ public class MainActivity extends AppCompatActivity {
         btnLogar.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                erro = null;
-                token = null;
                 if (validarCampos()) {
+                    final AlertDialog dialog = LoadingDialog.showLoadingDialog(getLayoutInflater(), MainActivity.this);
+                    dialog.show();
+
                     Login login = new Login();
                     login.setEmail(txtEmail.getText().toString());
                     login.setSenha(txtSenha.getText().toString());
 
                     try {
-                        LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
+                        LoginUsuario mLogin = new LoginUsuario(login, getApplicationContext(), token -> {
+                            if (token.isEmpty()) {
+                                dialog.dismiss();
+                                new AlertDialog.Builder(MainActivity.this)
+                                        .setTitle("Não foi desta vez.")
+                                        .setMessage("Usuário ou senha incorretos.")
+                                        .setPositiveButton("Fechar", null)
+                                        .show();
+                            } else {
+                                mTokenUsuarioDAO.salvarToken(token);
+
+                                try {
+                                    BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token, getApplicationContext(), consumidor -> {
+                                        if (consumidor != null) {
+                                            ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(getApplicationContext());
+                                            mConsumidorDAO.salvarConsumidorLogado(consumidor);
+                                            dialog.dismiss();
+
+                                            Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
+                                            startActivity(abrirTelaInicial);
+                                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                            MainActivity.this.finish();
+                                        }
+                                    });
+                                    mBuscarConsumidor.execute().get();
+
+                                } catch (ExecutionException | InterruptedException ignored) {}
+                            }
+                        });
                         mLogin.execute().get();
 
-                        if (erro != null || token == null) {
-                            new AlertDialog.Builder(MainActivity.this)
-                                    .setTitle("Não foi desta vez.")
-                                    .setMessage("Usuário ou senha incorretos.")
-                                    .setPositiveButton("Fechar", null)
-                                    .show();
-                        } else {
-                            mTokenUsuarioDAO.salvarToken(token);
-
-                            BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token);
-                            mBuscarConsumidor.execute().get();
-
-                            ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(getApplicationContext());
-                            mConsumidorDAO.salvarConsumidorLogado(mConsumidorLogado);
-
-                            Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
-                            startActivity(abrirTelaInicial);
-                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                            MainActivity.this.finish();
-                        }
-                    } catch (ExecutionException | InterruptedException e) {
-                        e.printStackTrace();
+                    } catch (ExecutionException | InterruptedException ignored) {} finally {
+                        dialog.dismiss();
+                        reset();
                     }
                 }
-                reset();
             }
         });
 
@@ -168,53 +166,81 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadUserProfile(AccessToken token) {
         // Enviando uma solicitação ao Facebook para pegar os dados do usuário através da API Graph
-        GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                try {
-                    final String first_name = object.getString("first_name");
-                    final String last_name = object.getString("last_name");
-                    final String email = object.getString("email");
-                    final String id = object.getString("id");
-                    final String image_url = "https://graph.facebook.com/" + id + "/picture?type=normal";
+        GraphRequest request = GraphRequest.newMeRequest(token, (object, response) -> {
+            try {
+                final String first_name = object.getString("first_name");
+                final String last_name = object.getString("last_name");
+                final String email = object.getString("email");
+                final String id = object.getString("id");
+                final String image_url = "https://graph.facebook.com/" + id + "/picture?type=normal";
+                final TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(this);
 
-                    ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("email", email, new ValidarDadosCadastro.ValidarCampo() {
-                        @Override
-                        public void Request(Boolean result) {
-                            if(!result){
-                                Login login = new Login();
-                                login.setEmail(email);
-                                login.setSenha(id + "_consumidor");
+                ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("facebook", email, getApplicationContext(), result -> {
+                    final AlertDialog dialog = LoadingDialog.showLoadingDialog(getLayoutInflater(), MainActivity.this);
+                    dialog.show();
 
-                                LoginUsuario mLogin = new LoginUsuario(login, MainActivity.this);
-                                // Vai para login
-                                // criar task de login por facebook
-                                // a task vai validar se o email nao possui senha no cadastro do banco
-                            }else{
-                                Cadastro cadastro = new Cadastro();
-                                cadastro.setNome(String.format("%s %s", first_name, last_name));
-                                cadastro.setEmail(email);
-                                cadastro.setFoto(image_url);
-                                cadastro.setSenha(id + "_consumidor");
+                    if (result) {
+                        Login login = new Login();
+                        login.setEmail(email);
+                        login.setSenha(id + "_consumidor");
 
-                                Intent abrirCadastro = new Intent(MainActivity.this, Cadastro2Activity.class);
-                                abrirCadastro.putExtra("cadastro", cadastro);
-                                abrirCadastro.putExtra("type", "facebook");
+                        try {
+                            LoginUsuario mLogin = new LoginUsuario(login, this, token1 -> {
+                                if (token1.isEmpty()) {
+                                    dialog.dismiss();
+                                    new AlertDialog.Builder(MainActivity.this)
+                                            .setTitle("Não foi desta vez.")
+                                            .setMessage("Usuário ou senha incorretos.")
+                                            .setPositiveButton("Fechar", null)
+                                            .show();
+                                } else {
+                                    mTokenUsuarioDAO.salvarToken(token1);
 
-                                startActivity(abrirCadastro);
-                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                            }
+                                    try {
+                                        BuscarConsumidor mBuscarConsumidor = new BuscarConsumidor(token1, getApplicationContext(), consumidor -> {
+                                            if (consumidor != null) {
+                                                ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(getApplicationContext());
+                                                mConsumidorDAO.salvarConsumidorLogado(consumidor);
+                                                dialog.dismiss();
+
+                                                Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
+                                                startActivity(abrirTelaInicial);
+                                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                                MainActivity.this.finish();
+                                            }
+                                        });
+                                        mBuscarConsumidor.execute().get();
+
+                                    } catch (ExecutionException | InterruptedException ignored) {
+                                    }
+                                }
+                            });
+
+                            mLogin.execute().get();
+                        } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    });
-                    mValidarDadosCadastro.execute().get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    } else {
+                        Cadastro cadastro = new Cadastro();
+                        cadastro.setNome(String.format("%s %s", first_name, last_name));
+                        cadastro.setEmail(email);
+                        cadastro.setFoto(image_url);
+                        cadastro.setSenha(id + "_consumidor");
+                        dialog.dismiss();
+
+                        Intent abrirCadastro = new Intent(MainActivity.this, Cadastro2Activity.class);
+                        abrirCadastro.putExtra("cadastro", cadastro);
+                        abrirCadastro.putExtra("type", "facebook");
+
+                        startActivity(abrirCadastro);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
+                });
+                mValidarDadosCadastro.execute().get();
+            } catch (InterruptedException | ExecutionException | JSONException e) {
+                e.printStackTrace();
             }
         });
-
         Bundle parameters = new Bundle();
 
         parameters.putString("fields", "first_name,last_name,email,id");
@@ -225,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
     private void checkLoginStatus() {
         if (AccessToken.getCurrentAccessToken() != null) {
             AccessToken.setCurrentAccessToken(null);
-            //loadUserProfile(AccessToken.getCurrentAccessToken());
         }
     }
 
@@ -245,5 +270,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return semErros;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkLoginStatus();
+        findViewById(R.id.scrollView).requestFocus();
     }
 }

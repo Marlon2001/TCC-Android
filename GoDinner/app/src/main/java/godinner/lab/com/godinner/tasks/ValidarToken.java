@@ -1,8 +1,9 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -12,22 +13,25 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import godinner.lab.com.godinner.MainActivity;
+import godinner.lab.com.godinner.R;
 
 public class ValidarToken extends AsyncTask<Void, Void, Boolean> {
 
-    private ResultRequest mListener;
     private String token;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
+    private ResultRequest mListener;
 
-    public ValidarToken(String token, @NonNull ResultRequest mListener) {
+    public ValidarToken(String token, Context context, @NonNull ResultRequest mListener) {
         this.token = token;
+        this.context = context;
         this.mListener = mListener;
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
-            URL url = new URL(MainActivity.ipServidor + "/consumidor/este");
+            URL url = new URL(String.format("%s/consumidor/este", context.getResources().getString(R.string.ipServidor)));
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("token", token);
@@ -40,26 +44,21 @@ public class ValidarToken extends AsyncTask<Void, Void, Boolean> {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
             String linha = "";
-            String dados = "";
+            StringBuilder dados = new StringBuilder();
 
             while (linha != null) {
-                dados = dados + linha;
+                dados.append(linha);
                 linha = bufferedReader.readLine();
             }
 
-            JSONObject json = new JSONObject(dados);
+            JSONObject json = new JSONObject(dados.toString());
 
             if (json.has("status") && json.has("error")) {
                 int status = json.getInt("status");
                 String error = json.getString("error");
 
-                if (status == 401 && error.equals("Unauthorized")) {
-                    return false;
-                }
-            } else if (json.length() == 0) {
-                return false;
-            }
-            return true;
+                return status != 401 || !error.equals("Unauthorized");
+            } else return json.length() != 0;
         } catch (Exception e) {
             return false;
         }

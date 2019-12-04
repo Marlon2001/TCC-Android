@@ -1,8 +1,8 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,18 +12,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import godinner.lab.com.godinner.Cadastro3Activity;
-import godinner.lab.com.godinner.MainActivity;
+import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Endereco;
 
 public class ConsultarCep extends AsyncTask {
 
     private String cep;
+    @SuppressLint("StaticFieldLeak")
     private Context context;
-    private Endereco endereco;
 
     public ConsultarCep(String cep, Context context) {
         this.cep = cep;
@@ -33,7 +32,7 @@ public class ConsultarCep extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            URL url = new URL(MainActivity.ipServidor + "/endereco/cep/" + cep);
+            URL url = new URL(String.format("%s/endereco/cep/%s", context.getResources().getString(R.string.ipServidor), cep));
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("Content-Type", "application/json");
@@ -45,17 +44,17 @@ public class ConsultarCep extends AsyncTask {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
             String linha = "";
-            String dados = "";
+            StringBuilder dados = new StringBuilder();
 
             while (linha != null) {
                 linha = bufferedReader.readLine();
-                dados = dados + linha;
+                dados.append(linha);
             }
 
-            JSONObject mObject = new JSONObject(dados);
+            JSONObject mObject = new JSONObject(dados.toString());
 
             if (!mObject.getString("cep").equals("null")) {
-                endereco = new Endereco();
+                Endereco endereco = new Endereco();
 
                 endereco.setLogradouro(mObject.getString("logradouro"));
                 endereco.setBairro(mObject.getString("bairro"));
@@ -68,11 +67,7 @@ public class ConsultarCep extends AsyncTask {
 
                 Cadastro3Activity.endereco = endereco;
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return null;

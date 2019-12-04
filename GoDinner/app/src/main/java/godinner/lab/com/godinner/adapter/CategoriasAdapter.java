@@ -43,14 +43,9 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Ca
 
         categoriasViewholder.txtCategoria.setText(c.getNome());
 
-        categoriasViewholder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCategoriaOnClickListener.onClickCategoria(v, i);
-            }
-        });
+        categoriasViewholder.itemView.setOnClickListener(v -> mCategoriaOnClickListener.onClickCategoria(v, i));
 
-        Picasso.get().load(MainActivity.ipServidorFotos + c.getUrlImage()).resize(100, 100).into(categoriasViewholder.imgCategoria);
+        Picasso.get().load(context.getResources().getString(R.string.ipServidorFotos) + c.getUrlImage()).resize(100, 100).into(categoriasViewholder.imgCategoria);
     }
 
     @Override

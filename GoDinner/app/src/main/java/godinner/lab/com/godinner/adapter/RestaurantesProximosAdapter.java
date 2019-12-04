@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import godinner.lab.com.godinner.MainActivity;
 import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.Restaurante;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
@@ -45,14 +44,9 @@ public class RestaurantesProximosAdapter extends RecyclerView.Adapter<Restaurant
 
         restauranteViewHolder.imgRestaurante.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_chef));
         restauranteViewHolder.txtRestaurante.setText(r.getRazaoSocial());
-        restauranteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRestauranteOnClickListener.onClickRestaurante(v, i);
-            }
-        });
+        restauranteViewHolder.itemView.setOnClickListener(v -> mRestauranteOnClickListener.onClickRestaurante(v, i));
 
-        Picasso.get().load(MainActivity.ipServidorFotos + r.getFoto()).resize(100, 100).into(restauranteViewHolder.imgRestaurante);
+        Picasso.get().load(context.getResources().getString(R.string.ipServidorFotos) + r.getFoto()).resize(100, 100).into(restauranteViewHolder.imgRestaurante);
     }
 
     @Override

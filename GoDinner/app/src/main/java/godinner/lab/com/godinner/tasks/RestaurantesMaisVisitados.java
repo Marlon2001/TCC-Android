@@ -1,5 +1,7 @@
 package godinner.lab.com.godinner.tasks;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import org.json.JSONArray;
@@ -11,29 +13,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 import godinner.lab.com.godinner.HomeFragment;
 import godinner.lab.com.godinner.MainActivity;
+import godinner.lab.com.godinner.R;
 import godinner.lab.com.godinner.model.RestauranteExibicao;
 
 public class RestaurantesMaisVisitados extends AsyncTask {
 
-    private ArrayList<RestauranteExibicao> restaurantes;
     private Integer idConsumidor;
     private String token;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
 
-    public RestaurantesMaisVisitados(int idConsumidor, String token) {
+    public RestaurantesMaisVisitados(Integer idConsumidor, String token, Context context) {
         this.idConsumidor = idConsumidor;
         this.token = token;
+        this.context = context;
     }
 
     @Override
     protected Object doInBackground(Object[] objects) {
         try {
-            URL url = new URL(MainActivity.ipServidor+"/restaurante/exibicao/"+idConsumidor);
+            URL url = new URL(String.format("%s/restaurante/exibicao/%s", context.getResources().getString(R.string.ipServidor), idConsumidor));
 
             HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
             conexao.setRequestProperty("token", token);
@@ -44,18 +48,18 @@ public class RestaurantesMaisVisitados extends AsyncTask {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
             String linha = "";
-            String dados = "";
+            StringBuilder dados = new StringBuilder();
 
             while (linha != null) {
                 linha = bufferedReader.readLine();
-                dados += linha;
+                dados.append(linha);
             }
 
-            JSONArray jsonArray = new JSONArray(dados);
-            restaurantes = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(dados.toString());
+            ArrayList<RestauranteExibicao> restaurantes = new ArrayList<>();
             RestauranteExibicao restaurante;
 
-            for (int i = 0; i < jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject mObject = (JSONObject) jsonArray.get(i);
                 restaurante = new RestauranteExibicao();
 
@@ -71,11 +75,7 @@ public class RestaurantesMaisVisitados extends AsyncTask {
             }
 
             HomeFragment.restaurantesMaisVisitados = restaurantes;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return null;

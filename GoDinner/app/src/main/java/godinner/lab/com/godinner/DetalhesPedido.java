@@ -46,7 +46,7 @@ public class DetalhesPedido extends AppCompatActivity {
         mProduto = (Produto) intent.getSerializableExtra("produto_clicado");
         mRestauranteExibicao = (RestauranteExibicao) intent.getSerializableExtra("restaurante");
 
-        String url = MainActivity.ipServidorFotos + "/" + (mProduto.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao : mProduto.getFotos().get(0).getFoto());
+        String url = getResources().getString(R.string.ipServidorFotos) + "/" + (mProduto.getFotos().size() == 0 ? getResources().getString(R.string.fotoLanchePadrao) : mProduto.getFotos().get(0).getFoto());
         Picasso.get().load(url).resize(150, 200).into(imageProduto);
 
         PedidoDAO mPedidoDAO = new PedidoDAO(this);

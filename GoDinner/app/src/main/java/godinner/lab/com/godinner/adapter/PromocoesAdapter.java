@@ -50,14 +50,9 @@ public class PromocoesAdapter extends RecyclerView.Adapter<PromocoesAdapter.Prom
         Double desconto = p.getPreco() * (p.getDesconto() / 100);
         promocoesViewholder.txtPrecoNovo.setText(String.format("%s", p.getPreco() - desconto));
 
-        promocoesViewholder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPromocaoOnClickListener.onClickPromocao(v, i);
-            }
-        });
+        promocoesViewholder.itemView.setOnClickListener(v -> mPromocaoOnClickListener.onClickPromocao(v, i));
 
-        String url = MainActivity.ipServidorFotos + (p.getFotos().size() == 0 ? MainActivity.fotoLanchePadrao : p.getFotos().get(0).getFoto());
+        String url = context.getResources().getString(R.string.ipServidorFotos) + (p.getFotos().size() == 0 ? context.getResources().getString(R.string.fotoLanchePadrao) : p.getFotos().get(0).getFoto());
         Picasso.get().load(url).resize(120, 120).into(promocoesViewholder.imgProduto);
     }
 

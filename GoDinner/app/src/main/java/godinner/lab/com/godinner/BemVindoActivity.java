@@ -33,5 +33,12 @@ public class BemVindoActivity extends AppCompatActivity implements View.OnClickL
         Intent abrirMainActivity = new Intent(BemVindoActivity.this, MainActivity.class);
         startActivity(abrirMainActivity);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

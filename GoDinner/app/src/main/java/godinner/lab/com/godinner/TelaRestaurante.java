@@ -60,10 +60,10 @@ public class TelaRestaurante extends AppCompatActivity implements View.OnClickLi
             TokenUsuarioDAO mTokenUsuarioDAO = new TokenUsuarioDAO(TelaRestaurante.this);
             String token = mTokenUsuarioDAO.consultarToken();
 
-            BuscarPromocoesRestaurante mPromocoesRestaurante = new BuscarPromocoesRestaurante(mRestaurante.getId(), token);
+            BuscarPromocoesRestaurante mPromocoesRestaurante = new BuscarPromocoesRestaurante(mRestaurante.getId(), token, this);
             mPromocoesRestaurante.execute().get();
 
-            BuscarProdutosRestaurante mProdutosRestaurante = new BuscarProdutosRestaurante(mRestaurante.getId(), token);
+            BuscarProdutosRestaurante mProdutosRestaurante = new BuscarProdutosRestaurante(mRestaurante.getId(), token, this);
             mProdutosRestaurante.execute().get();
 
             mAdapterPromocoes();

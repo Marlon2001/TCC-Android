@@ -132,7 +132,7 @@ public class SacolaFragment extends Fragment {
                             String token = mTokenUsuarioDAO.consultarToken();
                             String desc = txtComentario.getText().toString();
 
-                            FinalizarCompra mFinalizarCompra = new FinalizarCompra(s, l, token, desc);
+                            FinalizarCompra mFinalizarCompra = new FinalizarCompra(s, l, token, desc, context);
                             try {
                                 mFinalizarCompra.execute().get();
                                 Toast.makeText(context, "Pedido em Andamento", Toast.LENGTH_SHORT).show();

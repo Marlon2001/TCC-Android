@@ -14,10 +14,10 @@
         android:background="@drawable/rounded_rectangle_orange"
         android:maxWidth="240dp"
         android:minWidth="120dp"
-        android:paddingBottom="8dp"
-        android:paddingEnd="53dp"
+        android:paddingBottom="26dp"
+        android:paddingEnd="40dp"
         android:paddingStart="12dp"
-        android:paddingTop="20dp"
+        android:paddingTop="24dp"
         android:textColor="#ffffff"
         android:textSize="16sp"
         app:layout_constrainedWidth="true"
@@ -63,10 +63,10 @@
         android:id="@+id/text_message_name"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:maxLines="1"
         android:layout_marginStart="12dp"
-        android:paddingTop="2dp"
-        android:textStyle="bold"
+        android:maxLines="1"
+        android:paddingTop="5dp"
         android:textSize="14sp"
-        app:layout_constraintLeft_toLeftOf="@id/square1"/>
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/square1" />
 </android.support.constraint.ConstraintLayout>

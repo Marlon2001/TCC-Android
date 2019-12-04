@@ -1,11 +1,13 @@
 package godinner.lab.com.godinner;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ import org.json.JSONStringer;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import godinner.lab.com.godinner.adapter.MessageListAdapter;
 import godinner.lab.com.godinner.dao.ConsumidorDAO;
@@ -25,19 +28,17 @@ import godinner.lab.com.godinner.dao.TokenUsuarioDAO;
 import godinner.lab.com.godinner.model.Consumidor;
 import godinner.lab.com.godinner.model.Mensagem;
 import godinner.lab.com.godinner.tasks.SuporteUsuario;
+import godinner.lab.com.godinner.utils.Data;
 import godinner.lab.com.godinner.utils.OnSingleClickListener;
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class SuporteActivity extends AppCompatActivity {
 
     private RecyclerView mMessageList;
     private EditText txtMessageChat;
-    private Button btnEnviar;
     private Consumidor consumidor;
     private Socket socket;
-    private List<Mensagem> mMensagens;
     private MessageListAdapter messageListAdapter;
 
     @Override
@@ -45,15 +46,18 @@ public class SuporteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suporte);
 
+        ActionBar actionBar = Objects.requireNonNull(getSupportActionBar());
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setTitle("Suporte");
+
         mMessageList = findViewById(R.id.message_list);
         txtMessageChat = findViewById(R.id.message_chat);
-        btnEnviar = findViewById(R.id.btn_enviar);
+        Button btnEnviar = findViewById(R.id.btn_enviar);
 
-        mMensagens = new ArrayList<>();
+        List<Mensagem> mMensagens = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        layoutManager.setStackFromEnd(true);
-//        layoutManager.setReverseLayout(true);
         mMessageList.setLayoutManager(layoutManager);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mMessageList.getContext(), 0);
@@ -68,25 +72,23 @@ public class SuporteActivity extends AppCompatActivity {
         String token = mTokenUsuarioDAO.consultarToken();
 
         try {
-            socket = IO.socket(MainActivity.ipServidorChat);
+            socket = IO.socket(getResources().getString(R.string.ipServidorSocket));
             socket.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
-        SuporteUsuario mSuporteUsuario = new SuporteUsuario(token, consumidor.getIdServidor(), new SuporteUsuario.ResultRequest() {
-            @Override
-            public void onResult(String resposta) {
-                try {
+        SuporteUsuario mSuporteUsuario = new SuporteUsuario(token, consumidor.getIdServidor(), this, resposta -> {
+            try {
+                if (resposta != null) {
                     JSONObject mSala = new JSONObject(resposta);
 
                     if (mSala.has("sala")) {
                         int sala = mSala.getInt("sala");
                         joinChat(sala);
                     }
-                } catch (JSONException e) {
-                    if (resposta.equals("Unauthorized")) ;
                 }
+            } catch (JSONException ignored) {
             }
         });
         mSuporteUsuario.execute();
@@ -124,51 +126,42 @@ public class SuporteActivity extends AppCompatActivity {
 
         socket.emit("join", jsonJoinChat);
 
-        socket.on("message", new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Log.d("aaaaaaaaa", args[0].toString());
+        socket.on("message", args -> runOnUiThread(() -> {
+            try {
+                JSONObject o = new JSONObject(args[0].toString());
 
-                        try {
-                            JSONObject o = new JSONObject(args[0].toString());
+                Mensagem m = new Mensagem();
+                m.setUsername(o.getString("nome"));
+                m.setMessage(o.getString("message"));
+                m.setRemetente(o.getString("remetente"));
+                m.setCreatedAt(Data.getHoraAtual());
 
-                            Mensagem m = new Mensagem();
-                            m.setUsername(o.getString("nome"));
-                            m.setMessage(o.getString("message"));
-                            m.setRemetente(o.getString("remetente"));
-
-                            messageListAdapter.refreshData(m);
-                            mMessageList.smoothScrollToPosition(messageListAdapter.getItemCount());
-
-                            int index = mMensagens.size() - 1 == -1 ? 0 : mMensagens.size() - 1;
-                            //mMensagens.add(m);
-
-                            for (Mensagem mm : mMensagens)
-                                Log.d(mm.getRemetente() + " ---", mm.getMessage());
-                            //messageListAdapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                messageListAdapter.refreshData(m);
+                mMessageList.smoothScrollToPosition(messageListAdapter.getItemCount());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        });
+        }));
 
-        socket.on("userjoinedthechat", new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String dados = (String) args[0];
-                        Toast.makeText(SuporteActivity.this, dados, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
+        socket.on("userjoinedthechat", args -> runOnUiThread(() -> {
+            String dados = (String) args[0];
+            Toast.makeText(SuporteActivity.this, dados, Toast.LENGTH_LONG).show();
+        }));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.homeAsUp:
+                Log.d("BBBBBBBBB", "BBBBBBBBB");
+                break;
+            case R.id.showHome:
+                Log.d("AAAAAAAAAAA", "AAAAAAAAA");
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return false;
     }
 
     @Override
