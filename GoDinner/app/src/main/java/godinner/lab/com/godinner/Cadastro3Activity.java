@@ -163,7 +163,7 @@ public class Cadastro3Activity extends AppCompatActivity {
                                 startActivity(abrirBemVindo);
                                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                             } else {
-                                Toast.makeText(Cadastro3Activity.this, "Erro no Cadastro.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(Cadastro3Activity.this, "Erro no Cadastro. 1", Toast.LENGTH_LONG).show();
                             }
                         });
                         cadastroUsuario.execute().get();
@@ -174,7 +174,7 @@ public class Cadastro3Activity extends AppCompatActivity {
                                 startActivity(abrirBemVindo);
                                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                             } else {
-                                Toast.makeText(Cadastro3Activity.this, "Erro no Cadastro.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(Cadastro3Activity.this, "Erro no Cadastro. 2", Toast.LENGTH_LONG).show();
                             }
                         });
                         cadastroUsuario.execute().get();

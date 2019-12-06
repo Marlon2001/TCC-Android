@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
 
                 ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("facebook", email, getApplicationContext(), result -> {
                     final AlertDialog dialog = LoadingDialog.showLoadingDialog(getLayoutInflater(), MainActivity.this);
-                    dialog.show();
 
                     if (result) {
                         Login login = new Login();
@@ -187,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             LoginUsuario mLogin = new LoginUsuario(login, this, token1 -> {
                                 if (token1.isEmpty()) {
-                                    dialog.dismiss();
                                     new AlertDialog.Builder(MainActivity.this)
                                             .setTitle("Não foi desta vez.")
                                             .setMessage("Usuário ou senha incorretos.")
@@ -201,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
                                             if (consumidor != null) {
                                                 ConsumidorDAO mConsumidorDAO = new ConsumidorDAO(getApplicationContext());
                                                 mConsumidorDAO.salvarConsumidorLogado(consumidor);
-                                                dialog.dismiss();
 
                                                 Intent abrirTelaInicial = new Intent(getApplicationContext(), TelaInicialActivity.class);
                                                 startActivity(abrirTelaInicial);
@@ -226,7 +223,6 @@ public class MainActivity extends AppCompatActivity {
                         cadastro.setEmail(email);
                         cadastro.setFoto(image_url);
                         cadastro.setSenha(id + "_consumidor");
-                        dialog.dismiss();
 
                         Intent abrirCadastro = new Intent(MainActivity.this, Cadastro2Activity.class);
                         abrirCadastro.putExtra("cadastro", cadastro);

@@ -80,10 +80,10 @@ public class Cadastro2Activity extends AppCompatActivity {
 
         btnProximo.setOnClickListener(v -> {
             if (validarCampos()) {
-                ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("cpf", txtCpf.getRawText(), getApplicationContext(), result -> {
+                ValidarDadosCadastro mValidarDadosCadastro = new ValidarDadosCadastro("cpf", Objects.requireNonNull(txtCpf.getText()).toString(), getApplicationContext(), result -> {
                     if (!result) {
                         txtCpfLayout.setErrorEnabled(true);
-                        txtCpfLayout.setError("Cpf já cadastrado.");
+                        txtCpfLayout.setError("CPF já cadastrado.");
                     } else {
                         txtCpfLayout.setErrorEnabled(false);
 
